@@ -15,9 +15,7 @@ import BusinessProfile from "./pages/vendor/BusinessProfile";
 import MyPackages from "./pages/vendor/MyPackages";
 import PackageDetails from "./pages/vendor/PackageDetails";
 import AddPackage from "./pages/vendor/AddPackage";
-
-// Add Package page import when your form component is ready.
-// import AddEditPackage from "./pages/vendor/AddEditPackage";
+import VendorCalendar from "./pages/vendor/VendorCalendar";
 
 function VendorPlaceholder({ title }) {
   return (
@@ -36,9 +34,6 @@ function VendorPlaceholder({ title }) {
 }
 
 const placeholders = [
-  // Do not add "packages" here because it has a real page.
-  // Do not add "packages/:id" here because it has a real page.
-  ["availability", "Pricing & Availability"],
   ["bookings", "Bookings"],
   ["trips", "Trips & Departures"],
   ["earnings", "Earnings & Payouts"],
@@ -116,20 +111,14 @@ function VendorApp() {
             {/* Business Profile */}
             <Route path="business-profile" element={<BusinessProfile />} />
 
-            {/* My Packages */}
+            {/* Packages */}
             <Route path="packages" element={<MyPackages />} />
-
-            {/* Package Details */}
-            <Route path="packages/:id" element={<PackageDetails />} />
-
-            {/* My Packages */}
-            <Route path="packages" element={<MyPackages />} />
-
-            {/* Add New Package */}
             <Route path="packages/new" element={<AddPackage />} />
-
-            {/* Package Details */}
             <Route path="packages/:id" element={<PackageDetails />} />
+
+            {/* Vendor Calendar */}
+            <Route path="calendar" element={<VendorCalendar />} />
+
             {/* Other Vendor Modules */}
             {placeholders.map(([path, title]) => (
               <Route
@@ -139,7 +128,7 @@ function VendorApp() {
               />
             ))}
 
-            {/* Invalid Vendor Route - Keep Last */}
+            {/* Invalid Vendor Route */}
             <Route path="*" element={<Navigate to="/vendor" replace />} />
           </Routes>
         </main>
