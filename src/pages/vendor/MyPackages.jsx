@@ -1,740 +1,552 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  Plus,
-  Search,
-  Eye,
-  Pencil,
-  Trash2,
-  MapPin,
-  Users,
+  ArrowUpDown,
+  Building2,
+  Bus,
   CalendarDays,
-  Package,
-  X,
-  CheckCircle2,
-  Clock,
-  Ban,
-  MoreHorizontal,
-  Send,
-  AlertCircle,
+  Camera,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronsRight,
+  FileCheck,
+  LayoutGrid,
+  List,
+  Pencil,
+  Plane,
+  Search,
+  Star,
+  UserCheck,
+  Utensils,
 } from "lucide-react";
+import packages from "../../data/Package.jsx";
 
-import initialPackages from "../../data/Package";
-import AddPackage from "./AddPackage";
+/* ---------- helpers ---------- */
+const rupee = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
 
-const formatCurrency = (value) =>
-  new Intl.NumberFormat("en-IN", {
-    style: "currency",
-    currency: "INR",
-    maximumFractionDigits: 0,
-  }).format(Number(value) || 0);
+const compact = (n) =>
+  n >= 1000 ? `${(n / 1000).toFixed(1).replace(/\.0$/, "")}k` : `${n}`;
 
-const formatDate = (date) => {
-  if (!date) return "Not scheduled";
-
-  const parsedDate = new Date(`${date}T00:00:00`);
-
-  if (Number.isNaN(parsedDate.getTime())) return "Not scheduled";
-
-  return parsedDate.toLocaleDateString("en-IN", {
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-  });
+const INCLUSIONS = {
+  flights: { label: "Flights", Icon: Plane, tone: "bg-orange-50 text-orange-500" },
+  hotels: { label: "Hotels", Icon: Building2, tone: "bg-indigo-50 text-indigo-500" },
+  sightseeing: { label: "Sightseeing", Icon: Camera, tone: "bg-sky-50 text-sky-500" },
+  visa: { label: "Visa", Icon: FileCheck, tone: "bg-teal-50 text-teal-600" },
+  meal: { label: "Meal", Icon: Utensils, tone: "bg-amber-50 text-amber-500" },
+  meals: { label: "Meal", Icon: Utensils, tone: "bg-amber-50 text-amber-500" },
+  tourManager: { label: "Tour Manager", Icon: UserCheck, tone: "bg-rose-50 text-rose-500" },
+  transfer: { label: "Transfer", Icon: Bus, tone: "bg-rose-50 text-rose-500" },
 };
+
+const SORT_OPTIONS = [
+  { value: "recommended", label: "Recommended" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "rating", label: "Top Rated" },
+  { value: "departure", label: "Next Departure" },
+];
+
+const STATUSES = ["All", "Published", "Draft", "Pending Review", "Rejected"];
 
 const statusStyles = {
-  Published: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
-  Draft: "bg-slate-100 text-slate-700 ring-slate-500/20",
-  "Pending Review": "bg-amber-50 text-amber-700 ring-amber-600/20",
-  Rejected: "bg-rose-50 text-rose-700 ring-rose-600/20",
+  Published: "bg-emerald-50 text-emerald-700",
+  Draft: "bg-slate-100 text-slate-700",
+  "Pending Review": "bg-amber-50 text-amber-700",
+  Rejected: "bg-rose-50 text-rose-700",
 };
 
-function StatusBadge({ status }) {
+// card la lagnare price fields tourTypes madhun kadhto
+const getPricing = (pkg) => {
+  const t = pkg.tourTypes?.[0];
+  const price = t?.price ?? pkg.price ?? 0;
+  const originalPrice = t?.originalPrice ?? pkg.originalPrice ?? price;
+  const discountPercent =
+    originalPrice > price ? Math.round((1 - price / originalPrice) * 100) : 0;
+  return { price, originalPrice, discountPercent };
+};
+
+// calendar madhun departures, seats ani next departure kadhto
+// (juna package jyat fakt ek `departure` date ahe, to pan chalto)
+const getDepartureInfo = (pkg) => {
+  const entries = Object.entries(pkg.departures || {});
+  const today = new Date().toISOString().slice(0, 10);
+
+  if (!entries.length) {
+    return {
+      count: pkg.departure ? 1 : 0,
+      next: pkg.departure || "",
+      total: Number(pkg.seats || 0),
+      booked: Number(pkg.booked || 0),
+    };
+  }
+
+  const dates = entries.map(([date]) => date).sort();
+  const upcoming = dates.filter((date) => date >= today);
+
+  // sirf upcoming departures chya seats mojaycha
+  const relevant = entries.filter(([date]) => date >= today);
+  const source = relevant.length ? relevant : entries;
+
+  return {
+    count: upcoming.length || dates.length,
+    next: upcoming[0] || dates[0],
+    total: source.reduce((sum, [, d]) => sum + Number(d.totalSeats || 0), 0),
+    booked: source.reduce((sum, [, d]) => sum + Number(d.bookedSeats || 0), 0),
+  };
+};
+
+const prettyShort = (key) =>
+  key
+    ? new Date(`${key}T00:00:00`).toLocaleDateString("en-IN", {
+        day: "2-digit",
+        month: "short",
+        year: "numeric",
+      })
+    : "Not scheduled";
+
+/* ---------- hero ---------- */
+function PackageHero({ title, image, onSearch }) {
+  const [text, setText] = useState("");
+
   return (
-    <span
-      className={`inline-flex items-center rounded-full px-3 py-1 text-sm font-semibold ring-1 ring-inset ${
-        statusStyles[status] || statusStyles.Draft
-      }`}
-    >
-      {status || "Draft"}
-    </span>
+    <section className="relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-teal-900 px-4 py-8">
+      {image && (
+        <img
+          src={image}
+          alt=""
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-teal-950/70 via-teal-950/50 to-teal-950/80" />
+      <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-5 text-center">
+        <h1 className="text-2xl font-semibold text-white drop-shadow md:text-4xl">
+          {title}
+        </h1>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSearch(text);
+          }}
+          className="flex w-full items-center rounded-full bg-white p-1.5 shadow-2xl"
+        >
+          <input
+            value={text}
+            onChange={(e) => {
+              setText(e.target.value);
+              onSearch(e.target.value);
+            }}
+            placeholder="Search a package or city"
+            aria-label="Search packages"
+            className="h-11 min-w-0 flex-1 bg-transparent px-5 text-sm text-slate-700 outline-none placeholder:text-slate-400"
+          />
+          <button
+            type="submit"
+            aria-label="Search"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 text-white transition hover:brightness-110"
+          >
+            <Search className="h-5 w-5" />
+          </button>
+        </form>
+      </div>
+    </section>
   );
 }
 
-function MetricCard({ title, subtitle, value, icon: Icon, color, iconBg }) {
+/* ---------- category tabs ---------- */
+function CategoryTabs({ categories, active, onChange, onFilterClick, filterOpen }) {
   return (
-    <div className="flex min-h-[130px] items-center justify-between rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs transition hover:shadow-md sm:p-6">
-      <div className="space-y-2">
-        <p className="text-sm font-medium text-slate-500">{title}</p>
-        <p className="text-3xl font-bold tracking-tight text-slate-900">
-          {value}
-        </p>
-        {subtitle && <p className="text-xs text-slate-400">{subtitle}</p>}
-      </div>
+    <div className="flex items-stretch gap-4">
+      <button
+        type="button"
+        onClick={onFilterClick}
+        aria-pressed={filterOpen}
+        className="flex h-12 shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-700 px-5 text-base font-semibold text-white shadow-lg shadow-teal-700/25 transition hover:brightness-110"
+      >
+        Filter{" "}
+        <ChevronsRight
+          className={`h-5 w-5 transition-transform ${filterOpen ? "rotate-90" : ""}`}
+        />
+      </button>
 
       <div
-        className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl sm:h-14 sm:w-14 ${iconBg} ${color}`}
+        role="tablist"
+        className="flex min-w-0 flex-1 items-center gap-6 overflow-x-auto rounded-xl border border-slate-100 bg-slate-50 px-5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        <Icon size={24} />
+        {categories.map((c) => (
+          <button
+            key={c.key}
+            type="button"
+            role="tab"
+            aria-selected={active === c.key}
+            onClick={() => onChange(c.key)}
+            className={`relative h-12 shrink-0 cursor-pointer whitespace-nowrap text-base font-medium transition-colors ${
+              active === c.key
+                ? "text-teal-700 after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-amber-400 after:to-teal-500"
+                : "text-slate-700 hover:text-teal-700"
+            }`}
+          >
+            {c.label} ({c.count})
+          </button>
+        ))}
       </div>
     </div>
   );
 }
 
-export default function MyPackages() {
-  const [packages, setPackages] = useState(() =>
-    Array.isArray(initialPackages) ? initialPackages : [],
+/* ---------- toolbar ---------- */
+function PackagesToolbar({ total, name, sort, onSortChange, view, onViewChange }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center gap-4">
+        <h2 className="text-lg font-semibold text-slate-800">
+          {total} {name} Holiday Packages
+        </h2>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-5">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-600 to-cyan-600 text-white">
+            <ArrowUpDown className="h-5 w-5" />
+          </span>
+          <label className="relative flex items-center gap-2 text-slate-700">
+            <span className="hidden sm:inline">Sort by:</span>
+            <select
+              value={sort}
+              onChange={(e) => onSortChange(e.target.value)}
+              className="cursor-pointer appearance-none bg-transparent pr-6 font-medium outline-none"
+            >
+              {SORT_OPTIONS.map((o) => (
+                <option key={o.value} value={o.value}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="pointer-events-none absolute right-0 h-4 w-4" />
+          </label>
+        </div>
+
+        <div className="flex items-center gap-2 border-l border-slate-200 pl-5">
+          {[
+            ["grid", LayoutGrid, "Grid view"],
+            ["list", List, "List view"],
+          ].map(([key, Icon, label]) => (
+            <button
+              key={key}
+              type="button"
+              aria-label={label}
+              aria-pressed={view === key}
+              onClick={() => onViewChange(key)}
+              className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors ${
+                view === key ? "bg-teal-600 text-white" : "text-slate-500 hover:bg-teal-50"
+              }`}
+            >
+              <Icon className="h-5 w-5" />
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
   );
+}
 
-  const [searchQuery, setSearchQuery] = useState("");
-  const [statusFilter, setStatusFilter] = useState("All");
-  const [categoryFilter, setCategoryFilter] = useState("All");
-  const [sortBy, setSortBy] = useState("default");
+/* ---------- package card ---------- */
+function PackageCard({ pkg, layout = "grid" }) {
+  const [index, setIndex] = useState(0);
+  const images = [...(pkg.images || []), ...(pkg.image ? [pkg.image] : [])];
+  const isList = layout === "list";
+  const title = pkg.title || pkg.name;
+  const { price, originalPrice, discountPercent } = getPricing(pkg);
 
-  const [deleteTarget, setDeleteTarget] = useState(null);
-  const [openMenuId, setOpenMenuId] = useState(null);
-  const [toastMessage, setToastMessage] = useState("");
-  const [currentPage, setCurrentPage] = useState(1);
+  const departureInfo = getDepartureInfo(pkg);
+  const availableSeats = Math.max(0, departureInfo.total - departureInfo.booked);
 
-  const pageSize = 6;
-
-  const filteredPackages = useMemo(() => {
-    const query = searchQuery.trim().toLowerCase();
-
-    const result = packages.filter((item) => {
-      const name = String(item.name || "").toLowerCase();
-      const destination = String(item.destination || "").toLowerCase();
-
-      const matchesSearch =
-        !query || name.includes(query) || destination.includes(query);
-
-      const matchesStatus =
-        statusFilter === "All" || item.status === statusFilter;
-
-      const matchesCategory =
-        categoryFilter === "All" || item.category === categoryFilter;
-
-      return matchesSearch && matchesStatus && matchesCategory;
-    });
-
-    if (sortBy === "price-low") {
-      result.sort((a, b) => Number(a.price || 0) - Number(b.price || 0));
-    } else if (sortBy === "price-high") {
-      result.sort((a, b) => Number(b.price || 0) - Number(a.price || 0));
-    } else if (sortBy === "bookings") {
-      result.sort((a, b) => Number(b.booked || 0) - Number(a.booked || 0));
-    }
-
-    return result;
-  }, [packages, searchQuery, statusFilter, categoryFilter, sortBy]);
-
-  const totalPages = Math.max(1, Math.ceil(filteredPackages.length / pageSize));
-
-  const activePage = Math.min(currentPage, totalPages);
-
-  const visiblePackages = filteredPackages.slice(
-    (activePage - 1) * pageSize,
-    activePage * pageSize,
-  );
-
-  const publishedCount = packages.filter(
-    (item) => item.status === "Published",
-  ).length;
-
-  const pendingCount = packages.filter(
-    (item) => item.status === "Pending Review",
-  ).length;
-
-  const totalBookings = packages.reduce(
-    (sum, item) => sum + (Number(item.booked) || 0),
-    0,
-  );
-
-  const triggerToast = (message) => {
-    setToastMessage(message);
-
-    window.setTimeout(() => {
-      setToastMessage((current) => (current === message ? "" : current));
-    }, 3000);
-  };
-
-  const handleDeletePackage = () => {
-    if (!deleteTarget) return;
-
-    setPackages((prev) => prev.filter((item) => item.id !== deleteTarget.id));
-
-    setDeleteTarget(null);
-    setOpenMenuId(null);
-    triggerToast("Package deleted successfully.");
-  };
-
-  const handleTogglePublish = (item) => {
-    if (item.status === "Pending Review") return;
-
-    const nextStatus = item.status === "Published" ? "Draft" : "Published";
-
-    setPackages((prev) =>
-      prev.map((pkg) =>
-        pkg.id === item.id ? { ...pkg, status: nextStatus } : pkg,
-      ),
-    );
-
-    setOpenMenuId(null);
-
-    triggerToast(
-      nextStatus === "Published"
-        ? "Package successfully published."
-        : "Package moved to draft.",
-    );
-  };
-
-  const clearFilters = () => {
-    setSearchQuery("");
-    setStatusFilter("All");
-    setCategoryFilter("All");
-    setSortBy("default");
-    setCurrentPage(1);
+  const go = (dir) => (e) => {
+    e.preventDefault();
+    setIndex((i) => (i + dir + images.length) % images.length);
   };
 
   return (
-    <div
-      className="w-full space-y-6 pb-10"
-      onClick={(event) => {
-        if (
-          openMenuId !== null &&
-          !event.target.closest("[data-package-menu]")
-        ) {
-          setOpenMenuId(null);
-        }
-      }}
+    <article
+      className={`flex flex-col rounded-2xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-xl hover:shadow-teal-900/10 ${
+        isList ? "md:flex-row md:gap-6" : ""
+      }`}
     >
-      {/* Toast Notification */}
-      {toastMessage && (
-        <div
-          role="status"
-          className="fixed bottom-5 right-5 z-50 flex items-center gap-3 rounded-xl bg-slate-900 px-5 py-4 text-sm font-medium text-white shadow-xl"
+      {/* Image carousel */}
+      <div
+        className={`relative aspect-[4/2.1] overflow-hidden rounded-xl bg-slate-100 ${
+          isList ? "md:w-80 md:shrink-0" : ""
+        }`}
+      >
+        {images[index] && (
+          <img
+            src={images[index]}
+            alt={title}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
+        )}
+        {images.length > 1 && (
+          <>
+            <button
+              type="button"
+              aria-label="Previous photo"
+              onClick={go(-1)}
+              className="absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/95 shadow transition hover:bg-white"
+            >
+              <ChevronLeft className="h-5 w-5" />
+            </button>
+            <button
+              type="button"
+              aria-label="Next photo"
+              onClick={go(1)}
+              className="absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white/95 shadow transition hover:bg-white"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </button>
+          </>
+        )}
+        <span
+          className={`absolute left-3 top-3 rounded-full px-3 py-1 text-xs font-semibold shadow ${
+            statusStyles[pkg.status] || statusStyles.Draft
+          }`}
         >
-          <CheckCircle2 className="text-emerald-400" size={20} />
-          <span>{toastMessage}</span>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight text-slate-900">
-            My Packages
-          </h1>
-          <p className="mt-1 text-sm text-slate-500">
-            Create, manage and track your travel destination packages
-            seamlessly.
-          </p>
-        </div>
-
-        <Link
-          to="/vendor/packages/new"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white shadow-2xs transition hover:bg-emerald-800"
-        >
-          <Plus size={20} />
-          Add New Package
-        </Link>
+          {pkg.status || "Draft"}
+        </span>
       </div>
 
-      {/* Metrics */}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-4">
-        <MetricCard
-          title="Total Packages"
-          subtitle="All created packages"
-          value={packages.length}
-          icon={Package}
-          color="text-emerald-700"
-          iconBg="bg-emerald-50"
-        />
-
-        <MetricCard
-          title="Published"
-          subtitle="Live on website"
-          value={publishedCount}
-          icon={CheckCircle2}
-          color="text-emerald-600"
-          iconBg="bg-emerald-50"
-        />
-
-        <MetricCard
-          title="Pending Review"
-          subtitle="Awaiting admin approval"
-          value={pendingCount}
-          icon={Clock}
-          color="text-amber-600"
-          iconBg="bg-amber-50"
-        />
-
-        <MetricCard
-          title="Total Bookings"
-          subtitle="Across all listings"
-          value={totalBookings}
-          icon={Users}
-          color="text-blue-600"
-          iconBg="bg-blue-50"
-        />
-      </div>
-
-      {/* Search and Filters */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs">
-        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-          <div className="relative flex-1">
-            <Search
-              size={20}
-              className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-            />
-
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(event) => {
-                setSearchQuery(event.target.value);
-                setCurrentPage(1);
-              }}
-              placeholder="Search by package name or destination..."
-              className="w-full rounded-xl border border-slate-200 bg-slate-50/50 py-3.5 pl-12 pr-4 text-sm font-medium text-slate-800 outline-none transition focus:border-emerald-600 focus:bg-white focus:ring-3 focus:ring-emerald-600/10"
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center gap-3">
-            <select
-              value={statusFilter}
-              onChange={(event) => {
-                setStatusFilter(event.target.value);
-                setCurrentPage(1);
-              }}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 outline-none transition focus:border-emerald-600"
-            >
-              <option value="All">All Status</option>
-              <option value="Published">Published</option>
-              <option value="Draft">Draft</option>
-              <option value="Pending Review">Pending Review</option>
-              <option value="Rejected">Rejected</option>
-            </select>
-
-            <select
-              value={categoryFilter}
-              onChange={(event) => {
-                setCategoryFilter(event.target.value);
-                setCurrentPage(1);
-              }}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 outline-none transition focus:border-emerald-600"
-            >
-              <option value="All">All Categories</option>
-              <option value="Beach">Beach</option>
-              <option value="Adventure">Adventure</option>
-              <option value="Nature">Nature</option>
-              <option value="Heritage">Heritage</option>
-            </select>
-
-            <select
-              value={sortBy}
-              onChange={(event) => {
-                setSortBy(event.target.value);
-                setCurrentPage(1);
-              }}
-              className="rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 outline-none transition focus:border-emerald-600"
-            >
-              <option value="default">Sort: Default</option>
-              <option value="price-low">Price: Low to High</option>
-              <option value="price-high">Price: High to Low</option>
-              <option value="bookings">Most Booked</option>
-            </select>
-
-            {(searchQuery ||
-              statusFilter !== "All" ||
-              categoryFilter !== "All" ||
-              sortBy !== "default") && (
-              <button
-                type="button"
-                onClick={clearFilters}
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-medium text-slate-600 hover:bg-slate-100"
+      <div className="mt-4 flex flex-1 flex-col">
+        {/* Tags + rating */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex flex-wrap gap-2">
+            {[pkg.duration, ...(pkg.tags || [])].filter(Boolean).map((t) => (
+              <span
+                key={t}
+                className="rounded-lg bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800"
               >
-                <X size={17} />
-                Clear
-              </button>
-            )}
+                {t}
+              </span>
+            ))}
           </div>
+          {pkg.rating != null && (
+            <p className="flex shrink-0 items-center gap-1 font-semibold text-slate-800">
+              <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+              {pkg.rating}{" "}
+              <span className="font-normal text-slate-500">
+                ({compact(pkg.reviewCount || 0)})
+              </span>
+            </p>
+          )}
         </div>
-      </div>
 
-      {/* Package Cards */}
-      {visiblePackages.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-14 text-center">
-          <AlertCircle size={40} className="mx-auto text-slate-300" />
+        <h3 className="mt-3 text-base font-semibold text-slate-800">{title}</h3>
 
-          <h3 className="mt-4 text-lg font-bold text-slate-900">
-            No packages found
-          </h3>
+        {/* Route */}
+        <p className="mt-2 flex min-h-[2.5rem] text-sm flex-wrap items-start gap-x-2 text-slate-600">
+          {pkg.route?.length
+            ? pkg.route.map((stop, i) => (
+                <span key={stop} className="flex items-center gap-2">
+                  {i > 0 && <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />}
+                  {stop}
+                </span>
+              ))
+            : pkg.destination}
+        </p>
 
-          <p className="mt-2 text-sm text-slate-500">
-            Try adjusting your search criteria or filters.
-          </p>
-
-          <button
-            type="button"
-            onClick={clearFilters}
-            className="mt-5 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
-          >
-            Clear Filters
-          </button>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          {visiblePackages.map((item) => {
-            const booked = Number(item.booked) || 0;
-            const seats = Number(item.seats) || 0;
-            const availableSeats = Math.max(0, seats - booked);
-
-            const bookedPercentage = Math.round(
-              seats > 0 ? (booked / seats) * 100 : 0,
-            );
-
+        {/* Inclusions */}
+        <ul className="mt-4 grid grid-cols-3 gap-3 sm:grid-cols-6">
+          {pkg.inclusions?.map((key) => {
+            const item = INCLUSIONS[key];
+            if (!item) return null;
+            const { Icon, label, tone } = item;
             return (
-              <article
-                key={item.id}
-                className="group relative flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xs transition duration-200 hover:shadow-md"
+              <li
+                key={key}
+                className="flex flex-col items-center gap-1.5 text-center text-xs text-slate-600"
               >
-                {/* Package Image */}
-                <div className="relative h-56 w-full overflow-hidden bg-slate-100">
-                  {item.image ? (
-                    <img
-                      src={item.image}
-                      alt={item.name || "Travel package"}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
-                    />
-                  ) : (
-                    <div className="flex h-full items-center justify-center text-slate-400">
-                      <Package size={42} />
-                    </div>
-                  )}
-
-                  <div className="absolute left-4 top-4">
-                    <span className="rounded-lg bg-white/90 px-3 py-1.5 text-sm font-semibold text-slate-700 shadow-2xs backdrop-blur-xs">
-                      {item.category || "General"}
-                    </span>
-                  </div>
-
-                  <div className="absolute right-4 top-4">
-                    <StatusBadge status={item.status} />
-                  </div>
-                </div>
-
-                {/* Package Details */}
-                <div className="flex flex-1 flex-col justify-between p-5 sm:p-6">
-                  <div className="space-y-4">
-                    <div>
-                      <h2 className="line-clamp-1 text-xl font-bold text-slate-900">
-                        {item.name}
-                      </h2>
-
-                      <p className="mt-2 flex items-center gap-2 text-sm font-medium text-slate-500">
-                        <MapPin size={17} className="shrink-0 text-slate-400" />
-                        {item.destination || "Destination not set"}
-                      </p>
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-sm text-slate-500">
-                      <span className="flex items-center gap-1.5">
-                        <Clock size={15} className="text-slate-400" />
-                        {item.duration || "Duration not set"}
-                      </span>
-
-                      <span className="text-slate-300">•</span>
-
-                      <span className="flex items-center gap-1.5">
-                        <Users size={15} className="text-slate-400" />
-                        {seats} seats
-                      </span>
-
-                      <span className="text-slate-300">•</span>
-
-                      <span className="flex items-center gap-1.5">
-                        <CalendarDays size={15} className="text-slate-400" />
-                        {formatDate(item.departure)}
-                      </span>
-                    </div>
-
-                    <div className="pt-2">
-                      <div className="flex flex-col gap-3">
-                        <div>
-                          <span className="text-2xl font-extrabold text-slate-900">
-                            {formatCurrency(item.price)}
-                          </span>
-                          <span className="text-sm text-slate-400">
-                            {" "}
-                            /person
-                          </span>
-                        </div>
-
-                        <div className="flex flex-wrap items-center justify-between gap-2">
-                          <span className="text-sm font-semibold text-slate-600">
-                            {booked} booked
-                          </span>
-
-                          <span
-                            className={`text-sm font-semibold ${
-                              availableSeats === 0
-                                ? "text-red-600"
-                                : "text-emerald-700"
-                            }`}
-                          >
-                            {availableSeats} available
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex items-center gap-3">
-                        <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-100">
-                          <div
-                            className={`h-full rounded-full transition-all duration-300 ${
-                              bookedPercentage >= 100
-                                ? "bg-emerald-500"
-                                : bookedPercentage > 50
-                                  ? "bg-teal-600"
-                                  : "bg-teal-500"
-                            }`}
-                            style={{
-                              width: `${Math.min(100, bookedPercentage)}%`,
-                            }}
-                          />
-                        </div>
-
-                        <span className="min-w-[38px] text-right text-sm font-medium text-slate-500">
-                          {bookedPercentage}%
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Card Actions */}
-                  <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-slate-100 pt-5">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Link
-                        to={`/vendor/packages/${item.id}`}
-                        state={{ packageData: item }}
-                        className="flex h-10 items-center gap-1.5 rounded-lg border border-slate-200 px-3.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-                      >
-                        <Eye size={16} />
-                        View
-                      </Link>
-
-                      <Link
-                        to={`/vendor/packages/new?edit=${encodeURIComponent(
-                          item.id,
-                        )}`}
-                        className="flex h-10 items-center gap-1.5 rounded-lg border border-teal-200 px-3.5 text-sm font-medium text-teal-700 hover:bg-teal-50"
-                      >
-                        <Pencil size={16} />
-                        Edit
-                      </Link>
-
-                      <div className="relative" data-package-menu>
-                        <button
-                          type="button"
-                          aria-label={`More actions for ${item.name}`}
-                          aria-expanded={openMenuId === item.id}
-                          onClick={(event) => {
-                            event.stopPropagation();
-
-                            setOpenMenuId((current) =>
-                              current === item.id ? null : item.id,
-                            );
-                          }}
-                          className="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 text-slate-500 hover:bg-slate-50"
-                        >
-                          <MoreHorizontal size={18} />
-                        </button>
-                        {openMenuId === item.id && (
-                          <div className="absolute bottom-12 left-0 z-20 w-44 rounded-xl border border-slate-200 bg-white p-1.5 text-sm shadow-lg">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setDeleteTarget(item);
-                                setOpenMenuId(null);
-                              }}
-                              className="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-red-600 hover:bg-red-50"
-                            >
-                              <Trash2 size={15} />
-                              Delete
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-
-                    {item.status === "Published" ? (
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePublish(item)}
-                        className="flex h-10 items-center gap-1.5 rounded-lg border border-slate-200 px-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-100"
-                      >
-                        <Ban size={15} />
-                        Draft
-                      </button>
-                    ) : item.status === "Pending Review" ? (
-                      <button
-                        type="button"
-                        disabled
-                        className="flex h-10 cursor-not-allowed items-center gap-1.5 rounded-lg bg-amber-50 px-3.5 text-sm font-semibold text-amber-700 opacity-80"
-                      >
-                        <Clock size={15} />
-                        Pending
-                      </button>
-                    ) : item.status === "Rejected" ? (
-                      <button
-                        type="button"
-                        disabled
-                        title="This package needs to be corrected before publishing."
-                        className="flex h-10 cursor-not-allowed items-center gap-1.5 rounded-lg bg-rose-50 px-3.5 text-sm font-semibold text-rose-700 opacity-80"
-                      >
-                        <AlertCircle size={15} />
-                        Rejected
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => handleTogglePublish(item)}
-                        className="flex h-10 items-center gap-1.5 rounded-lg bg-emerald-700 px-4 text-sm font-semibold text-white hover:bg-emerald-800"
-                      >
-                        <Send size={15} />
-                        Publish
-                      </button>
-                    )}
-                  </div>
-                </div>
-              </article>
+                <span className={`flex h-9 w-9 items-center justify-center rounded-lg ${tone}`}>
+                  <Icon className="h-5 w-5" />
+                </span>
+                {label}
+              </li>
             );
           })}
+        </ul>
 
-          {/* Create New Package Card */}
-          <Link
-            to="/vendor/packages/new"
-            className="group flex min-h-[420px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed border-emerald-200 bg-emerald-50/20 p-10 text-center transition duration-200 hover:border-emerald-500 hover:bg-emerald-50/50"
-          >
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-emerald-100 text-emerald-700 transition group-hover:scale-105">
-              <Package size={32} />
-            </div>
-
-            <h3 className="mt-5 text-lg font-bold text-slate-900">
-              Create New Package
-            </h3>
-
-            <p className="mt-2 max-w-[220px] text-sm text-slate-500">
-              Add a new travel package and start reaching more travellers.
-            </p>
-
-            <span className="mt-6 inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white shadow-2xs group-hover:bg-emerald-800">
-              <Plus size={17} />
-              Add New Package
-            </span>
-          </Link>
+        {/* Calendar: next departure + dates count */}
+        <div className="mt-4 flex items-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-900">
+          <CalendarDays className="h-4 w-4 shrink-0 text-teal-700" />
+          <span>
+            Next departure:{" "}
+            <span className="font-semibold">{prettyShort(departureInfo.next)}</span>
+            {departureInfo.count > 1 && (
+              <span className="text-teal-700">
+                {" "}
+                · {departureInfo.count} dates
+              </span>
+            )}
+          </span>
         </div>
-      )}
 
-      {/* Pagination */}
-      {filteredPackages.length > 0 && (
-        <div className="flex flex-col gap-4 rounded-2xl border border-slate-200/80 bg-white px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-sm font-medium text-slate-500">
-            Showing{" "}
-            <span className="font-semibold text-slate-800">
-              {(activePage - 1) * pageSize + 1} -{" "}
-              {Math.min(activePage * pageSize, filteredPackages.length)}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-slate-800">
-              {filteredPackages.length}
-            </span>{" "}
-            packages
-          </p>
+        {/* Vendor info */}
+        <p className="mt-3 text-sm text-slate-500">
+          Seats: <span className="font-semibold text-slate-700">{departureInfo.booked}</span> booked /{" "}
+          <span className="font-semibold text-slate-700">{availableSeats}</span> available
+        </p>
 
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              disabled={activePage === 1}
-              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
-              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+        {/* Price + CTA */}
+        <div className="mt-4 flex flex-wrap items-end justify-between gap-3 border-t border-dashed border-slate-300 pt-4">
+          <div>
+            <div className="flex items-center gap-2">
+              {originalPrice > price && (
+                <span className="text-slate-500 line-through">{rupee(originalPrice)}</span>
+              )}
+              {discountPercent > 0 && (
+                <span className="rounded bg-orange-500 px-2 py-0.5 text-xs font-bold text-white">
+                  {discountPercent}% OFF
+                </span>
+              )}
+            </div>
+            <p className="mt-1">
+              <span className="text-xl font-bold text-slate-900">{rupee(price)}</span>{" "}
+              <span className="text-xs text-slate-500">Starting price per adult</span>
+            </p>
+          </div>
+
+          <div className="flex shrink-0 items-center gap-2">
+            <Link
+              to={`/vendor/packages/new?edit=${pkg.id}`}
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
             >
-              Previous
-            </button>
-
-            <span className="px-2 text-sm font-semibold text-slate-600">
-              Page {activePage} of {totalPages}
-            </span>
-
-            <button
-              type="button"
-              disabled={activePage === totalPages}
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(totalPages, prev + 1))
-              }
-              className="rounded-lg border border-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
+              <Pencil size={15} />
+              Edit
+            </Link>
+            <Link
+              to={`/vendor/packages/${pkg.id}`}
+              state={{ packageData: pkg }}
+              className="rounded-full bg-gradient-to-r from-teal-700 to-cyan-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-700/25 transition hover:brightness-110"
             >
-              Next
-            </button>
+              View Details
+            </Link>
           </div>
         </div>
+      </div>
+    </article>
+  );
+}
+
+/* ---------- page ---------- */
+export default function MyPackages() {
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("all");
+  const [status, setStatus] = useState("All");
+  const [filterOpen, setFilterOpen] = useState(false);
+  const [sort, setSort] = useState("recommended");
+  const [view, setView] = useState("grid");
+
+  const categories = useMemo(() => {
+    const names = [...new Set(packages.map((p) => p.category).filter(Boolean))];
+    return [
+      { key: "all", label: "All", count: packages.length },
+      ...names.map((n) => ({
+        key: n,
+        label: n,
+        count: packages.filter((p) => p.category === n).length,
+      })),
+    ];
+  }, []);
+
+  const visible = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    const list = packages.filter((p) => {
+      if (category !== "all" && p.category !== category) return false;
+      if (status !== "All" && (p.status || "Draft") !== status) return false;
+      if (!q) return true;
+      const hay = [p.title, p.name, p.destination, ...(p.route || [])]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+      return hay.includes(q);
+    });
+
+    const sorted = [...list];
+    if (sort === "price-asc") sorted.sort((a, b) => getPricing(a).price - getPricing(b).price);
+    if (sort === "price-desc") sorted.sort((a, b) => getPricing(b).price - getPricing(a).price);
+    if (sort === "rating") sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    if (sort === "departure") {
+      // jyachi departure javal ahe to pahila; date nasleli shevti
+      sorted.sort((a, b) => {
+        const da = getDepartureInfo(a).next || "9999-12-31";
+        const db = getDepartureInfo(b).next || "9999-12-31";
+        return da.localeCompare(db);
+      });
+    }
+    return sorted;
+  }, [search, category, status, sort]);
+
+  return (
+    <div className="mx-auto w-full max-w-7xl space-y-6 pb-10">
+      <PackageHero
+        title="My Packages"
+        image={packages[0]?.images?.[0]}
+        onSearch={setSearch}
+      />
+
+      <CategoryTabs
+        categories={categories}
+        active={category}
+        onChange={setCategory}
+        onFilterClick={() => setFilterOpen((o) => !o)}
+        filterOpen={filterOpen}
+      />
+
+      {filterOpen && (
+        <div className="flex flex-wrap items-center gap-3 rounded-xl border border-slate-200 bg-white p-4">
+          <span className="text-sm font-semibold text-slate-700">Status:</span>
+          {STATUSES.map((s) => (
+            <button
+              key={s}
+              type="button"
+              onClick={() => setStatus(s)}
+              className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                status === s
+                  ? "bg-teal-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-teal-50 hover:text-teal-700"
+              }`}
+            >
+              {s}
+            </button>
+          ))}
+        </div>
       )}
 
-      {/* Delete Confirmation Modal */}
-      {deleteTarget && (
+      <PackagesToolbar
+        total={visible.length}
+        name={category === "all" ? "Total" : category}
+        sort={sort}
+        onSortChange={setSort}
+        view={view}
+        onViewChange={setView}
+      />
+
+      {visible.length ? (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 p-4 backdrop-blur-2xs"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setDeleteTarget(null);
-            }
-          }}
+          className={
+            view === "grid"
+              ? "grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3"
+              : "flex flex-col gap-6"
+          }
         >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="delete-package-title"
-            className="w-full max-w-md rounded-2xl bg-white p-7 shadow-2xl"
-          >
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-red-50 text-red-600">
-              <Trash2 size={24} />
-            </div>
-
-            <h2
-              id="delete-package-title"
-              className="mt-5 text-xl font-bold text-slate-900"
-            >
-              Delete package?
-            </h2>
-
-            <p className="mt-3 text-sm leading-7 text-slate-600">
-              Are you sure you want to delete{" "}
-              <span className="font-semibold text-slate-900">
-                {deleteTarget.name}
-              </span>
-              ? This action cannot be undone.
-            </p>
-
-            <div className="mt-7 flex justify-end gap-3">
-              <button
-                type="button"
-                onClick={() => setDeleteTarget(null)}
-                className="rounded-xl border border-slate-300 px-5 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="button"
-                onClick={handleDeletePackage}
-                className="rounded-xl bg-red-600 px-5 py-2.5 text-sm font-semibold text-white shadow-2xs hover:bg-red-700"
-              >
-                Confirm Delete
-              </button>
-            </div>
-          </section>
+          {visible.map((pkg) => (
+            <PackageCard key={pkg.id} pkg={pkg} layout={view} />
+          ))}
+        </div>
+      ) : (
+        <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
+          <h3 className="text-lg font-bold text-slate-900">No packages found</h3>
+          <p className="mt-2 text-sm text-slate-500">
+            Search kiva filter badlun pahaa.
+          </p>
         </div>
       )}
     </div>

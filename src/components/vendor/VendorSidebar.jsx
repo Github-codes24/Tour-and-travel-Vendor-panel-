@@ -51,7 +51,6 @@ const menuSections = [
         path: "/vendor/business-profile",
         icon: Building2,
       },
-  
     ],
   },
   {
@@ -69,8 +68,8 @@ const menuSections = [
         icon: PlusCircle,
       },
       {
-        label: "Pricing & Availability",
-        path: "/vendor/availability",
+        label: "Calendar",
+        path: "/vendor/calendar",
         icon: CalendarDays,
       },
     ],
@@ -551,7 +550,6 @@ export default function VendorSidebar({
             {!collapsed && <span>Logout</span>}
           </button>
         )}
-
       </div>
     </aside>
   );
