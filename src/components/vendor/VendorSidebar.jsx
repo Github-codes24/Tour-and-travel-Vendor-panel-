@@ -3,7 +3,6 @@ import { useState } from "react";
 import {
   LayoutDashboard,
   Building2,
-  ShieldCheck,
   Map,
   PlusCircle,
   CalendarDays,
@@ -14,7 +13,6 @@ import {
   Bell,
   Headset,
   Settings,
-  Plane,
   X,
   BarChart3,
   TrendingUp,
@@ -27,9 +25,8 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-/* -------------------------------------------------------
-   Vendor sidebar menu configuration
-------------------------------------------------------- */
+import Safar2You  from "../../assets/Safar2You.png";
+import NewSafar11  from "../../assets/NewSafar11.png";
 
 const menuSections = [
   {
@@ -68,7 +65,7 @@ const menuSections = [
         icon: PlusCircle,
       },
       {
-        label: "Calendar",
+        label: "Availability Calendar",
         path: "/vendor/calendar",
         icon: CalendarDays,
       },
@@ -185,11 +182,6 @@ const linkActive =
 
 const linkIdle = "text-slate-300 hover:bg-white/10 hover:text-white";
 
-/**
- * Dark, slim scrollbar - up/down arrows nahi (Tailwind arbitrary variants).
- * Chrome / Edge / Safari -> ::-webkit-scrollbar
- * Firefox                -> scrollbar-width + scrollbar-color
- */
 const scrollbarSlim =
   "[color-scheme:dark] " +
   "[&::-webkit-scrollbar]:w-1.5 " +
@@ -200,14 +192,10 @@ const scrollbarSlim =
   "[@supports(not_selector(::-webkit-scrollbar))]:[scrollbar-color:rgba(255,255,255,0.2)_transparent] " +
   "[@supports(not_selector(::-webkit-scrollbar))]:[scrollbar-width:thin]";
 
-// Collapsed (w-20) mode madhe scrollbar poorna lapvaycha
 const scrollbarHidden =
   "[&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]";
 
-/* -------------------------------------------------------
-   Badge component
-------------------------------------------------------- */
-
+/* Count badge */
 function CountBadge({ count, active }) {
   if (!count) return null;
 
@@ -222,10 +210,7 @@ function CountBadge({ count, active }) {
   );
 }
 
-/* -------------------------------------------------------
-   Normal navigation link
-------------------------------------------------------- */
-
+/* Normal navigation link */
 function MenuLink({ item, badges, onNavigate, collapsed }) {
   const Icon = item.icon;
   const count = item.badgeKey ? badges[item.badgeKey] : 0;
@@ -270,10 +255,7 @@ function MenuLink({ item, badges, onNavigate, collapsed }) {
   );
 }
 
-/* -------------------------------------------------------
-   Navigation group with submenu
-------------------------------------------------------- */
-
+/* Navigation group with submenu */
 function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
   const { pathname } = useLocation();
 
@@ -284,8 +266,6 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
 
   const handleClick = () => {
     if (collapsed) {
-      // Collapsed mode madhe submenu dakhvta yet nahi,
-      // mhanun sidebar expand karun group open kar
       onExpand?.();
       setOpen(true);
       return;
@@ -344,14 +324,17 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
                 end={child.end}
                 onClick={onNavigate}
                 className={({ isActive }) =>
-                  `group flex items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-colors ${
+                  `group flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-colors ${
                     isActive
-                      ? "bg-teal-600/20 font-semibold text-teal-300"
-                      : "text-slate-400 hover:bg-white/5 hover:text-white"
+                      ? "bg-teal-500/15 font-semibold text-teal-300 ring-1 ring-inset ring-teal-400/20"
+                      : "text-slate-400 hover:bg-white/5 hover:text-slate-100"
                   }`
                 }
               >
-                <ChildIcon size={15} className="shrink-0" />
+                <ChildIcon
+                  size={16}
+                  className={`shrink-0 ${pathname === child.path ? "text-teal-300" : "text-slate-500 group-hover:text-slate-300"}`}
+                />
 
                 <span className="min-w-0 flex-1 truncate">{child.label}</span>
               </NavLink>
@@ -363,10 +346,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
   );
 }
 
-/* -------------------------------------------------------
-   Main Vendor Sidebar
-------------------------------------------------------- */
-
+/* Main Vendor Sidebar */
 export default function VendorSidebar({
   onNavigate,
   onClose,
@@ -378,8 +358,6 @@ export default function VendorSidebar({
 
   const vendorName = vendor?.name || defaultVendor.name;
   const accountType = vendor?.accountType || defaultVendor.accountType;
-  const verified = vendor?.verified ?? defaultVendor.verified;
-
   const initial = vendorName.trim().charAt(0).toUpperCase() || "V";
 
   return (
@@ -388,7 +366,7 @@ export default function VendorSidebar({
         collapsed ? "w-20" : "w-64 max-w-[85vw]"
       }`}
     >
-      {/* Brand and collapse toggle */}
+      {/* Safar2You logo and collapse toggle */}
       <div
         className={`flex shrink-0 border-b border-white/10 ${
           collapsed
@@ -397,20 +375,11 @@ export default function VendorSidebar({
         }`}
       >
         {!collapsed && (
-          <>
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500 text-white">
-              <Plane size={24} />
-            </div>
-
-            <div className="min-w-0 flex-1">
-              <p className="whitespace-nowrap text-lg font-bold leading-none tracking-tight">
-                Travel<span className="text-teal-400">Partner</span>
-              </p>
-              <p className="mt-1.5 truncate text-[11px] text-slate-400">
-                Vendor Management Portal
-              </p>
-            </div>
-          </>
+          <img
+            src={NewSafar11}
+            alt="Safar2You"
+            className="h-12 min-w-0 flex-1 rounded-md bg-white px-1 object-contain"
+          />
         )}
 
         <button
@@ -430,9 +399,11 @@ export default function VendorSidebar({
         </button>
 
         {collapsed && (
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-500 text-white">
-            <Plane size={24} />
-          </div>
+          <img
+            src={NewSafar11}
+            alt="Safar2You"
+            className="h-6 w-16 shrink-0 rounded-md bg-white px-0.5 object-contain"
+          />
         )}
 
         {onClose && (
@@ -459,26 +430,17 @@ export default function VendorSidebar({
         </div>
 
         {!collapsed && (
-          <>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-semibold">{vendorName}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-semibold">{vendorName}</p>
 
-              <p className="mt-0.5 truncate text-xs text-slate-400">
-                {accountType}
-              </p>
-            </div>
-
-            {/* <span
-              title={verified ? "KYC verified" : "KYC pending"}
-              className={`h-2 w-2 shrink-0 rounded-full ${
-                verified ? "bg-emerald-400" : "bg-amber-400"
-              }`}
-            /> */}
-          </>
+            <p className="mt-0.5 truncate text-xs text-slate-400">
+              {accountType}
+            </p>
+          </div>
         )}
       </div>
 
-      {/* Navigation - scroll sirf ethech, dark slim scrollbar */}
+      {/* Navigation */}
       <nav
         className={`mt-3 min-h-0 flex-1 space-y-3 overflow-x-hidden overflow-y-auto pb-4 ${
           collapsed ? "px-2" : "pl-3 pr-1.5"
@@ -524,18 +486,6 @@ export default function VendorSidebar({
           collapsed ? "p-2" : "p-3"
         }`}
       >
-        {!collapsed && (
-          <div className="rounded-xl bg-white/5 px-3 py-2.5 text-left">
-            <p className="text-xs font-medium text-slate-300">
-              Need assistance?
-            </p>
-
-            <p className="mt-1 text-xs leading-5 text-slate-500">
-              Contact your platform admin.
-            </p>
-          </div>
-        )}
-
         {onLogout && (
           <button
             type="button"

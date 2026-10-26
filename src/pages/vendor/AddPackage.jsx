@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import initialPackages from "../../data/Package";
 import VendorCalendar from "../vendor/VendorCalendar";
+import { removePackageById } from "../../utils/tripData";
 const STORAGE_KEY = "tour_vendor_packages_v1";
 const MAX_IMAGE_SIZE = 2 * 1024 * 1024;
 
@@ -845,6 +846,24 @@ export default function AddPackage() {
     }
   };
 
+  const deletePackage = () => {
+    if (!editId || saving) return;
+    const title = form.name.trim() || "this package";
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+
+    try {
+      const updatedPackages = removePackageById(editId);
+      if (!updatedPackages) {
+        setNotice("This package could not be found in saved packages.");
+        return;
+      }
+      navigate("/vendor/packages");
+    } catch (error) {
+      console.error("Unable to delete package:", error);
+      setNotice("Unable to delete this package. Please try again.");
+    }
+  };
+
   const errorText = (field) =>
     errors[field] ? (
       <span className="mt-1 block text-xs text-red-600">{errors[field]}</span>
@@ -875,6 +894,17 @@ export default function AddPackage() {
         </div>
 
         <div className="flex flex-wrap gap-2">
+          {editId && (
+            <button
+              type="button"
+              disabled={saving}
+              onClick={deletePackage}
+              className="inline-flex items-center gap-2 rounded-xl border border-rose-200 px-4 py-3 text-sm font-semibold text-rose-700 hover:bg-rose-50 disabled:opacity-50"
+            >
+              <Trash2 size={17} />
+              Delete Package
+            </button>
+          )}
           <button
             type="button"
             disabled={saving}

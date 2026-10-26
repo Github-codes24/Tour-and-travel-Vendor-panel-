@@ -69,10 +69,6 @@ const defaultProfile = {
   phone: "9876543210",
   whatsapp: "9876543210",
   supportHours: "9:00 AM - 7:00 PM",
-  instagram: "https://instagram.com/sunrisetravels",
-  facebook: "",
-  youtube: "",
-  linkedin: "",
 
   addressLine: "Plot 14, Dharampeth",
   city: "Nagpur",
@@ -204,10 +200,6 @@ const tabFields = {
     "phone",
     "whatsapp",
     "supportHours",
-    "instagram",
-    "facebook",
-    "youtube",
-    "linkedin",
   ],
   address: ["addressLine", "city", "state", "pincode", "mapLink", "destinations"],
   gallery: ["gallery"],
@@ -221,9 +213,6 @@ const tabFields = {
 /* -------------------------------------------------------
    Validation
 ------------------------------------------------------- */
-
-const socialRule = (pattern, name) => (v) =>
-  v && !pattern.test(v) ? `Enter a valid ${name} link` : "";
 
 const policyRule = (v) =>
   v.trim() && v.trim().length < 20 ? "Enter at least 20 characters" : "";
@@ -256,10 +245,6 @@ const rules = {
   whatsapp: (v) => (v && !/^[6-9]\d{9}$/.test(v) ? "Enter a valid 10-digit mobile number" : ""),
   website: (v) =>
     v && !/^https?:\/\/[^\s.]+\.[^\s]{2,}$/.test(v) ? "Enter a valid URL starting with http:// or https://" : "",
-  instagram: socialRule(/^https?:\/\/(www\.)?instagram\.com\/[^\s]+$/i, "Instagram"),
-  facebook: socialRule(/^https?:\/\/(www\.)?(facebook|fb)\.com\/[^\s]+$/i, "Facebook"),
-  youtube: socialRule(/^https?:\/\/(www\.)?(youtube\.com|youtu\.be)\/[^\s]+$/i, "YouTube"),
-  linkedin: socialRule(/^https?:\/\/([\w-]+\.)?linkedin\.com\/[^\s]+$/i, "LinkedIn"),
   addressLine: (v) => (!v.trim() ? "Address is required" : ""),
   city: (v) => (!v.trim() ? "City is required" : ""),
   state: (v) => (!v.trim() ? "State is required" : ""),
@@ -1322,18 +1307,6 @@ export default function BusinessProfile({
                     <Field {...common} label="Customer Support Hours" name="supportHours" span={2} placeholder="e.g. 9:00 AM - 7:00 PM" />
                   </div>
 
-                  <div className="mt-8 border-t border-slate-100 pt-6">
-                    <h4 className="text-sm font-semibold text-slate-900">Social media</h4>
-                    <p className="mt-1 text-sm text-slate-500">
-                      Link your business pages so travellers can see your recent trips.
-                    </p>
-                    <div className="mt-5 grid gap-x-6 gap-y-5 sm:grid-cols-2">
-                      <Field {...common} label="Instagram" name="instagram" kind="link" placeholder="https://instagram.com/yourbusiness" />
-                      <Field {...common} label="Facebook" name="facebook" kind="link" placeholder="https://facebook.com/yourbusiness" />
-                      <Field {...common} label="YouTube" name="youtube" kind="link" placeholder="https://youtube.com/@yourbusiness" />
-                      <Field {...common} label="LinkedIn" name="linkedin" kind="link" placeholder="https://linkedin.com/company/yourbusiness" />
-                    </div>
-                  </div>
                 </>
               )}
 

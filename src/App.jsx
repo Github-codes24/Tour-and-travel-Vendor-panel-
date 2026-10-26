@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import {
   BrowserRouter,
   Routes,
   Route,
   Navigate,
   useLocation,
+  useNavigate,
 } from "react-router-dom";
 
 import VendorSidebar from "./components/vendor/VendorSidebar";
@@ -16,6 +20,17 @@ import MyPackages from "./pages/vendor/MyPackages";
 import PackageDetails from "./pages/vendor/PackageDetails";
 import AddPackage from "./pages/vendor/AddPackage";
 import VendorCalendar from "./pages/vendor/VendorCalendar";
+import Booking, { BookingDetailsPage } from "./pages/vendor/Booking";
+import TripsDepartures from "./pages/vendor/TripsDepartures";
+import TripDepartureDetails from "./pages/vendor/TripDepartureDetails";
+import EarningsPayouts from "./pages/vendor/EarningsPayouts";
+import PayoutDetails from "./pages/vendor/PayoutDetails";
+import AuthPage from "./pages/auth/AuthPage";
+import {
+  hasLocalVendorSession,
+  signOutLocalVendor,
+} from "./utils/localVendorAuth";
+import ReviewsRatings from "./pages/vendor/ReviewsRatings";
 
 function VendorPlaceholder({ title }) {
   return (
@@ -34,16 +49,12 @@ function VendorPlaceholder({ title }) {
 }
 
 const placeholders = [
-  ["bookings", "Bookings"],
-  ["trips", "Trips & Departures"],
-  ["earnings", "Earnings & Payouts"],
   ["reports", "Analytics Overview"],
   ["reports/sales", "Sales Report"],
   ["reports/bookings", "Booking Analytics"],
   ["reports/revenue", "Revenue Report"],
   ["reports/packages", "Package Performance"],
   ["reports/customers", "Customer Insights"],
-  ["reviews", "Reviews & Ratings"],
   ["notifications", "Notifications"],
   ["support", "Support"],
   ["settings", "Security & Settings"],
@@ -52,13 +63,20 @@ const placeholders = [
 function VendorApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
-  // Close mobile sidebar when the route changes.
+  function handleLogout() {
+    signOutLocalVendor();
+    navigate("/login", { replace: true });
+  }
+
+  // Close mobile sidebar and scroll to top when the route changes.
   useEffect(() => {
     setSidebarOpen(false);
+    window.scrollTo({ top: 0, left: 0 });
   }, [pathname]);
 
-  // Close mobile sidebar with the Escape key.
+  // Close mobile sidebar with Escape.
   useEffect(() => {
     function handleEscape(event) {
       if (event.key === "Escape") {
@@ -73,11 +91,23 @@ function VendorApp() {
     };
   }, []);
 
+  // Lock page scroll while the mobile drawer is open.
+  useEffect(() => {
+    if (!sidebarOpen) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className="flex min-h-dvh bg-slate-100">
       {/* Desktop Sidebar */}
       <div className="sticky top-0 hidden h-dvh shrink-0 lg:block">
-        <VendorSidebar />
+        <VendorSidebar onLogout={handleLogout} />
       </div>
 
       {/* Mobile Sidebar Drawer */}
@@ -94,6 +124,7 @@ function VendorApp() {
             <VendorSidebar
               onNavigate={() => setSidebarOpen(false)}
               onClose={() => setSidebarOpen(false)}
+              onLogout={handleLogout}
             />
           </div>
         </div>
@@ -116,9 +147,29 @@ function VendorApp() {
             <Route path="packages/new" element={<AddPackage />} />
             <Route path="packages/:id" element={<PackageDetails />} />
 
-            {/* Vendor Calendar */}
+            {/* Calendar & Availability */}
             <Route path="calendar" element={<VendorCalendar />} />
 
+            {/* Bookings */}
+            <Route
+              path="bookings/:bookingId"
+              element={<BookingDetailsPage />}
+            />
+            <Route path="bookings" element={<Booking />} />
+            <Route
+              path="booking"
+              element={<Navigate to="/vendor/bookings" replace />}
+            />
+
+            {/* Trips & Departures */}
+            <Route path="trips" element={<TripsDepartures />} />
+            <Route path="trips/:id" element={<TripDepartureDetails />} />
+
+            {/* Earnings & Payouts */}
+            <Route path="earnings" element={<EarningsPayouts />} />
+            <Route path="earnings/:id" element={<PayoutDetails />} />
+
+            <Route path="reviews" element={<ReviewsRatings />} />
             {/* Other Vendor Modules */}
             {placeholders.map(([path, title]) => (
               <Route
@@ -137,15 +188,40 @@ function VendorApp() {
   );
 }
 
+function RequireVendorAuth() {
+  const location = useLocation();
+
+  return hasLocalVendorSession() ? (
+    <VendorApp />
+  ) : (
+    <Navigate to="/login" replace state={{ from: location.pathname }} />
+  );
+}
+
 export default function App() {
   return (
     <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={1800}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+
       <Routes>
-        <Route path="/" element={<Navigate to="/vendor" replace />} />
+          <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/login" element={<AuthPage />} />
+          <Route path="/register" element={<AuthPage />} />
 
-        <Route path="/vendor/*" element={<VendorApp />} />
+          {/* Vendor Panel */}
+          <Route path="/vendor/*" element={<RequireVendorAuth />} />
 
-        <Route path="*" element={<Navigate to="/vendor" replace />} />
+          {/* Invalid Route */}
+          <Route path="*" element={<Navigate to="/vendor" replace />} />
       </Routes>
     </BrowserRouter>
   );
