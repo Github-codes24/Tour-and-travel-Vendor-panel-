@@ -27,7 +27,6 @@ import {
   XCircle,
 } from "lucide-react";
 import packages from "../../data/Package.jsx";
-import { AvailabilityCalendar } from "./VendorCalendar.jsx";
 
 /* ---------- helpers ---------- */
 const rupee = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
