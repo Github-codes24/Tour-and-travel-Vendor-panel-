@@ -17,7 +17,7 @@ import {
   Wallet,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import safar2youLogo from "../../assets/safar2you.png";
+import Safar2You from "../../assets/Safar2You.png";
 import travelImage from "../../assets/dashboard-travel.jpg";
 import {
   createLocalVendorAccount,
@@ -484,7 +484,7 @@ export default function AuthPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-violet-950/85 via-slate-950/70 to-slate-950/90" />
         <div className="relative z-10">
-          <img src={safar2youLogo} alt="Safar2You" className="h-12 w-auto rounded-md bg-white px-2 object-contain" />
+          <img src={Safar2You} alt="Safar2You" className="h-12 w-auto rounded-md bg-white px-2 object-contain" />
           <div className="mt-24 max-w-lg">
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-violet-200">
               Your journeys, growing
@@ -514,7 +514,7 @@ export default function AuthPage() {
       <section className="flex min-h-dvh flex-col px-5 py-6 sm:px-8 lg:px-10 xl:px-16">
         <header className="flex items-center justify-between lg:justify-end">
           <Link to="/login" className="lg:hidden">
-            <img src={safar2youLogo} alt="Safar2You" className="h-9 w-auto object-contain" />
+            <img src={Safar2You} alt="Safar2You" className="h-9 w-auto object-contain" />
           </Link>
           <p className="text-sm text-slate-500">
             {isRegister ? "Already a partner?" : "New to Safar2You?"}{" "}
