@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   ArrowUpDown,
@@ -17,10 +17,31 @@ import {
   Plane,
   Search,
   Star,
+  Trash2,
   UserCheck,
   Utensils,
 } from "lucide-react";
-import packages from "../../data/Package.jsx";
+import initialPackages from "../../data/Package.jsx";
+import { removePackageById } from "../../utils/tripData";
+
+const PACKAGE_STORAGE_KEY = "tour_vendor_packages_v1";
+
+function readPackages() {
+  const saved = localStorage.getItem(PACKAGE_STORAGE_KEY);
+  if (!saved) return initialPackages;
+
+  const parsed = JSON.parse(saved);
+  if (!Array.isArray(parsed)) {
+    throw new Error("Saved packages must be an array.");
+  }
+
+  const savedById = new Map(parsed.map((pkg) => [String(pkg.id), pkg]));
+  const initialIds = new Set(initialPackages.map((pkg) => String(pkg.id)));
+  return [
+    ...initialPackages.map((pkg) => savedById.get(String(pkg.id)) || pkg),
+    ...parsed.filter((pkg) => !initialIds.has(String(pkg.id))),
+  ];
+}
 
 /* ---------- helpers ---------- */
 const rupee = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
@@ -251,7 +272,7 @@ function PackagesToolbar({ total, name, sort, onSortChange, view, onViewChange }
 }
 
 /* ---------- package card ---------- */
-function PackageCard({ pkg, layout = "grid" }) {
+function PackageCard({ pkg, layout = "grid", onDelete }) {
   const [index, setIndex] = useState(0);
   const images = [...(pkg.images || []), ...(pkg.image ? [pkg.image] : [])];
   const isList = layout === "list";
@@ -421,6 +442,15 @@ function PackageCard({ pkg, layout = "grid" }) {
               <Pencil size={15} />
               Edit
             </Link>
+            <button
+              type="button"
+              onClick={() => onDelete(pkg)}
+              aria-label={`Delete ${title}`}
+              title="Delete package"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-rose-200 bg-white text-rose-600 transition hover:bg-rose-50"
+            >
+              <Trash2 size={16} />
+            </button>
             <Link
               to={`/vendor/packages/${pkg.id}`}
               state={{ packageData: pkg }}
@@ -437,12 +467,56 @@ function PackageCard({ pkg, layout = "grid" }) {
 
 /* ---------- page ---------- */
 export default function MyPackages() {
+  const [packages, setPackages] = useState(() => {
+    try {
+      return readPackages();
+    } catch (error) {
+      console.error("Unable to load saved packages.", error);
+      return initialPackages;
+    }
+  });
+  const [deleteError, setDeleteError] = useState("");
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("all");
   const [status, setStatus] = useState("All");
   const [filterOpen, setFilterOpen] = useState(false);
   const [sort, setSort] = useState("recommended");
   const [view, setView] = useState("grid");
+
+  useEffect(() => {
+    const refreshPackages = () => {
+      try {
+        setPackages(readPackages());
+      } catch (error) {
+        console.error("Unable to refresh saved packages.", error);
+      }
+    };
+
+    window.addEventListener("focus", refreshPackages);
+    window.addEventListener("storage", refreshPackages);
+    return () => {
+      window.removeEventListener("focus", refreshPackages);
+      window.removeEventListener("storage", refreshPackages);
+    };
+  }, []);
+
+  const handleDelete = (pkg) => {
+    const title = pkg.title || pkg.name || "this package";
+    if (!window.confirm(`Delete "${title}"? This cannot be undone.`)) return;
+
+    try {
+      const updatedPackages = removePackageById(pkg.id);
+      if (!updatedPackages) {
+        setDeleteError("This package could not be found in saved packages.");
+        return;
+      }
+      setPackages(updatedPackages);
+      setDeleteError("");
+    } catch (error) {
+      console.error("Unable to delete package.", error);
+      setDeleteError("Unable to delete this package. Please try again.");
+    }
+  };
 
   const categories = useMemo(() => {
     const names = [...new Set(packages.map((p) => p.category).filter(Boolean))];
@@ -454,7 +528,7 @@ export default function MyPackages() {
         count: packages.filter((p) => p.category === n).length,
       })),
     ];
-  }, []);
+  }, [packages]);
 
   const visible = useMemo(() => {
     const q = search.trim().toLowerCase();
@@ -482,7 +556,7 @@ export default function MyPackages() {
       });
     }
     return sorted;
-  }, [search, category, status, sort]);
+  }, [packages, search, category, status, sort]);
 
   return (
     <div className="mx-auto w-full max-w-7xl space-y-6 pb-10">
@@ -491,6 +565,12 @@ export default function MyPackages() {
         image={packages[0]?.images?.[0]}
         onSearch={setSearch}
       />
+
+      {deleteError && (
+        <div role="alert" className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+          {deleteError}
+        </div>
+      )}
 
       <CategoryTabs
         categories={categories}
@@ -538,7 +618,7 @@ export default function MyPackages() {
           }
         >
           {visible.map((pkg) => (
-            <PackageCard key={pkg.id} pkg={pkg} layout={view} />
+            <PackageCard key={pkg.id} pkg={pkg} layout={view} onDelete={handleDelete} />
           ))}
         </div>
       ) : (
