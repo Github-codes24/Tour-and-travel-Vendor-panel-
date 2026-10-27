@@ -31,6 +31,15 @@ import {
   signOutLocalVendor,
 } from "./utils/localVendorAuth";
 import ReviewsRatings from "./pages/vendor/ReviewsRatings";
+import VendorNotifications from "./pages/vendor/VendorNotifications";
+import SupportDashboard from "./pages/vendor/support/SupportDashboard";
+import CreateTicket from "./pages/vendor/support/CreateTicket";
+import MyTickets from "./pages/vendor/support/MyTickets";
+import TicketDetails from "./pages/vendor/support/TicketDetails";
+import HelpCenter from "./pages/vendor/support/HelpCenter";
+
+import SecuritySettings from "./pages/vendor/SecuritySettings";
+import ReportsAnalytics from "./pages/vendor/Reports & Analytics/ReportsAnalytics";
 
 function VendorPlaceholder({ title }) {
   return (
@@ -48,17 +57,7 @@ function VendorPlaceholder({ title }) {
   );
 }
 
-const placeholders = [
-  ["reports", "Analytics Overview"],
-  ["reports/sales", "Sales Report"],
-  ["reports/bookings", "Booking Analytics"],
-  ["reports/revenue", "Revenue Report"],
-  ["reports/packages", "Package Performance"],
-  ["reports/customers", "Customer Insights"],
-  ["notifications", "Notifications"],
-  ["support", "Support"],
-  ["settings", "Security & Settings"],
-];
+const placeholders = [["settings", "Security & Settings"]];
 
 function VendorApp() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -138,18 +137,14 @@ function VendorApp() {
           <Routes>
             {/* Dashboard */}
             <Route index element={<VendorDashboard />} />
-
             {/* Business Profile */}
             <Route path="business-profile" element={<BusinessProfile />} />
-
             {/* Packages */}
             <Route path="packages" element={<MyPackages />} />
             <Route path="packages/new" element={<AddPackage />} />
             <Route path="packages/:id" element={<PackageDetails />} />
-
             {/* Calendar & Availability */}
             <Route path="calendar" element={<VendorCalendar />} />
-
             {/* Bookings */}
             <Route
               path="bookings/:bookingId"
@@ -160,16 +155,49 @@ function VendorApp() {
               path="booking"
               element={<Navigate to="/vendor/bookings" replace />}
             />
-
             {/* Trips & Departures */}
             <Route path="trips" element={<TripsDepartures />} />
             <Route path="trips/:id" element={<TripDepartureDetails />} />
-
             {/* Earnings & Payouts */}
             <Route path="earnings" element={<EarningsPayouts />} />
             <Route path="earnings/:id" element={<PayoutDetails />} />
-
             <Route path="reviews" element={<ReviewsRatings />} />
+            <Route path="notifications" element={<VendorNotifications />} />
+            {/* Support */}
+            <Route path="support" element={<SupportDashboard />} />
+            <Route path="support/create" element={<CreateTicket />} />
+            <Route path="support/tickets" element={<MyTickets />} />
+            <Route
+              path="support/tickets/:ticketId"
+              element={<TicketDetails />}
+            />
+            <Route path="support/help" element={<HelpCenter />} />
+            <Route path="settings" element={<SecuritySettings />} />
+            {/* Reports & Analytics submodules */}
+            <Route
+              path="reports"
+              element={<ReportsAnalytics section="overview" />}
+            />
+            <Route
+              path="reports/sales"
+              element={<ReportsAnalytics section="sales" />}
+            />
+            <Route
+              path="reports/bookings"
+              element={<ReportsAnalytics section="booking-reports" />}
+            />
+            <Route
+              path="reports/revenue"
+              element={<ReportsAnalytics section="earnings" />}
+            />
+            <Route
+              path="reports/packages"
+              element={<ReportsAnalytics section="packages" />}
+            />
+            <Route
+              path="reports/customers"
+              element={<ReportsAnalytics section="customers" />}
+            />
             {/* Other Vendor Modules */}
             {placeholders.map(([path, title]) => (
               <Route
@@ -178,7 +206,6 @@ function VendorApp() {
                 element={<VendorPlaceholder title={title} />}
               />
             ))}
-
             {/* Invalid Vendor Route */}
             <Route path="*" element={<Navigate to="/vendor" replace />} />
           </Routes>
@@ -213,15 +240,15 @@ export default function App() {
       />
 
       <Routes>
-          <Route path="/" element={<Navigate to="/login" replace />} />
-          <Route path="/login" element={<AuthPage />} />
-          <Route path="/register" element={<AuthPage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/login" element={<AuthPage />} />
+        <Route path="/register" element={<AuthPage />} />
 
-          {/* Vendor Panel */}
-          <Route path="/vendor/*" element={<RequireVendorAuth />} />
+        {/* Vendor Panel */}
+        <Route path="/vendor/*" element={<RequireVendorAuth />} />
 
-          {/* Invalid Route */}
-          <Route path="*" element={<Navigate to="/vendor" replace />} />
+        {/* Invalid Route */}
+        <Route path="*" element={<Navigate to="/vendor" replace />} />
       </Routes>
     </BrowserRouter>
   );

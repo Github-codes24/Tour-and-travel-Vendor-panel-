@@ -1,4 +1,4 @@
-import initialPackages from "../data/Package.jsx";
+import initialPackages from "../data/Package.js";
 import { BOOKING_STORAGE_KEY, getBookings } from "./bookingStorage";
 
 export { BOOKING_STORAGE_KEY };

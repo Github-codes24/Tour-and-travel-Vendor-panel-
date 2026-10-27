@@ -21,7 +21,7 @@ import {
   UserCheck,
   Utensils,
 } from "lucide-react";
-import initialPackages from "../../data/Package.jsx";
+import initialPackages from "../../data/Package.js";
 import { removePackageById } from "../../utils/tripData";
 
 const PACKAGE_STORAGE_KEY = "tour_vendor_packages_v1";

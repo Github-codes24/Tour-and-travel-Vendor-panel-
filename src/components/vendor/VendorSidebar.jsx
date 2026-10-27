@@ -23,9 +23,10 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   ChevronDown,
+  LifeBuoy,
 } from "lucide-react";
 
-import Safar2You  from "../../assets/Safar2YouSidebar.png";
+import Safar2You from "../../assets/Safar2YouSidebar.png";
 
 const menuSections = [
   {
@@ -152,6 +153,29 @@ const menuSections = [
         label: "Support",
         path: "/vendor/support",
         icon: Headset,
+        children: [
+          {
+            label: "Support Dashboard",
+            path: "/vendor/support",
+            icon: LayoutDashboard,
+            end: true,
+          },
+          {
+            label: "Create Ticket",
+            path: "/vendor/support/create",
+            icon: PlusCircle,
+          },
+          {
+            label: "My Tickets",
+            path: "/vendor/support/tickets",
+            icon: BookOpen,
+          },
+          {
+            label: "Help Center / FAQs",
+            path: "/vendor/support/help",
+            icon: LifeBuoy,
+          },
+        ],
       },
     ],
   },

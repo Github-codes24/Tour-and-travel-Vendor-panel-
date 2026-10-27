@@ -26,7 +26,7 @@ import {
   Utensils,
   XCircle,
 } from "lucide-react";
-import packages from "../../data/Package.jsx";
+import packages from "../../data/Package.js";
 
 /* ---------- helpers ---------- */
 const rupee = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;

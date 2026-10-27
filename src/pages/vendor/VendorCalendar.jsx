@@ -16,7 +16,7 @@ import {
   Trash2,
   Clock3,
 } from "lucide-react";
-import defaultPackages from "../../data/Package.jsx";
+import defaultPackages from "../../data/Package.js";
 
 const WEEKDAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 const PACKAGE_STORAGE_KEY = "tour_vendor_packages_v1";
