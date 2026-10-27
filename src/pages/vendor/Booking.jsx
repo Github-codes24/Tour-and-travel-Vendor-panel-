@@ -34,7 +34,7 @@ import {
   saveBooking,
   updateBooking,
 } from "../../utils/bookingStorage";
-import packages from "../../data/Package.jsx";
+import packages from "../../data/Package.js";
 
 const statusStyles = {
   confirmed: "bg-emerald-50 text-emerald-700 ring-emerald-200",

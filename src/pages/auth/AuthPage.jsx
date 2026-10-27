@@ -3,12 +3,15 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   ArrowLeft,
   ArrowRight,
+  BarChart3,
   Building2,
+  CalendarCheck,
   Check,
   CheckCircle2,
   Eye,
   EyeOff,
   FileCheck2,
+  Loader2,
   LockKeyhole,
   MapPin,
   ShieldCheck,
@@ -17,16 +20,74 @@ import {
   Wallet,
 } from "lucide-react";
 import { toast } from "react-toastify";
-import Safar2You from "../../assets/Safar2You.png";
+import Safar2YouSidebar from "../../assets/Safar2YouSidebar.png";
 import travelImage from "../../assets/dashboard-travel.jpg";
 import {
   createLocalVendorAccount,
   signInLocalVendor,
 } from "../../utils/localVendorAuth";
 
+/* ------------------------------------------------------------------ */
+/* Config                                                              */
+/* ------------------------------------------------------------------ */
+
+// Dev shortcut. Production la false thev; local testing sathi true kar.
+const SHOW_PREVIEW_LINK = false;
+
 const inputClass =
-  "mt-1.5 block w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-4 focus:ring-violet-500/10";
-const labelClass = "text-sm font-medium text-slate-700";
+  "block w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 hover:border-slate-400 focus:border-violet-600 focus:ring-4 focus:ring-violet-600/15";
+
+// "block" must: label inline asel tar space-y / margin kaam karat nahi
+const labelClass = "block text-sm font-medium text-slate-700";
+
+const primaryButtonClass =
+  "inline-flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/30 disabled:cursor-not-allowed disabled:opacity-70";
+
+const features = [
+  {
+    icon: CalendarCheck,
+    title: "Simple bookings",
+    text: "Track every enquiry and confirmed trip in one place.",
+  },
+  {
+    icon: Wallet,
+    title: "Trusted payouts",
+    text: "Verified bank accounts and clear settlement records.",
+  },
+  {
+    icon: BarChart3,
+    title: "Real-time insights",
+    text: "Sales, departures and reviews, always up to date.",
+  },
+];
+
+/* ------------------------------------------------------------------ */
+/* Shared UI                                                           */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Brand logo.
+ * Keep the transparent PNG itself. On the dark brand panel it sits
+ * directly on the photo; a white drop-shadow glow follows the logo shape.
+ */
+function BrandLogo({ variant = "plain", className = "" }) {
+  const isCard = variant === "card";
+
+  return (
+    <img
+      src={Safar2YouSidebar}
+      alt="Safar2You"
+      className={[
+        "select-none object-contain bg-transparent",
+        isCard
+          ? "h-14 w-auto max-w-full drop-shadow-[0_0_14px_rgba(255,255,255,0.85)] sm:h-16"
+          : "h-8 w-auto sm:h-9",
+        className,
+      ].join(" ")}
+      draggable={false}
+    />
+  );
+}
 
 function TextField({
   label,
@@ -43,10 +104,10 @@ function TextField({
     <label className={labelClass}>
       {label}
       <input
-        className={inputClass}
+        className={`${inputClass} mt-1.5`}
         name={name}
         type={type}
-        value={onChange ? value ?? "" : undefined}
+        value={onChange ? (value ?? "") : undefined}
         onChange={onChange}
         placeholder={placeholder}
         required={required}
@@ -57,12 +118,19 @@ function TextField({
   );
 }
 
-function SelectField({ label, name, value, onChange, children, required = true }) {
+function SelectField({
+  label,
+  name,
+  value,
+  onChange,
+  children,
+  required = true,
+}) {
   return (
     <label className={labelClass}>
       {label}
       <select
-        className={`${inputClass} appearance-none`}
+        className={`${inputClass} mt-1.5 appearance-none`}
         name={name}
         value={value ?? ""}
         onChange={onChange}
@@ -80,9 +148,12 @@ function SectionTitle({ icon: Icon, title, description }) {
       <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
         <Icon size={19} />
       </span>
+
       <div>
         <h2 className="font-semibold text-slate-900">{title}</h2>
-        <p className="mt-1 text-sm leading-5 text-slate-500">{description}</p>
+        <p className="mt-1 text-sm leading-5 text-slate-500">
+          {description}
+        </p>
       </div>
     </div>
   );
@@ -92,13 +163,22 @@ function UploadField({ label, file, onChange, required = false }) {
   return (
     <label className="block cursor-pointer">
       <span className={labelClass}>{label}</span>
+
       <span className="mt-1.5 flex min-h-12 items-center gap-3 rounded-xl border border-dashed border-slate-300 bg-slate-50 px-3.5 py-3 text-sm text-slate-600 transition hover:border-violet-400 hover:bg-violet-50/50">
         <Upload size={17} className="shrink-0 text-violet-600" />
+
         <span className="min-w-0 flex-1 truncate">
           {file?.name || "Choose PDF, JPG or PNG"}
         </span>
-        {file && <CheckCircle2 size={17} className="shrink-0 text-emerald-600" />}
+
+        {file && (
+          <CheckCircle2
+            size={17}
+            className="shrink-0 text-emerald-600"
+          />
+        )}
       </span>
+
       <input
         className="sr-only"
         type="file"
@@ -110,6 +190,10 @@ function UploadField({ label, file, onChange, required = false }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Login                                                               */
+/* ------------------------------------------------------------------ */
+
 function Login({ onOtpNotice }) {
   const [showPassword, setShowPassword] = useState(false);
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -118,6 +202,7 @@ function Login({ onOtpNotice }) {
 
   async function handleSubmit(event) {
     event.preventDefault();
+
     const formData = new FormData(event.currentTarget);
     setIsSigningIn(true);
 
@@ -129,21 +214,25 @@ function Login({ onOtpNotice }) {
       );
 
       if (!isAuthenticated) {
-        toast.error("Email or password is incorrect. Register a local account first.");
+        toast.error(
+          "Email or password is incorrect. Register a local account first.",
+        );
         return;
       }
 
       toast.success("Signed in successfully.");
       navigate("/vendor", { replace: true });
     } catch (error) {
-      toast.error(error.message || "Unable to sign in with local account.");
+      toast.error(
+        error.message || "Unable to sign in with local account.",
+      );
     } finally {
       setIsSigningIn(false);
     }
   }
 
   return (
-    <form className="space-y-5" onSubmit={handleSubmit}>
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <TextField
         label="Email address"
         name="email"
@@ -152,8 +241,10 @@ function Login({ onOtpNotice }) {
         placeholder="you@youragency.com"
         autoComplete="email"
       />
+
       <label className={labelClass}>
         Password
+
         <span className="relative mt-1.5 block">
           <input
             className={`${inputClass} pr-12`}
@@ -163,49 +254,61 @@ function Login({ onOtpNotice }) {
             autoComplete="current-password"
             required
           />
+
           <button
             type="button"
             onClick={() => setShowPassword((visible) => !visible)}
             aria-label={showPassword ? "Hide password" : "Show password"}
-            className="absolute inset-y-0 right-0 flex w-12 items-center justify-center text-slate-400 hover:text-slate-700"
+            className="absolute inset-y-0 right-0 flex w-12 items-center justify-center rounded-r-xl text-slate-400 transition hover:text-slate-700 focus:outline-none focus-visible:text-violet-700"
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
         </span>
       </label>
-      <div className="flex items-center justify-between text-sm">
-        <label className="flex items-center gap-2 text-slate-600">
-          <input name="rememberMe" type="checkbox" className="accent-violet-700" />
+
+      <div className="flex items-center justify-between gap-4 text-sm">
+        <label className="flex cursor-pointer items-center gap-2.5 text-slate-600">
+          <input
+            name="rememberMe"
+            type="checkbox"
+            className="h-4 w-4 rounded border-slate-300 accent-violet-700"
+          />
           Remember me
         </label>
+
         <button
           type="button"
           onClick={onOtpNotice}
-          className="font-semibold text-violet-700 hover:text-violet-900"
+          className="font-semibold text-violet-700 transition hover:text-violet-900"
         >
           Forgot password?
         </button>
       </div>
+
       <button
         type="submit"
         disabled={isSigningIn}
-        className="auth-primary-action flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3.5 text-sm font-semibold shadow-lg shadow-violet-700/15 transition focus:outline-none focus:ring-4 focus:ring-violet-500/20"
+        className={`${primaryButtonClass} w-full py-3.5 shadow-lg shadow-violet-700/20`}
       >
-        {isSigningIn ? "Signing in..." : "Sign in"} <ArrowRight size={17} />
+        {isSigningIn ? (
+          <>
+            <Loader2 size={17} className="animate-spin" />
+            Signing in...
+          </>
+        ) : (
+          <>
+            Sign in
+            <ArrowRight size={17} />
+          </>
+        )}
       </button>
-      <p className="text-center text-sm text-slate-500">
-        New to Safar2You?{" "}
-        <button
-          type="button"
-          onClick={() => navigate("/register")}
-          className="font-semibold text-violet-700 hover:text-violet-900"
-        >
-          Create an account
-        </button>
-      </p>
     </form>
   );
 }
+
+/* ------------------------------------------------------------------ */
+/* Registration                                                        */
+/* ------------------------------------------------------------------ */
 
 const steps = [
   { title: "Your details", icon: UserRound },
@@ -216,6 +319,7 @@ const steps = [
 function Registration({ onOtpNotice }) {
   const navigate = useNavigate();
   const stepRef = useRef(null);
+
   const [step, setStep] = useState(0);
   const [vendorType, setVendorType] = useState("agency");
   const [gstRegistered, setGstRegistered] = useState(false);
@@ -227,37 +331,51 @@ function Registration({ onOtpNotice }) {
 
   function setValue(event) {
     const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
+
+    setValues((current) => ({
+      ...current,
+      [name]: value,
+    }));
   }
 
   function updateFile(key, file) {
-    setFiles((current) => ({ ...current, [key]: file }));
+    setFiles((current) => ({
+      ...current,
+      [key]: file,
+    }));
   }
 
   function validateCurrentStep() {
     const fields = stepRef.current?.querySelectorAll(
       "input[required], select[required]",
     );
+
     for (const field of fields || []) {
       if (!field.checkValidity()) {
         field.reportValidity();
         return false;
       }
     }
+
     return true;
   }
 
   function nextStep() {
-    if (validateCurrentStep()) setStep((current) => Math.min(current + 1, 2));
+    if (validateCurrentStep()) {
+      setStep((current) => Math.min(current + 1, 2));
+    }
   }
 
   async function submitRegistration(event) {
     event.preventDefault();
+
     if (!validateCurrentStep()) return;
+
     setIsSaving(true);
 
     try {
       await createLocalVendorAccount(values.email, values.password);
+
       setSubmitted(true);
       toast.success("Local demo account created.");
     } catch (error) {
@@ -273,55 +391,74 @@ function Registration({ onOtpNotice }) {
         <span className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-50 text-emerald-600">
           <CheckCircle2 size={34} />
         </span>
-        <p className="mt-6 text-xs font-bold uppercase tracking-[0.18em] text-violet-700">
+
+        <p className="mt-6 text-sm font-semibold text-violet-700">
           Local demo account ready
         </p>
+
         <h2 className="mt-2 text-2xl font-bold tracking-tight text-slate-900">
           Your account is ready
         </h2>
+
         <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-slate-500">
-          Your sign-in details are saved in this browser. The vendor application
-          has not been sent for review; once a backend is connected, it can be
-          submitted for <strong className="text-amber-700">Pending Approval</strong>.
-          Payouts must remain disabled until your bank account is verified by
-          the payment provider.
+          Your sign-in details are saved in this browser. The vendor
+          application has not been sent for review; once a backend is
+          connected, it can be submitted for{" "}
+          <strong className="text-amber-700">Pending Approval</strong>.
+          Payouts must remain disabled until your bank account is
+          verified by the payment provider.
         </p>
+
         <div className="mt-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-left text-sm leading-5 text-amber-900">
-          Demo mode: only your email and a salted password hash are stored in
-          this browser. Documents, bank details, OTP verification, and admin
-          approval are not saved or processed until a backend is connected.
+          Demo mode: only your email and a salted password hash are
+          stored in this browser. Documents, bank details, OTP
+          verification, and admin approval are not saved or processed
+          until a backend is connected.
         </div>
+
         <button
           type="button"
-          onClick={() => navigate("/login", { state: { email: values.email } })}
-          className="mt-7 inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800"
+          onClick={() =>
+            navigate("/login", {
+              state: { email: values.email },
+            })
+          }
+          className={`${primaryButtonClass} mt-7`}
         >
-          Back to sign in <ArrowRight size={17} />
+          Back to sign in
+          <ArrowRight size={17} />
         </button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submitRegistration}>
-      <div className="mb-7 grid grid-cols-3 gap-2">
-        {steps.map(({ title, icon: Icon }, index) => (
-          <div key={title} className="min-w-0">
-            <div
-              className={`mb-2 h-1 rounded-full ${
-                index <= step ? "bg-violet-600" : "bg-slate-200"
-              }`}
-            />
-            <div
-              className={`flex items-center gap-1.5 text-[11px] font-semibold sm:text-xs ${
-                index === step ? "text-violet-800" : "text-slate-400"
-              }`}
-            >
-              <Icon size={14} className="shrink-0" />
-              <span className="truncate">{title}</span>
+    <form onSubmit={submitRegistration} className="w-full">
+      <div className="mb-6 rounded-2xl border border-slate-200 bg-white p-3 shadow-sm shadow-slate-200/60">
+        <div className="grid grid-cols-3 gap-2">
+          {steps.map(({ title, icon: Icon }, index) => (
+            <div key={title} className="min-w-0">
+              <div
+                className={`mb-2 h-1.5 rounded-full ${
+                  index <= step ? "bg-violet-600" : "bg-slate-200"
+                }`}
+              />
+
+              <div
+                className={`flex items-center gap-1.5 text-[11px] font-semibold sm:text-xs ${
+                  index === step
+                    ? "text-violet-800"
+                    : index < step
+                      ? "text-emerald-700"
+                      : "text-slate-400"
+                }`}
+              >
+                <Icon size={14} className="shrink-0" />
+                <span className="truncate">{title}</span>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div ref={stepRef}>
@@ -332,36 +469,125 @@ function Registration({ onOtpNotice }) {
               title="Let’s get to know you"
               description="Start with your contact details and location."
             />
-            <TextField label="Full name" name="fullName" value={values.fullName} onChange={setValue} placeholder="Your full name" autoComplete="name" />
+
+            <TextField
+              label="Full name"
+              name="fullName"
+              value={values.fullName}
+              onChange={setValue}
+              placeholder="Your full name"
+              autoComplete="name"
+            />
+
             <div className="grid gap-4 sm:grid-cols-2">
               <div>
-                <TextField label="Email address" name="email" type="email" value={values.email} onChange={setValue} placeholder="you@example.com" autoComplete="email" />
-                <button type="button" onClick={onOtpNotice} className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900">
+                <TextField
+                  label="Email address"
+                  name="email"
+                  type="email"
+                  value={values.email}
+                  onChange={setValue}
+                  placeholder="you@example.com"
+                  autoComplete="email"
+                />
+
+                <button
+                  type="button"
+                  onClick={onOtpNotice}
+                  className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900"
+                >
                   Send email OTP
                 </button>
               </div>
+
               <div>
-                <TextField label="Mobile number" name="phone" type="tel" value={values.phone} onChange={setValue} placeholder="+91 98765 43210" autoComplete="tel" pattern="[+0-9 ()-]{10,16}" />
-                <button type="button" onClick={onOtpNotice} className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900">
+                <TextField
+                  label="Mobile number"
+                  name="phone"
+                  type="tel"
+                  value={values.phone}
+                  onChange={setValue}
+                  placeholder="+91 98765 43210"
+                  autoComplete="tel"
+                  pattern="[+0-9 ()-]{10,16}"
+                />
+
+                <button
+                  type="button"
+                  onClick={onOtpNotice}
+                  className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900"
+                >
                   Send mobile OTP
                 </button>
               </div>
             </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="Create password" name="password" type="password" value={values.password} onChange={setValue} placeholder="At least 8 characters" autoComplete="new-password" minLength={8} />
-              <SelectField label="Vendor type" name="vendorType" value={vendorType} onChange={(event) => setVendorType(event.target.value)}>
+              <TextField
+                label="Create password"
+                name="password"
+                type="password"
+                value={values.password}
+                onChange={setValue}
+                placeholder="At least 8 characters"
+                autoComplete="new-password"
+                minLength={8}
+              />
+
+              <SelectField
+                label="Vendor type"
+                name="vendorType"
+                value={vendorType}
+                onChange={(event) => setVendorType(event.target.value)}
+              >
                 <option value="agency">Travel Agency</option>
                 <option value="individual">Individual Tour Operator</option>
               </SelectField>
             </div>
+
             <div className="grid gap-4 sm:grid-cols-2">
-              <TextField label="Address" name="address" value={values.address} onChange={setValue} placeholder="Street address" autoComplete="street-address" />
-              <TextField label="City" name="city" value={values.city} onChange={setValue} placeholder="City" autoComplete="address-level2" />
-              <TextField label="State" name="state" value={values.state} onChange={setValue} placeholder="State" autoComplete="address-level1" />
-              <TextField label="PIN code" name="pin" value={values.pin} onChange={setValue} placeholder="6-digit PIN code" inputMode="numeric" pattern="[0-9]{6}" autoComplete="postal-code" />
+              <TextField
+                label="Address"
+                name="address"
+                value={values.address}
+                onChange={setValue}
+                placeholder="Street address"
+                autoComplete="street-address"
+              />
+
+              <TextField
+                label="City"
+                name="city"
+                value={values.city}
+                onChange={setValue}
+                placeholder="City"
+                autoComplete="address-level2"
+              />
+
+              <TextField
+                label="State"
+                name="state"
+                value={values.state}
+                onChange={setValue}
+                placeholder="State"
+                autoComplete="address-level1"
+              />
+
+              <TextField
+                label="PIN code"
+                name="pin"
+                value={values.pin}
+                onChange={setValue}
+                placeholder="6-digit PIN code"
+                inputMode="numeric"
+                pattern="[0-9]{6}"
+                autoComplete="postal-code"
+              />
             </div>
+
             <p className="rounded-xl bg-slate-50 px-3.5 py-3 text-xs leading-5 text-slate-500">
-              OTP controls are shown for the registration flow. Delivery and verification require a configured OTP provider.
+              OTP controls are shown for the registration flow. Delivery
+              and verification require a configured OTP provider.
             </p>
           </div>
         )}
@@ -370,18 +596,34 @@ function Registration({ onOtpNotice }) {
           <div className="space-y-5">
             <SectionTitle
               icon={Building2}
-              title={vendorType === "agency" ? "Agency details" : "Operator details"}
+              title={
+                vendorType === "agency" ? "Agency details" : "Operator details"
+              }
               description="Tell us about your business and upload applicable documents."
             />
+
             <TextField
-              label={vendorType === "agency" ? "Agency name" : "Business / display name"}
+              label={
+                vendorType === "agency"
+                  ? "Agency name"
+                  : "Business / display name"
+              }
               name="businessName"
               value={values.businessName}
               onChange={setValue}
-              placeholder={vendorType === "agency" ? "Your registered agency name" : "Name customers will see"}
+              placeholder={
+                vendorType === "agency"
+                  ? "Your registered agency name"
+                  : "Name customers will see"
+              }
             />
+
             <TextField
-              label={vendorType === "agency" ? "Business PAN (if applicable)" : "Individual PAN"}
+              label={
+                vendorType === "agency"
+                  ? "Business PAN (if applicable)"
+                  : "Individual PAN"
+              }
               name="pan"
               value={values.pan}
               onChange={setValue}
@@ -390,31 +632,87 @@ function Registration({ onOtpNotice }) {
               pattern="[A-Za-z]{5}[0-9]{4}[A-Za-z]"
               maxLength={10}
             />
+
+            {/* Agency owner / authorized person Aadhaar */}
+            {vendorType === "agency" && (
+              <UploadField
+                label="Owner / Authorized Person Aadhaar Card"
+                file={files.ownerAadhaar}
+                onChange={(file) => updateFile("ownerAadhaar", file)}
+              />
+            )}
+
+            {/* Agency business registration proof */}
             {vendorType === "agency" && (
               <div className="space-y-3">
                 <label className="flex items-center gap-2.5 text-sm text-slate-700">
-                  <input type="checkbox" checked={hasRegistrationProof} onChange={(event) => setHasRegistrationProof(event.target.checked)} className="accent-violet-700" />
+                  <input
+                    type="checkbox"
+                    checked={hasRegistrationProof}
+                    onChange={(event) =>
+                      setHasRegistrationProof(event.target.checked)
+                    }
+                    className="accent-violet-700"
+                  />
                   Business registration proof is applicable
                 </label>
+
                 {hasRegistrationProof && (
-                  <UploadField label="Business registration proof" file={files.registration} onChange={(file) => updateFile("registration", file)} required />
+                  <UploadField
+                    label="Business registration proof"
+                    file={files.registration}
+                    onChange={(file) => updateFile("registration", file)}
+                    required
+                  />
                 )}
               </div>
             )}
+
+            {/* Individual vendor Aadhaar and additional ID */}
             {vendorType === "individual" && (
-              <UploadField label="Identity proof" file={files.identity} onChange={(file) => updateFile("identity", file)} required />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <UploadField
+                  label="Identity proof (Aadhaar Card)"
+                  file={files.identity}
+                  onChange={(file) => updateFile("identity", file)}
+                  required
+                />
+
+                <UploadField
+                  label="Additional identity document (optional)"
+                  file={files.additionalIdentity}
+                  onChange={(file) => updateFile("additionalIdentity", file)}
+                />
+              </div>
             )}
+
+            {/* GST certificate */}
             <div className="space-y-3">
               <label className="flex items-center gap-2.5 text-sm text-slate-700">
-                <input type="checkbox" checked={gstRegistered} onChange={(event) => setGstRegistered(event.target.checked)} className="accent-violet-700" />
+                <input
+                  type="checkbox"
+                  checked={gstRegistered}
+                  onChange={(event) => setGstRegistered(event.target.checked)}
+                  className="accent-violet-700"
+                />
                 GST registered / GST certificate applicable
               </label>
+
               {gstRegistered && (
-                <UploadField label="GST certificate" file={files.gst} onChange={(file) => updateFile("gst", file)} required />
+                <UploadField
+                  label="GST certificate"
+                  file={files.gst}
+                  onChange={(file) => updateFile("gst", file)}
+                  required
+                />
               )}
             </div>
+
             <p className="rounded-xl border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-900">
-              GST and business registration documents are requested only when applicable to your business structure and legal requirements.
+              GST and business registration documents are requested only
+              when applicable to your business structure and legal
+              requirements. Aadhaar documents should only be collected
+              when necessary and handled securely.
             </p>
           </div>
         )}
@@ -426,17 +724,66 @@ function Registration({ onOtpNotice }) {
               title="Where should we send payouts?"
               description="Bank details are sensitive and must be verified before payouts are enabled."
             />
-            <TextField label="Account holder name" name="accountHolder" value={values.accountHolder} onChange={setValue} placeholder="Name as shown on bank account" autoComplete="off" />
-            <TextField label="Bank account number" name="accountNumber" type="password" value={values.accountNumber} onChange={setValue} placeholder="Enter bank account number" autoComplete="off" inputMode="numeric" pattern="[0-9]{9,18}" minLength={9} maxLength={18} />
-            <TextField label="IFSC code" name="ifsc" value={values.ifsc} onChange={setValue} placeholder="e.g. HDFC0001234" autoComplete="off" pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}" maxLength={11} />
-            <UploadField label="Cancelled cheque or bank proof" file={files.bankProof} onChange={(file) => updateFile("bankProof", file)} required />
+
+            <TextField
+              label="Account holder name"
+              name="accountHolder"
+              value={values.accountHolder}
+              onChange={setValue}
+              placeholder="Name as shown on bank account"
+              autoComplete="off"
+            />
+
+            <TextField
+              label="Bank account number"
+              name="accountNumber"
+              type="password"
+              value={values.accountNumber}
+              onChange={setValue}
+              placeholder="Enter bank account number"
+              autoComplete="off"
+              inputMode="numeric"
+              pattern="[0-9]{9,18}"
+              minLength={9}
+              maxLength={18}
+            />
+
+            <TextField
+              label="IFSC code"
+              name="ifsc"
+              value={values.ifsc}
+              onChange={setValue}
+              placeholder="e.g. HDFC0001234"
+              autoComplete="off"
+              pattern="[A-Za-z]{4}0[A-Za-z0-9]{6}"
+              maxLength={11}
+            />
+
+            <UploadField
+              label="Cancelled cheque or bank proof"
+              file={files.bankProof}
+              onChange={(file) => updateFile("bankProof", file)}
+              required
+            />
+
             <div className="flex gap-3 rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-3 text-xs leading-5 text-slate-600">
-              <ShieldCheck size={17} className="mt-0.5 shrink-0 text-emerald-600" />
-              Never share bank credentials or OTPs. Account verification should be completed through your payment provider’s KYC process before payouts are enabled.
+              <ShieldCheck
+                size={17}
+                className="mt-0.5 shrink-0 text-emerald-600"
+              />
+              Never share bank credentials or OTPs. Account verification
+              should be completed through your payment provider’s KYC
+              process before payouts are enabled.
             </div>
+
             <label className="flex items-start gap-2.5 text-xs leading-5 text-slate-600">
-              <input type="checkbox" required className="mt-1 accent-violet-700" />
-              I confirm these details are accurate and agree to administrator review of my application.
+              <input
+                type="checkbox"
+                required
+                className="mt-1 accent-violet-700"
+              />
+              I confirm these details are accurate and agree to
+              administrator review of my application.
             </label>
           </div>
         )}
@@ -447,20 +794,43 @@ function Registration({ onOtpNotice }) {
           <button
             type="button"
             onClick={() => setStep((current) => current - 1)}
-            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-2 rounded-xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
           >
-            <ArrowLeft size={16} /> Back
+            <ArrowLeft size={16} />
+            Back
           </button>
         ) : (
-          <span className="text-xs text-slate-400">Step {step + 1} of {steps.length}</span>
+          <span className="text-xs text-slate-400">
+            Step {step + 1} of {steps.length}
+          </span>
         )}
+
         {step < steps.length - 1 ? (
-          <button type="button" onClick={nextStep} className="ml-auto inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800">
-            Continue <ArrowRight size={16} />
+          <button
+            type="button"
+            onClick={nextStep}
+            className={`${primaryButtonClass} ml-auto`}
+          >
+            Continue
+            <ArrowRight size={16} />
           </button>
         ) : (
-          <button type="submit" disabled={isSaving} className="ml-auto inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800 disabled:cursor-wait disabled:opacity-70">
-              {isSaving ? "Creating account..." : "Create account"} <Check size={16} />
+          <button
+            type="submit"
+            disabled={isSaving}
+            className={`${primaryButtonClass} ml-auto`}
+          >
+            {isSaving ? (
+              <>
+                <Loader2 size={16} className="animate-spin" />
+                Creating account...
+              </>
+            ) : (
+              <>
+                Create account
+                <Check size={16} />
+              </>
+            )}
           </button>
         )}
       </div>
@@ -468,77 +838,127 @@ function Registration({ onOtpNotice }) {
   );
 }
 
+/* ------------------------------------------------------------------ */
+/* Page                                                                */
+/* ------------------------------------------------------------------ */
+
 export default function AuthPage() {
   const isRegister = useLocation().pathname === "/register";
 
   function showOtpNotice() {
-    toast.info("OTP, password reset, and account verification require backend setup.");
+    toast.info(
+      "OTP, password reset, and account verification require backend setup.",
+    );
   }
 
   return (
-    <main className="min-h-dvh bg-slate-50 lg:grid lg:grid-cols-[minmax(0,0.92fr)_minmax(540px,1.08fr)]">
-      <aside className="relative hidden min-h-dvh overflow-hidden bg-slate-950 text-white lg:flex lg:flex-col lg:justify-between lg:p-10 xl:p-14">
-        <div
-          className="absolute inset-0 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: `url(${travelImage})` }}
+    <main className="min-h-dvh bg-[#f3f4f6] lg:grid lg:grid-cols-[minmax(0,0.92fr)_minmax(540px,1.08fr)]">
+      {/* ---------- Brand panel (desktop only) ---------- */}
+      <aside className="relative hidden overflow-hidden bg-slate-950 text-white lg:sticky lg:top-0 lg:flex lg:h-dvh lg:flex-col lg:justify-between lg:gap-8 lg:self-start lg:px-10 lg:py-8 xl:px-14 xl:py-10">
+        {/* Background photo */}
+        <img
+          src={travelImage}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover scale-[1.08]"
         />
-        <div className="absolute inset-0 bg-gradient-to-br from-violet-950/85 via-slate-950/70 to-slate-950/90" />
+
+        {/* Lighter tint at top, dark at bottom so text stays readable */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(168,85,247,0.15),_transparent_30%)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950/25 to-slate-950/90" />
+        <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-slate-950/30 to-transparent" />
+
+        {/* Logo: transparent background, white glow keeps it visible */}
         <div className="relative z-10">
-          <img src={Safar2You} alt="Safar2You" className="h-12 w-auto rounded-md bg-white px-2 object-contain" />
-          <div className="mt-24 max-w-lg">
-            <p className="mb-4 text-sm font-semibold uppercase tracking-[0.2em] text-violet-200">
+          <Link
+            to="/login"
+            aria-label="Safar2You home"
+            className="inline-block"
+          >
+            <BrandLogo variant="card" />
+          </Link>
+        </div>
+
+        <div className="relative z-10 shrink-0">
+          <div className="max-w-lg">
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-violet-100 ring-1 ring-white/20 backdrop-blur">
+              <MapPin size={13} />
               Your journeys, growing
             </p>
-            <h1 className="text-4xl font-bold leading-tight tracking-tight xl:text-5xl">
+
+            <h1 className="text-4xl font-bold leading-[1.15] tracking-tight drop-shadow-sm xl:text-5xl">
               Make every trip a story worth sharing.
             </h1>
-            <p className="mt-5 max-w-md text-base leading-7 text-slate-200">
-              Manage your travel business, welcome more explorers, and grow with Safar2You.
+
+            <p className="mt-4 max-w-md text-base leading-7 text-slate-200">
+              Manage your travel business, welcome more explorers, and
+              grow with Safar2You.
             </p>
           </div>
-        </div>
-        <div className="relative z-10 grid grid-cols-3 gap-4 border-t border-white/15 pt-6">
-          {[
-            ["01", "Simple bookings"],
-            ["02", "Trusted payouts"],
-            ["03", "Real-time insights"],
-          ].map(([number, title]) => (
-            <div key={number}>
-              <p className="text-xs font-bold text-violet-300">{number}</p>
-              <p className="mt-1 text-sm text-slate-200">{title}</p>
-            </div>
-          ))}
+
+          <ul className="mt-7 space-y-3.5 border-t border-white/20 pt-6">
+            {features.map(({ icon: Icon, title, text }) => (
+              <li key={title} className="flex items-start gap-3.5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-violet-100 ring-1 ring-white/20 backdrop-blur">
+                  <Icon size={17} />
+                </span>
+
+                <div>
+                  <p className="text-sm font-semibold text-white">{title}</p>
+                  <p className="mt-0.5 text-sm leading-5 text-slate-300">
+                    {text}
+                  </p>
+                </div>
+              </li>
+            ))}
+          </ul>
         </div>
       </aside>
 
-      <section className="flex min-h-dvh flex-col px-5 py-6 sm:px-8 lg:px-10 xl:px-16">
+      {/* ---------- Form panel ---------- */}
+      <section className="flex min-h-dvh flex-col bg-[#f3f4f6] px-5 py-6 sm:px-8 lg:px-10 xl:px-16">
         <header className="flex items-center justify-between lg:justify-end">
-          <Link to="/login" className="lg:hidden">
-            <img src={Safar2You} alt="Safar2You" className="h-9 w-auto object-contain" />
+          <Link
+            to="/login"
+            aria-label="Safar2You home"
+            className="lg:hidden"
+          >
+            <BrandLogo variant="plain" />
           </Link>
+
           <p className="text-sm text-slate-500">
             {isRegister ? "Already a partner?" : "New to Safar2You?"}{" "}
-            <Link to={isRegister ? "/login" : "/register"} className="font-semibold text-violet-700 hover:text-violet-900">
+            <Link
+              to={isRegister ? "/login" : "/register"}
+              className="font-semibold text-violet-700 transition hover:text-violet-900"
+            >
               {isRegister ? "Sign in" : "Join as a vendor"}
             </Link>
           </p>
         </header>
 
-        <div className={`mx-auto flex w-full max-w-xl flex-1 flex-col justify-center ${isRegister ? "py-10" : "py-12"}`}>
+        <div
+          className={`mx-auto flex w-full flex-1 flex-col justify-center ${
+            isRegister ? "max-w-[760px] py-10" : "max-w-md py-12"
+          }`}
+        >
           <div className="mb-8">
-            <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-100 text-violet-700">
-              {isRegister ? <FileCheck2 size={21} /> : <LockKeyhole size={21} />}
+            <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 ring-1 ring-violet-200/60 shadow-sm shadow-violet-200/40">
+              {isRegister ? (
+                <FileCheck2 size={22} />
+              ) : (
+                <LockKeyhole size={22} />
+              )}
             </div>
-            <p className="text-xs font-bold uppercase tracking-[0.18em] text-violet-700">
-              Vendor portal
-            </p>
-            <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">
+
+            <h2 className="text-3xl font-bold tracking-tight text-slate-900 lg:text-[2.6rem]">
               {isRegister ? "Create your account" : "Welcome back"}
             </h2>
+
             <p className="mt-2 text-sm leading-6 text-slate-500">
               {isRegister
                 ? "A few details are all it takes to get started."
-                : "Sign in to manage your travel business."}
+                : "Sign in to your vendor portal to manage your travel business."}
             </p>
           </div>
 
@@ -547,17 +967,46 @@ export default function AuthPage() {
           ) : (
             <>
               <Login onOtpNotice={showOtpNotice} />
-              <div className="mt-7 flex items-center justify-center gap-2 text-xs text-slate-400">
-                <ShieldCheck size={15} /> Your account details are kept secure
+
+              <div className="my-7 flex items-center gap-3 text-xs text-slate-400">
+                <span className="h-px flex-1 bg-slate-200" />
+                New to Safar2You?
+                <span className="h-px flex-1 bg-slate-200" />
+              </div>
+
+              <Link
+                to="/register"
+                className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/15"
+              >
+                Create a vendor account
+              </Link>
+
+              <div className="mt-6 flex items-center justify-center gap-2 text-xs text-slate-400">
+                <ShieldCheck size={15} className="text-emerald-600" />
+                Your account details are kept secure
               </div>
             </>
           )}
         </div>
 
-        <footer className="flex items-center justify-between border-t border-slate-200 pt-4 text-xs text-slate-400">
+        <footer className="flex items-center justify-between gap-4 border-t border-slate-200 pt-4 text-xs text-slate-400">
           <span>© {new Date().getFullYear()} Safar2You</span>
-          <span className="hidden items-center gap-1 sm:flex"><MapPin size={13} /> Made for travel partners</span>
-          <Link to="/vendor" className="font-medium text-slate-500 hover:text-violet-700">Preview dashboard</Link>
+
+          <span className="hidden items-center gap-1 sm:flex">
+            <MapPin size={13} />
+            Made for travel partners
+          </span>
+
+          {SHOW_PREVIEW_LINK ? (
+            <Link
+              to="/vendor"
+              className="font-medium text-slate-500 hover:text-violet-700"
+            >
+              Preview dashboard
+            </Link>
+          ) : (
+            <span className="hidden sm:inline">Vendor Portal</span>
+          )}
         </footer>
       </section>
     </main>

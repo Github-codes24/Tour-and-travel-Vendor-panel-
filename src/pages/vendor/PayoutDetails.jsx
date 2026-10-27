@@ -1,4 +1,3 @@
-
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -126,7 +125,8 @@ const transactions = [
     bank: "HDFC Bank",
     account: "XXXX XXXX 4821",
     accountHolder: "Travel Vendor",
-    notes: "Payout failed in the sample records. Verify with the payment provider.",
+    notes:
+      "Payout failed in the sample records. Verify with the payment provider.",
   },
   {
     id: "PAY-2026-006",
@@ -257,30 +257,51 @@ export default function PayoutDetails() {
               </span>
             </div>
             <p className="mt-1.5 text-sm text-slate-500">
-              Booking reference <span className="font-semibold text-slate-700">{payout.bookingId}</span>
+              Booking reference{" "}
+              <span className="font-semibold text-slate-700">
+                {payout.bookingId}
+              </span>
             </p>
           </div>
           <div className="flex items-center gap-2 self-start rounded-xl bg-slate-50 px-3.5 py-2.5 sm:self-center">
             <CalendarDays size={16} className="text-slate-400" />
             <div>
-              <p className="text-[11px] font-medium text-slate-500">Payout date</p>
-              <p className="text-sm font-semibold text-slate-800">{dateLabel(payout.date)}</p>
+              <p className="text-[11px] font-medium text-slate-500">
+                Payout date
+              </p>
+              <p className="text-sm font-semibold text-slate-800">
+                {dateLabel(payout.date)}
+              </p>
             </div>
           </div>
         </div>
 
         <div className="grid divide-y divide-slate-100 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
           <div className="px-5 py-4 sm:px-6">
-            <p className="text-xs font-medium text-slate-500">Gross booking amount</p>
-            <p className="mt-1.5 text-xl font-bold tracking-tight text-slate-900">{money(payout.amount)}</p>
+            <p className="text-xs font-medium text-slate-500">
+              Gross booking amount
+            </p>
+            <p className="mt-1.5 text-xl font-bold tracking-tight text-slate-900">
+              {money(payout.amount)}
+            </p>
           </div>
-          <div className="px-5 py-4 sm:px-6">
-            <p className="text-xs font-medium text-slate-500">Platform commission</p>
-            <p className="mt-1.5 text-xl font-bold tracking-tight text-slate-700">− {money(payout.commission)}</p>
+
+          <div className="bg-red-50 px-5 py-4 sm:px-6">
+            <p className="text-xs font-medium text-red-700">
+              Platform commission
+            </p>
+            <p className="mt-1.5 text-xl font-bold tracking-tight text-red-700">
+              − {money(payout.commission)}
+            </p>
           </div>
+
           <div className="bg-teal-50/70 px-5 py-4 sm:px-6">
-            <p className="text-xs font-semibold text-teal-800">Net payout amount</p>
-            <p className="mt-1.5 text-2xl font-bold tracking-tight text-teal-800">{money(payout.netAmount)}</p>
+            <p className="text-xs font-medium text-teal-800">
+              Net payout amount
+            </p>
+            <p className="mt-1.5 text-xl font-bold tracking-tight text-teal-800">
+              {money(payout.netAmount)}
+            </p>
           </div>
         </div>
       </section>
@@ -293,15 +314,47 @@ export default function PayoutDetails() {
           </p>
         </div>
         <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5 xl:grid-cols-3">
-          <DetailCard label="Customer name" value={payout.customer} icon={UserRound} />
+          <DetailCard
+            label="Customer name"
+            value={payout.customer}
+            icon={UserRound}
+          />
           <DetailCard label="Customer email" value={payout.email} icon={Mail} />
-          <DetailCard label="Customer phone" value={payout.phone} icon={Phone} />
-          <DetailCard label="Tour package" value={payout.packageName} icon={FileText} />
-          <DetailCard label="Destination" value={payout.destination} icon={MapPin} />
-          <DetailCard label="Number of travellers" value={payout.travellers} icon={Users} />
-          <DetailCard label="Travel departure" value={dateLabel(payout.travelDate)} icon={CalendarDays} />
-          <DetailCard label="Booking reference" value={payout.bookingId} icon={FileText} />
-          <DetailCard label="Transaction date" value={dateLabel(payout.date)} icon={CalendarDays} />
+          <DetailCard
+            label="Customer phone"
+            value={payout.phone}
+            icon={Phone}
+          />
+          <DetailCard
+            label="Tour package"
+            value={payout.packageName}
+            icon={FileText}
+          />
+          <DetailCard
+            label="Destination"
+            value={payout.destination}
+            icon={MapPin}
+          />
+          <DetailCard
+            label="Number of travellers"
+            value={payout.travellers}
+            icon={Users}
+          />
+          <DetailCard
+            label="Travel departure"
+            value={dateLabel(payout.travelDate)}
+            icon={CalendarDays}
+          />
+          <DetailCard
+            label="Booking reference"
+            value={payout.bookingId}
+            icon={FileText}
+          />
+          <DetailCard
+            label="Transaction date"
+            value={dateLabel(payout.date)}
+            icon={CalendarDays}
+          />
         </div>
       </section>
 
@@ -313,12 +366,36 @@ export default function PayoutDetails() {
           </p>
         </div>
         <div className="grid grid-cols-1 gap-3 p-4 sm:grid-cols-2 sm:p-5 xl:grid-cols-3">
-          <DetailCard label="Payment method" value={payout.method} icon={CreditCard} />
-          <DetailCard label="Transaction reference" value={payout.reference} icon={FileText} />
-          <DetailCard label="Settlement bank" value={payout.bank} icon={Building2} />
-          <DetailCard label="Beneficiary account" value={payout.account} icon={CreditCard} />
-          <DetailCard label="Account holder" value={payout.accountHolder} icon={ShieldCheck} />
-          <DetailCard label="Settlement status" value={payout.status} icon={CheckCircle2} />
+          <DetailCard
+            label="Payment method"
+            value={payout.method}
+            icon={CreditCard}
+          />
+          <DetailCard
+            label="Transaction reference"
+            value={payout.reference}
+            icon={FileText}
+          />
+          <DetailCard
+            label="Settlement bank"
+            value={payout.bank}
+            icon={Building2}
+          />
+          <DetailCard
+            label="Beneficiary account"
+            value={payout.account}
+            icon={CreditCard}
+          />
+          <DetailCard
+            label="Account holder"
+            value={payout.accountHolder}
+            icon={ShieldCheck}
+          />
+          <DetailCard
+            label="Settlement status"
+            value={payout.status}
+            icon={CheckCircle2}
+          />
         </div>
       </section>
 
@@ -329,7 +406,9 @@ export default function PayoutDetails() {
           </span>
           <div>
             <h2 className="font-bold text-slate-900">Transaction notes</h2>
-            <p className="mt-1 text-sm leading-6 text-slate-600">{payout.notes}</p>
+            <p className="mt-1 text-sm leading-6 text-slate-600">
+              {payout.notes}
+            </p>
           </div>
         </div>
 
