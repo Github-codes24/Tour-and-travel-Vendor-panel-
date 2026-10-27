@@ -25,8 +25,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 
-import Safar2You  from "../../assets/Safar2You.png";
-import NewSafar11  from "../../assets/NewSafar11.png";
+import Safar2You  from "../../assets/Safar2YouSidebar.png";
 
 const menuSections = [
   {
@@ -376,9 +375,9 @@ export default function VendorSidebar({
       >
         {!collapsed && (
           <img
-            src={NewSafar11}
+            src={Safar2You}
             alt="Safar2You"
-            className="h-12 min-w-0 flex-1 rounded-md bg-white px-1 object-contain"
+            className="h-12 min-w-0 flex-1 scale-x-[0.9] object-contain"
           />
         )}
 
@@ -400,9 +399,9 @@ export default function VendorSidebar({
 
         {collapsed && (
           <img
-            src={NewSafar11}
+            src={Safar2You}
             alt="Safar2You"
-            className="h-6 w-16 shrink-0 rounded-md bg-white px-0.5 object-contain"
+            className="h-6 w-16 shrink-0 scale-x-[0.9] object-contain"
           />
         )}
 
