@@ -14,6 +14,7 @@ import {
   Loader2,
   LockKeyhole,
   MapPin,
+  Send,
   ShieldCheck,
   Upload,
   UserRound,
@@ -42,6 +43,18 @@ const labelClass = "block text-sm font-medium text-slate-700";
 
 const primaryButtonClass =
   "inline-flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/30 disabled:cursor-not-allowed disabled:opacity-70";
+
+function generateDemoOtp() {
+  const range = 1_000_000;
+  const maxUnbiasedValue = Math.floor(2 ** 32 / range) * range;
+  const randomValues = new Uint32Array(1);
+
+  do {
+    window.crypto.getRandomValues(randomValues);
+  } while (randomValues[0] >= maxUnbiasedValue);
+
+  return String(randomValues[0] % range).padStart(6, "0");
+}
 
 const features = [
   {
@@ -98,13 +111,19 @@ function TextField({
   placeholder,
   required = true,
   autoComplete,
+  inputClassName = "",
+  action,
   ...props
 }) {
   return (
-    <label className={labelClass}>
-      {label}
+    <div className={labelClass}>
+      <div className="flex items-center justify-between gap-3">
+        <label htmlFor={name}>{label}</label>
+        {action}
+      </div>
       <input
-        className={`${inputClass} mt-1.5`}
+        className={`${inputClass} mt-1.5 ${inputClassName}`}
+        id={name}
         name={name}
         type={type}
         value={onChange ? (value ?? "") : undefined}
@@ -114,7 +133,7 @@ function TextField({
         autoComplete={autoComplete}
         {...props}
       />
-    </label>
+    </div>
   );
 }
 
@@ -316,7 +335,7 @@ const steps = [
   { title: "Payout details", icon: Wallet },
 ];
 
-function Registration({ onOtpNotice }) {
+function Registration() {
   const navigate = useNavigate();
   const stepRef = useRef(null);
 
@@ -326,16 +345,92 @@ function Registration({ onOtpNotice }) {
   const [hasRegistrationProof, setHasRegistrationProof] = useState(false);
   const [files, setFiles] = useState({});
   const [values, setValues] = useState({});
+  const [emailOtp, setEmailOtp] = useState("");
+  const [mobileOtp, setMobileOtp] = useState("");
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [isMobileVerified, setIsMobileVerified] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+
+  const canSendEmailOtp =
+    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email || "");
+  const phoneDigits = (values.phone || "").replace(/\D/g, "");
+  const canSendMobileOtp =
+    /^[+0-9 ()-]{10,16}$/.test(values.phone || "") &&
+    phoneDigits.length >= 10 &&
+    phoneDigits.length <= 15;
 
   function setValue(event) {
     const { name, value } = event.target;
 
-    setValues((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    if (name === "email") {
+      setEmailOtp("");
+      setIsEmailVerified(false);
+      setValues((current) => ({
+        ...current,
+        email: value,
+        emailOtp: "",
+      }));
+      return;
+    }
+
+    if (name === "phone") {
+      setMobileOtp("");
+      setIsMobileVerified(false);
+      setValues((current) => ({
+        ...current,
+        phone: value,
+        phoneOtp: "",
+      }));
+      return;
+    }
+
+    if (name === "emailOtp") {
+      setIsEmailVerified(false);
+    } else if (name === "phoneOtp") {
+      setIsMobileVerified(false);
+    }
+
+    setValues((current) => ({ ...current, [name]: value }));
+  }
+
+  function sendDemoOtp(channel) {
+    try {
+      const otp = generateDemoOtp();
+
+      if (channel === "email") {
+        setEmailOtp(otp);
+        setIsEmailVerified(false);
+        setValues((current) => ({ ...current, emailOtp: "" }));
+      } else {
+        setMobileOtp(otp);
+        setIsMobileVerified(false);
+        setValues((current) => ({ ...current, phoneOtp: "" }));
+      }
+
+      toast.info(`Demo OTP: ${otp}`, { autoClose: 15000 });
+    } catch (error) {
+      toast.error(error.message || "Unable to generate a demo OTP.");
+    }
+  }
+
+  function verifyDemoOtp(channel) {
+    const isEmail = channel === "email";
+    const enteredOtp = isEmail ? values.emailOtp : values.phoneOtp;
+    const generatedOtp = isEmail ? emailOtp : mobileOtp;
+
+    if (enteredOtp !== generatedOtp) {
+      toast.error("The OTP is incorrect. Please check the code and try again.");
+      return;
+    }
+
+    if (isEmail) {
+      setIsEmailVerified(true);
+    } else {
+      setIsMobileVerified(true);
+    }
+
+    toast.success(`${isEmail ? "Email" : "Mobile number"} verified.`);
   }
 
   function updateFile(key, file) {
@@ -361,9 +456,14 @@ function Registration({ onOtpNotice }) {
   }
 
   function nextStep() {
-    if (validateCurrentStep()) {
-      setStep((current) => Math.min(current + 1, 2));
+    if (!validateCurrentStep()) return;
+
+    if (step === 0 && (!isEmailVerified || !isMobileVerified)) {
+      toast.error("Verify both your email address and mobile number to continue.");
+      return;
     }
+
+    setStep((current) => Math.min(current + 1, 2));
   }
 
   async function submitRegistration(event) {
@@ -480,7 +580,7 @@ function Registration({ onOtpNotice }) {
             />
 
             <div className="grid gap-4 sm:grid-cols-2">
-              <div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4">
                 <TextField
                   label="Email address"
                   name="email"
@@ -491,16 +591,61 @@ function Registration({ onOtpNotice }) {
                   autoComplete="email"
                 />
 
-                <button
-                  type="button"
-                  onClick={onOtpNotice}
-                  className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900"
-                >
-                  Send email OTP
-                </button>
+                <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-3">
+                  <TextField
+                    label="Email verification code"
+                    name="emailOtp"
+                    value={values.emailOtp}
+                    onChange={setValue}
+                    placeholder="Enter 6-digit code"
+                    autoComplete="one-time-code"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    action={
+                      <button
+                        type="button"
+                        onClick={() => sendDemoOtp("email")}
+                        disabled={!canSendEmailOtp}
+                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-600/40 ${
+                          canSendEmailOtp
+                            ? "border-violet-200 bg-white text-violet-700 hover:border-violet-300 hover:bg-violet-50"
+                            : "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                        }`}
+                      >
+                        <Send size={12} />
+                        Generate OTP
+                      </button>
+                    }
+                    inputClassName="text-center font-mono text-base font-semibold tracking-[0.2em] placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal"
+                  />
+                  {emailOtp && (
+                    <p className="mt-2 text-xs text-violet-800">
+                      Demo OTP: <span className="font-mono font-bold tracking-wider">{emailOtp}</span>
+                      <span className="text-slate-500"> · visible only in this demo</span>
+                    </p>
+                  )}
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <span
+                      className={`text-xs font-medium ${
+                        isEmailVerified ? "text-emerald-700" : "text-slate-500"
+                      }`}
+                    >
+                      {isEmailVerified ? "Email verified" : "Enter code to verify"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => verifyDemoOtp("email")}
+                      disabled={!emailOtp || !/^[0-9]{6}$/.test(values.emailOtp || "") || isEmailVerified}
+                      className="rounded-lg bg-violet-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-violet-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-600/25 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
+                    >
+                      {isEmailVerified ? "Verified" : "Verify email"}
+                    </button>
+                  </div>
+                </div>
               </div>
 
-              <div>
+              <div className="rounded-2xl border border-slate-200 bg-white p-3.5 shadow-sm sm:p-4">
                 <TextField
                   label="Mobile number"
                   name="phone"
@@ -512,13 +657,58 @@ function Registration({ onOtpNotice }) {
                   pattern="[+0-9 ()-]{10,16}"
                 />
 
-                <button
-                  type="button"
-                  onClick={onOtpNotice}
-                  className="mt-2 text-xs font-semibold text-violet-700 hover:text-violet-900"
-                >
-                  Send mobile OTP
-                </button>
+                <div className="mt-4 rounded-xl border border-slate-100 bg-slate-50 p-3">
+                  <TextField
+                    label="Mobile verification code"
+                    name="phoneOtp"
+                    value={values.phoneOtp}
+                    onChange={setValue}
+                    placeholder="Enter 6-digit code"
+                    autoComplete="one-time-code"
+                    inputMode="numeric"
+                    pattern="[0-9]{6}"
+                    maxLength={6}
+                    action={
+                      <button
+                        type="button"
+                        onClick={() => sendDemoOtp("mobile")}
+                        disabled={!canSendMobileOtp}
+                        className={`inline-flex shrink-0 items-center gap-1.5 rounded-lg border px-2.5 py-1.5 text-xs font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-600/40 ${
+                          canSendMobileOtp
+                            ? "border-violet-200 bg-white text-violet-700 hover:border-violet-300 hover:bg-violet-50"
+                            : "cursor-not-allowed border-slate-200 bg-slate-100 text-slate-400"
+                        }`}
+                      >
+                        <Send size={12} />
+                        Generate OTP
+                      </button>
+                    }
+                    inputClassName="text-center font-mono text-base font-semibold tracking-[0.2em] placeholder:font-sans placeholder:text-sm placeholder:font-normal placeholder:tracking-normal"
+                  />
+                  {mobileOtp && (
+                    <p className="mt-2 text-xs text-violet-800">
+                      Demo OTP: <span className="font-mono font-bold tracking-wider">{mobileOtp}</span>
+                      <span className="text-slate-500"> · visible only in this demo</span>
+                    </p>
+                  )}
+                  <div className="mt-3 flex items-center justify-between gap-3">
+                    <span
+                      className={`text-xs font-medium ${
+                        isMobileVerified ? "text-emerald-700" : "text-slate-500"
+                      }`}
+                    >
+                      {isMobileVerified ? "Mobile verified" : "Enter code to verify"}
+                    </span>
+                    <button
+                      type="button"
+                      onClick={() => verifyDemoOtp("mobile")}
+                      disabled={!mobileOtp || !/^[0-9]{6}$/.test(values.phoneOtp || "") || isMobileVerified}
+                      className="rounded-lg bg-violet-700 px-3 py-2 text-xs font-semibold text-white transition hover:bg-violet-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-600/25 disabled:cursor-not-allowed disabled:bg-slate-200 disabled:text-slate-500"
+                    >
+                      {isMobileVerified ? "Verified" : "Verify mobile"}
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -585,9 +775,10 @@ function Registration({ onOtpNotice }) {
               />
             </div>
 
-            <p className="rounded-xl bg-slate-50 px-3.5 py-3 text-xs leading-5 text-slate-500">
-              OTP controls are shown for the registration flow. Delivery
-              and verification require a configured OTP provider.
+            <p className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-5 text-amber-900">
+              Demo mode: OTPs are generated and verified in this browser
+              only. They are not sent to email or mobile, so this is not
+              suitable for production account security.
             </p>
           </div>
         )}
@@ -635,11 +826,34 @@ function Registration({ onOtpNotice }) {
 
             {/* Agency owner / authorized person Aadhaar */}
             {vendorType === "agency" && (
-              <UploadField
-                label="Owner / Authorized Person Aadhaar Card"
-                file={files.ownerAadhaar}
-                onChange={(file) => updateFile("ownerAadhaar", file)}
-              />
+              <div className="space-y-4">
+                <TextField
+                  label="Owner / Authorized Person Aadhaar Number *"
+                  name="aadhaarNumber"
+                  value={values.aadhaarNumber || ""}
+                  onChange={(event) =>
+                    setValues((current) => ({
+                      ...current,
+                      aadhaarNumber: event.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 12),
+                    }))
+                  }
+                  placeholder="Enter 12-digit Aadhaar number"
+                  required
+                  inputMode="numeric"
+                  pattern="[0-9]{12}"
+                  maxLength={12}
+                  autoComplete="off"
+                />
+
+                <UploadField
+                  label="Upload Aadhaar Card Photo"
+                  file={files.ownerAadhaar}
+                  onChange={(file) => updateFile("ownerAadhaar", file)}
+                  
+                />
+              </div>
             )}
 
             {/* Agency business registration proof */}
@@ -670,9 +884,29 @@ function Registration({ onOtpNotice }) {
 
             {/* Individual vendor Aadhaar and additional ID */}
             {vendorType === "individual" && (
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="space-y-4">
+                <TextField
+                  label="Aadhaar Card Number *"
+                  name="aadhaarNumber"
+                  value={values.aadhaarNumber || ""}
+                  onChange={(event) =>
+                    setValues((current) => ({
+                      ...current,
+                      aadhaarNumber: event.target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 12),
+                    }))
+                  }
+                  placeholder="Enter 12-digit Aadhaar number"
+                  required
+                  inputMode="numeric"
+                  pattern="[0-9]{12}"
+                  maxLength={12}
+                  autoComplete="off"
+                />
+
                 <UploadField
-                  label="Identity proof (Aadhaar Card)"
+                  label="Upload Aadhaar Card Photo *"
                   file={files.identity}
                   onChange={(file) => updateFile("identity", file)}
                   required
@@ -963,7 +1197,7 @@ export default function AuthPage() {
           </div>
 
           {isRegister ? (
-            <Registration onOtpNotice={showOtpNotice} />
+            <Registration />
           ) : (
             <>
               <Login onOtpNotice={showOtpNotice} />

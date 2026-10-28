@@ -34,6 +34,18 @@ const api = {
     await new Promise((r) => setTimeout(r, 600));
     return { ok: true };
   },
+  verifyCode: async ({ type, code }) => {
+    // POST /vendor/auth/verify-code { type, code }
+    // Demo only: replace with real backend OTP validation.
+    await new Promise((r) => setTimeout(r, 500));
+    return { ok: type === "mobile" && /^\d{6}$/.test(code) };
+  },
+  updateTwoFactor: async (enabled) => {
+    // PUT /vendor/auth/two-factor { enabled }
+    // Demo only: persist this setting through your backend in production.
+    await new Promise((r) => setTimeout(r, 400));
+    return { ok: true, enabled };
+  },
   saveNotifications: async (prefs) => {
     // PUT /vendor/settings/notifications
     await new Promise((r) => setTimeout(r, 600));
@@ -187,15 +199,15 @@ function Modal({ open, onClose, title, children }) {
       <div
         role="dialog"
         aria-modal="true"
-        className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl"
+        className="w-full max-w-md overflow-hidden rounded-2xl border border-gray-100 bg-white p-5 shadow-2xl sm:p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="mb-4 flex items-start justify-between gap-4">
-          <h3 className="text-lg font-semibold text-gray-900">{title}</h3>
+        <div className="mb-5 flex items-start justify-between gap-4">
+          <h3 className="text-xl font-semibold tracking-tight text-gray-900">{title}</h3>
           <button
             onClick={onClose}
             aria-label="Close"
-            className="rounded-md p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
           >
             <X size={18} />
           </button>
@@ -245,6 +257,11 @@ function PasswordSecurityCard({ notify }) {
   const [saving, setSaving] = useState(false);
   const [verifying, setVerifying] = useState(null);
   const [account, setAccount] = useState(ACCOUNT);
+  const [verificationType, setVerificationType] = useState(null);
+  const [otp, setOtp] = useState("");
+  const [otpSubmitting, setOtpSubmitting] = useState(false);
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  const [twoFactorSaving, setTwoFactorSaving] = useState(false);
 
   const set = (k) => (v) => setForm((f) => ({ ...f, [k]: v }));
   const passed = useMemo(
@@ -285,11 +302,55 @@ function PasswordSecurityCard({ notify }) {
     setVerifying(type);
     try {
       await api.sendVerification(type);
-      notify(`Verification ${type === "email" ? "link sent to your email" : "code sent to your mobile"}`);
+      if (type === "mobile") {
+        setOtp("");
+        setVerificationType("mobile");
+      } else {
+        notify("Verification link sent to your email. Open the link in your inbox.");
+      }
     } catch {
       notify("Couldn't send verification. Try again.", "error");
     } finally {
       setVerifying(null);
+    }
+  };
+
+  const submitOtp = async (event) => {
+    event.preventDefault();
+    if (!/^\d{6}$/.test(otp)) {
+      notify("Enter the 6-digit code sent to your mobile.", "error");
+      return;
+    }
+    setOtpSubmitting(true);
+    try {
+      const result = await api.verifyCode({ type: verificationType, code: otp });
+      if (!result?.ok) throw new Error("Invalid code");
+      setAccount((current) => ({ ...current, mobileVerified: true }));
+      setVerificationType(null);
+      setOtp("");
+      notify("Mobile number verified successfully.");
+    } catch {
+      notify("Invalid or expired code. Please try again.", "error");
+    } finally {
+      setOtpSubmitting(false);
+    }
+  };
+
+  const handleTwoFactorChange = async (enabled) => {
+    if (enabled && !account.mobileVerified) {
+      notify("Verify your mobile number first to enable two-factor authentication.", "error");
+      verify("mobile");
+      return;
+    }
+    setTwoFactorSaving(true);
+    try {
+      await api.updateTwoFactor(enabled);
+      setTwoFactorEnabled(enabled);
+      notify(enabled ? "Two-factor authentication enabled." : "Two-factor authentication disabled.");
+    } catch {
+      notify("Couldn't update two-factor authentication. Try again.", "error");
+    } finally {
+      setTwoFactorSaving(false);
     }
   };
 
@@ -371,51 +432,139 @@ function PasswordSecurityCard({ notify }) {
 
       <hr className="my-6 border-gray-100" />
 
-      <h3 className="mb-3 text-sm font-semibold text-gray-900">Account security</h3>
-      <ul className="divide-y divide-gray-100 rounded-lg border border-gray-200">
-        {contactRows.map((row) => (
-          <li
-            key={row.type}
-            className="flex flex-wrap items-center justify-between gap-3 px-4 py-3"
-          >
-            <div className="flex items-center gap-3">
-              <row.icon size={18} className="text-gray-400" />
-              <div>
-                <p className="text-xs text-gray-500">{row.label}</p>
-                <p className="text-sm font-medium text-gray-900">{row.value}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <StatusBadge verified={row.verified} />
-              {!row.verified && (
-                <button
-                  onClick={() => verify(row.type)}
-                  disabled={verifying === row.type}
-                  className="text-sm font-medium text-teal-600 hover:text-teal-700 disabled:opacity-60"
-                >
-                  {verifying === row.type ? "Sending…" : "Verify now"}
-                </button>
-              )}
-            </div>
-          </li>
-        ))}
+   
+<h3 className="mb-4 text-base font-semibold text-gray-900">
+  Account security
+</h3>
 
-        <li className="flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-          <div className="flex items-center gap-3">
-            <ShieldCheck size={18} className="text-gray-400" />
-            <div>
-              <p className="text-sm font-medium text-gray-900">Two-factor authentication</p>
-              <p className="text-xs text-gray-500">Extra sign-in protection with a one-time code.</p>
+<ul className="overflow-hidden rounded-xl border border-gray-200 bg-white divide-y divide-gray-100">
+  {contactRows.map((row) => (
+    <li
+      key={row.type}
+      className="flex flex-col gap-3 px-5 py-4 transition-colors hover:bg-gray-50/70 sm:flex-row sm:items-center sm:justify-between"
+    >
+      <div className="flex min-w-0 items-center gap-3">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
+          <row.icon size={19} strokeWidth={1.8} className="text-gray-500" />
+        </div>
+
+        <div className="min-w-0">
+          <p className="mb-1 text-xs font-medium text-gray-500">
+            {row.label}
+          </p>
+          <p className="break-all text-sm font-semibold text-gray-900 sm:text-[15px]">
+            {row.value}
+          </p>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 pl-[52px] sm:pl-0">
+        <StatusBadge verified={row.verified} />
+
+        {!row.verified && (
+          <button
+            type="button"
+            onClick={() => verify(row.type)}
+            disabled={verifying === row.type}
+            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-teal-600 px-3.5 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {verifying === row.type ? "Sending..." : "Verify now"}
+          </button>
+        )}
+      </div>
+    </li>
+  ))}
+
+  <li className="flex flex-col gap-3 px-5 py-4 transition-colors hover:bg-gray-50/70 sm:flex-row sm:items-center sm:justify-between">
+    <div className="flex min-w-0 items-center gap-3">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-gray-200 bg-gray-50">
+        <ShieldCheck size={19} strokeWidth={1.8} className="text-gray-500" />
+      </div>
+
+      <div className="min-w-0">
+        <p className="text-sm font-semibold text-gray-900">
+          Two-factor authentication
+        </p>
+        <p className="mt-1 text-xs leading-5 text-gray-500 sm:text-sm">
+          Extra sign-in protection with a one-time code.
+        </p>
+      </div>
+    </div>
+
+    <div className="flex shrink-0 items-center gap-3 pl-[52px] sm:pl-0">
+      <span className={`rounded-full px-3 py-1.5 text-xs font-medium ${twoFactorEnabled ? "bg-green-50 text-green-700" : "bg-gray-100 text-gray-600"}`}>
+        {twoFactorSaving ? "Updating…" : twoFactorEnabled ? "Enabled" : "Disabled"}
+      </span>
+      <Toggle
+        checked={twoFactorEnabled}
+        onChange={handleTwoFactorChange}
+        disabled={twoFactorSaving}
+        label="Two-factor authentication"
+      />
+    </div>
+  </li>
+</ul>
+
+      <Modal
+        open={verificationType === "mobile"}
+        onClose={() => { setVerificationType(null); setOtp(""); }}
+        title="Verify mobile number"
+      >
+        <form onSubmit={submitOtp} className="space-y-5">
+          <div className="flex flex-col items-center text-center">
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 ring-8 ring-teal-50/60">
+              <ShieldCheck size={27} strokeWidth={1.8} className="text-teal-700" />
+            </div>
+            <p className="max-w-sm text-sm leading-6 text-gray-600">
+              Enter the 6-digit verification code sent to
+            </p>
+            <div className="mt-2 inline-flex items-center gap-2 rounded-full border border-gray-200 bg-gray-50 px-3.5 py-2">
+              <Phone size={15} className="text-gray-500" />
+              <span className="text-sm font-semibold text-gray-800">{account.mobile}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="rounded-full bg-gray-100 px-2.5 py-1 text-xs font-medium text-gray-600">
-              Coming soon
-            </span>
-            <Toggle checked={false} onChange={() => {}} disabled label="Two-factor authentication" />
+
+          <div>
+            <label htmlFor="mobile-otp" className="mb-2 block text-sm font-semibold text-gray-700">
+              Verification code
+            </label>
+            <input
+              id="mobile-otp"
+              type="text"
+              inputMode="numeric"
+              autoComplete="one-time-code"
+              maxLength={6}
+              pattern="[0-9]{6}"
+              value={otp}
+              onChange={(event) => setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))}
+              placeholder="••••••"
+              aria-describedby="mobile-otp-help"
+              className="h-14 w-full rounded-xl border border-gray-300 bg-gray-50 px-4 text-center font-mono text-2xl font-semibold tracking-[0.55em] text-gray-900 placeholder:tracking-[0.45em] placeholder:text-gray-300 focus:border-teal-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-100"
+              required
+            />
+            <p id="mobile-otp-help" className="mt-2 text-xs text-gray-500">
+              Enter all 6 digits. Do not share this code with anyone.
+            </p>
           </div>
-        </li>
-      </ul>
+
+          <div className="flex flex-col-reverse gap-2 border-t border-gray-100 pt-4 sm:flex-row sm:justify-end sm:gap-3">
+            <button
+              type="button"
+              onClick={() => { setVerificationType(null); setOtp(""); }}
+              className="inline-flex min-h-11 items-center justify-center rounded-lg border border-gray-300 bg-white px-5 py-2.5 text-sm font-semibold text-gray-700 transition hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-200"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={otpSubmitting || otp.length !== 6}
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-teal-300 disabled:shadow-none"
+            >
+              {otpSubmitting ? "Verifying…" : "Verify code"}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </Card>
   );
 }
