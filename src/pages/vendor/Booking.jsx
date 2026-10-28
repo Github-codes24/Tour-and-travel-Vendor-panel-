@@ -195,10 +195,10 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
           <img
             src={booking.pkgImage}
             alt=""
-            className="absolute inset-0 -z-20 h-full w-full object-cover opacity-20 blur-sm"
+            className="absolute inset-0 -z-20 h-full w-full object-cover"
           />
         )}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-950/95 via-violet-900/90 to-violet-900/80" />
+        <div className="absolute inset-0 -z-10 bg-slate-950/55" />
         <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[1fr_300px]">
           <div className="min-w-0">
             <Link

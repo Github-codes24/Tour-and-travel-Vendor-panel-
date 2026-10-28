@@ -1085,7 +1085,6 @@ export default function AuthPage() {
         />
 
         {/* Lighter tint at top, dark at bottom so text stays readable */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(168,85,247,0.15),_transparent_30%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/20 via-slate-950/25 to-slate-950/90" />
         <div className="absolute inset-y-0 left-0 w-2/3 bg-gradient-to-r from-slate-950/30 to-transparent" />
 

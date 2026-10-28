@@ -131,7 +131,7 @@ function PackageHero({ title, image, onSearch }) {
   const [text, setText] = useState("");
 
   return (
-    <section className="relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-violet-900 px-4 py-8">
+    <section className="relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-slate-700 px-4 py-8">
       {image && (
         <img
           src={image}
@@ -139,7 +139,7 @@ function PackageHero({ title, image, onSearch }) {
           className="absolute inset-0 h-full w-full object-cover"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-violet-950/70 via-violet-950/50 to-violet-950/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-slate-950/35 via-slate-950/20 to-slate-950/40" />
       <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-5 text-center">
         <h1 className="text-2xl font-semibold text-white drop-shadow md:text-4xl">
           {title}

@@ -783,7 +783,7 @@ export default function BusinessProfile({
       <input ref={signatureInput} type="file" accept="image/*" onChange={pickImage("invoiceSignature", "Signature")} className="hidden" />
 
       <section className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="relative h-32 bg-gradient-to-r from-violet-800 via-violet-600 to-sky-500 bg-cover bg-center sm:h-40" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
+        <div className="relative h-32 bg-gradient-to-r from-slate-700 via-slate-600 to-slate-500 bg-cover bg-center sm:h-40" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent" />
           <button type="button" onClick={() => openPicker(coverInput)} disabled={uploading.cover} className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-xl bg-slate-900/70 px-3 py-2 text-xs font-medium text-white backdrop-blur hover:bg-slate-900/85 disabled:opacity-60">
             {uploading.cover ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading.cover ? "Uploading..." : "Change Cover"}
