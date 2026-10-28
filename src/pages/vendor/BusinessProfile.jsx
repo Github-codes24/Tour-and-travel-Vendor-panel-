@@ -1,10 +1,10 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   Building2, Phone, MapPin, FileText, ScrollText, Images, Pencil, Save,
   X, Camera, CheckCircle2, AlertCircle, Plus, ChevronRight, CalendarDays,
   Lock, Headphones, Bell, CalendarCheck, Landmark, Loader2, ShieldCheck,
+  ChevronLeft, Upload,
 } from "lucide-react";
 
 const defaultSettings = {
@@ -109,7 +109,8 @@ const tabs = [
   { id: "contact", label: "Contact Info", icon: Phone, title: "Contact Information", description: "Used by travellers and our team to reach your business." },
   { id: "address", label: "Location", icon: MapPin, title: "Location", description: "Your registered office and operating destinations." },
   { id: "gallery", label: "Gallery", icon: Images, title: "Gallery", description: "Photos of your team, office, vehicles and past trips." },
-  { id: "legal", label: "Legal & Tax", icon: FileText, title: "Legal, Tax & Verification", description: "Registration details, invoice settings and verification documents." },
+  { id: "legal", label: "Legal & Tax", icon: FileText, title: "Legal & Tax", description: "Registration details and invoice settings." },
+  { id: "documents", label: "Documents", icon: ShieldCheck, title: "Documents & Verification", description: "Upload clear documents for business verification." },
   { id: "bank", label: "Bank & Payout", icon: Landmark, title: "Bank & Payout", description: "The account where your earnings are credited." },
   { id: "policies", label: "Policies", icon: ScrollText, title: "Policies", description: "Shown to travellers before they book." },
   { id: "bookings", label: "Bookings", icon: CalendarCheck, title: "Booking settings", description: "Control how travellers book and pay for packages." },
@@ -121,7 +122,8 @@ const tabFields = {
   contact: ["contactPerson", "email", "phone", "whatsapp", "supportHours"],
   address: ["addressLine", "city", "state", "pincode", "mapLink", "destinations"],
   gallery: ["gallery"],
-  legal: ["gst", "pan", "tourismRegNo", "invoicePrefix", "gstMode", "invoiceSignature", "invoiceNote", "documents"],
+  legal: ["gst", "pan", "tourismRegNo", "invoicePrefix", "gstMode", "invoiceSignature", "invoiceNote"],
+  documents: ["documents"],
   bank: ["accountHolder", "bankName", "accountNumber", "confirmAccountNumber", "ifsc", "upiId", "payoutCycle"],
   policies: ["cancellationPolicy", "refundPolicy", "customerTerms"],
   bookings: ["bookingsPaused", "autoAccept", "advancePercent", "minNoticeDays"],
@@ -192,14 +194,17 @@ const formatPhone = (value) =>
 const uploadImage = async (file, onUpload) =>
   onUpload ? onUpload(file) : URL.createObjectURL(file);
 
+// Add New Package page sarkhe: rounded-xl, px-4 py-3
 const inputClass = (hasError) =>
-  `w-full rounded-lg border bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-4 ${
+  `w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-4 ${
     hasError
       ? "border-red-300 focus:border-red-400 focus:ring-red-100"
       : "border-slate-300 focus:border-teal-600 focus:ring-teal-600/15"
   }`;
 
-const viewBoxClass = "rounded-lg border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm font-medium text-slate-900";
+const viewBoxClass = "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900";
+
+const cardClass = "rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6";
 
 function ViewValue({ kind, name, value }) {
   if (!isFilled(value)) return <span className="font-normal text-slate-400">Not provided</span>;
@@ -233,7 +238,7 @@ function Field({
     <div className={span === 2 ? "sm:col-span-2" : ""}>
       <FieldLabel editing={editing} name={name} label={label} required={required} />
       {!editing ? (
-        <div className={`${viewBoxClass} ${type === "textarea" ? "min-h-[108px]" : "min-h-[42px]"}`}>
+        <div className={`${viewBoxClass} ${type === "textarea" ? "min-h-[112px]" : "min-h-[46px]"}`}>
           <ViewValue kind={type === "textarea" ? "multiline" : kind} name={name} value={value} />
         </div>
       ) : type === "textarea" ? (
@@ -309,11 +314,11 @@ function TagField({ label, name, data, errors, editing, onChange, placeholder, r
   return (
     <div className={span === 2 ? "sm:col-span-2" : ""}>
       <p className="mb-1.5 text-sm font-medium text-slate-700">{label}{required && <span className="ml-0.5 text-red-500">*</span>}</p>
-      <div className={`rounded-lg border p-2 ${editing ? `bg-white ${error ? "border-red-300" : "border-slate-300"}` : "min-h-[42px] border-slate-200 bg-slate-50"}`}>
+      <div className={`min-h-[46px] rounded-xl border p-2 ${editing ? `bg-white ${error ? "border-red-300" : "border-slate-300"}` : "border-slate-200 bg-slate-50"}`}>
         <div className="flex flex-wrap items-center gap-2">
-          {!tags.length && !editing && <span className="px-1 py-0.5 text-sm text-slate-400">Not provided</span>}
+          {!tags.length && !editing && <span className="px-2 py-1 text-sm text-slate-400">Not provided</span>}
           {tags.map((tag) => (
-            <span key={tag} className="inline-flex items-center gap-1.5 rounded-md bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800 ring-1 ring-inset ring-teal-100">
+            <span key={tag} className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800 ring-1 ring-inset ring-teal-100">
               {tag}
               {editing && <button type="button" aria-label={`Remove ${tag}`} onClick={() => onChange(name, tags.filter((item) => item !== tag))} className="text-teal-600 hover:text-red-600"><X size={13} /></button>}
             </span>
@@ -335,7 +340,7 @@ function TagField({ label, name, data, errors, editing, onChange, placeholder, r
 
 function Notice({ tone = "info", icon: Icon, children }) {
   const styles = tone === "warning" ? "border-amber-200 bg-amber-50 text-amber-900" : "border-slate-200 bg-slate-50 text-slate-700";
-  return <div className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-sm ${styles}`}><Icon size={17} className="mt-0.5 shrink-0" /><p className="leading-6">{children}</p></div>;
+  return <div className={`flex items-start gap-3 rounded-xl border px-4 py-3 text-sm ${styles}`}><Icon size={17} className="mt-0.5 shrink-0" /><p className="leading-6">{children}</p></div>;
 }
 
 function Switch({ checked, onChange, disabled, label }) {
@@ -349,7 +354,7 @@ function Switch({ checked, onChange, disabled, label }) {
 
 function ToggleField({ label, description, name, data, editing, onChange }) {
   return (
-    <div className="flex items-start justify-between gap-6 rounded-lg border border-slate-200 p-4">
+    <div className="flex items-start justify-between gap-6 rounded-xl border border-slate-200 p-4">
       <div className="min-w-0"><p className="text-sm font-medium text-slate-900">{label}</p><p className="mt-1 text-sm text-slate-500">{description}</p></div>
       <Switch checked={Boolean(data[name])} disabled={!editing} label={label} onChange={(next) => onChange(name, next)} />
     </div>
@@ -369,7 +374,7 @@ function NotificationMatrix({ data, editing, onChange }) {
   const toggle = (event, channel, next) => onChange("notifications", { ...prefs, [event]: { ...(prefs[event] || {}), [channel]: next } });
 
   return (
-    <div className="overflow-x-auto rounded-lg border border-slate-200">
+    <div className="overflow-x-auto rounded-xl border border-slate-200">
       <table className="w-full min-w-[480px] text-left text-sm">
         <thead className="bg-slate-50 text-xs font-medium text-slate-500"><tr><th className="px-4 py-3">Alert</th>{notificationChannels.map(([key, label]) => <th key={key} className="px-4 py-3 text-center">{label}</th>)}</tr></thead>
         <tbody className="divide-y divide-slate-100">
@@ -390,14 +395,14 @@ function SignatureField({ data, editing, uploading, onPick, onRemove }) {
   return (
     <div className="sm:col-span-2">
       <p className="mb-1.5 text-sm font-medium text-slate-700">Authorised signature / stamp</p>
-      <div className="flex flex-wrap items-center gap-4 rounded-lg border border-slate-200 bg-slate-50 p-3">
-        <div className="flex h-20 w-40 shrink-0 items-center justify-center overflow-hidden rounded-md border border-dashed border-slate-300 bg-white">
+      <div className="flex flex-wrap items-center gap-4 rounded-xl border border-slate-200 bg-slate-50 p-3">
+        <div className="flex h-20 w-40 shrink-0 items-center justify-center overflow-hidden rounded-lg border border-dashed border-slate-300 bg-white">
           {url ? <img src={url} alt="Authorised signature" className="max-h-full max-w-full object-contain" /> : <span className="text-xs text-slate-400">Not provided</span>}
         </div>
         <p className="min-w-[160px] flex-1 text-xs leading-5 text-slate-500">Printed at the bottom of every invoice. A PNG with a transparent background works best.</p>
         {editing && <div className="flex gap-2">
-          <button type="button" onClick={onPick} disabled={uploading} className="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60">{uploading ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading ? "Uploading..." : url ? "Replace" : "Upload"}</button>
-          {url && !uploading && <button type="button" onClick={onRemove} className="rounded-lg px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50">Remove</button>}
+          <button type="button" onClick={onPick} disabled={uploading} className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-3 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60">{uploading ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading ? "Uploading..." : url ? "Replace" : "Upload"}</button>
+          {url && !uploading && <button type="button" onClick={onRemove} className="rounded-xl px-3 py-2 text-xs font-medium text-red-600 hover:bg-red-50">Remove</button>}
         </div>}
       </div>
     </div>
@@ -440,7 +445,7 @@ function GalleryField({ data, editing, onChange, onError, onStartEdit, onUpload 
       <span className="flex h-11 w-11 items-center justify-center rounded-full bg-white text-slate-400 ring-1 ring-slate-200"><Images size={20} /></span>
       <p className="mt-3 text-sm font-medium text-slate-900">No photos added yet</p>
       <p className="mt-1 max-w-sm text-sm text-slate-500">Add up to {MAX_PHOTOS} images of your team, office or past trips.</p>
-      <button type="button" onClick={onStartEdit} className="mt-4 inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"><Plus size={15} />Add photos</button>
+      <button type="button" onClick={onStartEdit} className="mt-4 inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50"><Plus size={15} />Add photos</button>
     </div>
   );
 
@@ -448,12 +453,12 @@ function GalleryField({ data, editing, onChange, onError, onStartEdit, onUpload 
     <div>
       <div className="mb-3 flex items-center justify-between text-xs text-slate-500"><span>{photos.length} of {MAX_PHOTOS} photos</span>{editing && <span>JPG or PNG, up to {MAX_IMAGE_MB} MB each</span>}</div>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
-        {photos.map((photo) => <div key={photo.id} className="group relative aspect-[4/3] overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+        {photos.map((photo) => <div key={photo.id} className="group relative aspect-[4/3] overflow-hidden rounded-xl border border-slate-200 bg-slate-100">
           <img src={photo.url} alt={photo.name} className="h-full w-full object-cover" />
           {editing && <button type="button" aria-label={`Remove ${photo.name}`} onClick={() => onChange("gallery", photos.filter((item) => item.id !== photo.id))} className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900/70 text-white hover:bg-red-600"><X size={14} /></button>}
         </div>)}
         {editing && photos.length < MAX_PHOTOS && <>
-          <button type="button" onClick={() => inputRef.current?.click()} disabled={busy} className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700">{busy ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}{busy ? "Uploading..." : "Add photos"}</button>
+          <button type="button" onClick={() => inputRef.current?.click()} disabled={busy} className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700">{busy ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}{busy ? "Uploading..." : "Add photos"}</button>
           <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
         </>}
       </div>
@@ -461,20 +466,26 @@ function GalleryField({ data, editing, onChange, onError, onStartEdit, onUpload 
   );
 }
 
-function DocumentUploads({ data, editing, onDocumentChange, onError }) {
+function DocumentUploads({ data, editing, onDocumentChange, onStartEdit }) {
   const docs = data.documents || defaultProfile.documents;
+  const visibleDocs = documentFields.filter(
+    (doc) => doc.name !== "registration" || data.vendorType === "Agency"
+  );
+  const uploadedCount = visibleDocs.filter((doc) => docs[doc.name]).length;
+
+  // View mode madhe upload kela tar apoap edit mode suru hoto
+  const handleSelect = (event, name) => {
+    if (!editing) onStartEdit();
+    onDocumentChange(event, name);
+  };
 
   return (
-    <div className="mt-8 border-t border-slate-100 pt-6">
-      <div className="mb-4 flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700"><ShieldCheck size={20} /></span>
-        <div>
-          <h4 className="text-sm font-semibold text-slate-900">Documents & Verification</h4>
-          <p className="mt-1 text-sm text-slate-500">Upload clear documents for business verification.</p>
-        </div>
+    <div>
+      <div className="mb-5 flex justify-end">
+        <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">{uploadedCount} of {visibleDocs.length} uploaded</span>
       </div>
 
-      <div className="mb-5 flex flex-col gap-3 rounded-lg border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mb-5 flex flex-col gap-3 rounded-xl border border-amber-200 bg-amber-50 p-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <p className="text-sm font-semibold text-slate-900">Verification status</p>
           <p className="mt-1 text-xs text-slate-600">Your documents may require review by the admin team.</p>
@@ -482,29 +493,33 @@ function DocumentUploads({ data, editing, onDocumentChange, onError }) {
         <span className="w-fit rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-800">{data.verificationStatus || "Pending Verification"}</span>
       </div>
 
-      <div className="divide-y divide-slate-100">
-        {documentFields.filter((doc) => doc.name !== "registration" || data.vendorType === "Agency").map((doc) => {
+      <ul className="divide-y divide-slate-100 overflow-hidden rounded-xl border border-slate-200">
+        {visibleDocs.map((doc) => {
           const file = docs[doc.name];
           const fileName = file instanceof File ? file.name : file?.name || "";
           return (
-            <div key={doc.name} className="flex flex-col gap-3 py-4 first:pt-0 sm:flex-row sm:items-center sm:justify-between">
-              <div className="min-w-0">
-                <p className="text-sm font-medium text-slate-800">{doc.label}{doc.required && <span className="ml-1 text-red-500">*</span>}</p>
-                <p className="mt-1 break-all text-xs text-slate-500">{fileName || "PDF, JPG or PNG · Maximum 5 MB"}</p>
+            <li key={doc.name} className="flex flex-col gap-3 px-4 py-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-3">
+                <span className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${file ? "bg-emerald-50 text-emerald-600" : "bg-slate-100 text-slate-400"}`}>
+                  {file ? <CheckCircle2 size={19} /> : <FileText size={19} />}
+                </span>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-slate-800">{doc.label}{doc.required && <span className="ml-1 text-red-500">*</span>}</p>
+                  <p className="mt-0.5 break-all text-xs text-slate-500">{fileName || "PDF, JPG or PNG · Maximum 5 MB"}</p>
+                </div>
               </div>
-              {editing ? (
-                <label className="inline-flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700">
-                  <FileText size={15} />{fileName ? "Replace File" : "Choose File"}
-                  <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" className="sr-only" onChange={(event) => onDocumentChange(event, doc.name)} />
-                </label>
-              ) : (
-                <span className={`w-fit rounded-full px-3 py-1 text-xs font-medium ${file ? "bg-emerald-50 text-emerald-700" : "bg-slate-100 text-slate-500"}`}>{file ? "Uploaded" : "Not uploaded"}</span>
-              )}
-            </div>
+
+              <label className="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700 focus-within:ring-4 focus-within:ring-teal-600/15">
+                <Upload size={15} />
+                {file ? "Replace File" : "Upload"}
+                <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" className="sr-only" onChange={(event) => handleSelect(event, doc.name)} />
+              </label>
+            </li>
           );
         })}
-      </div>
-      {editing && <p className="mt-3 text-xs text-slate-500">Accepted formats: PDF, JPG and PNG. Maximum size: 5 MB per document.</p>}
+      </ul>
+
+      <p className="mt-3 text-xs text-slate-500">Accepted formats: PDF, JPG and PNG. Maximum size: 5 MB per document. Changes are saved when you click Save changes.</p>
     </div>
   );
 }
@@ -543,6 +558,9 @@ export default function BusinessProfile({
   const signatureInput = useRef(null);
   const coverInput = useRef(null);
   const tabRefs = useRef({});
+  const tabScroller = useRef(null);
+  const panelRef = useRef(null);
+  const [tabScroll, setTabScroll] = useState({ left: false, right: false });
 
   const data = editing ? draft : profile;
   const dirty = editing && JSON.stringify(draft) !== JSON.stringify(profile);
@@ -578,6 +596,30 @@ export default function BusinessProfile({
     const timer = setTimeout(() => setToast(null), 3500);
     return () => clearTimeout(timer);
   }, [toast]);
+
+  // Active tab scroll karun dakhav (single-row tab bar madhe)
+  useEffect(() => {
+    tabRefs.current[activeTab]?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeTab]);
+
+  // Tab bar madhe left / right la aniki tabs aslyache arrows ni dakhavto
+  const updateTabScroll = () => {
+    const el = tabScroller.current;
+    if (!el) return;
+    setTabScroll({
+      left: el.scrollLeft > 4,
+      right: el.scrollLeft + el.clientWidth < el.scrollWidth - 4,
+    });
+  };
+
+  useEffect(() => {
+    updateTabScroll();
+    window.addEventListener("resize", updateTabScroll);
+    return () => window.removeEventListener("resize", updateTabScroll);
+  }, []);
+
+  const scrollTabs = (direction) =>
+    tabScroller.current?.scrollBy({ left: direction * 240, behavior: "smooth" });
 
   const showError = (message) => setToast({ type: "error", message });
   const tabHasError = (tabId) => tabFields[tabId].some((field) => errors[field]);
@@ -698,6 +740,15 @@ export default function BusinessProfile({
     ref.current?.click();
   };
 
+  // Quick Actions > Edit Profile: edit mode suru karun direct form paryant scroll
+  const goToEdit = () => {
+    setActiveTab("general");
+    startEdit();
+    requestAnimationFrame(() =>
+      panelRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })
+    );
+  };
+
   const handleTabKeyDown = (event) => {
     const index = tabs.findIndex((tab) => tab.id === activeTab);
     let next = null;
@@ -716,80 +767,101 @@ export default function BusinessProfile({
   const initial = (data.name || "B").trim().charAt(0).toUpperCase();
 
   return (
-    <div className="mx-auto w-full max-w-7xl">
-      {toast && <div role={toast.type === "error" ? "alert" : "status"} className={`fixed right-4 top-4 z-50 flex max-w-sm items-center gap-2.5 rounded-lg px-4 py-3 text-sm font-medium text-white shadow-lg ${toast.type === "success" ? "bg-emerald-600" : "bg-red-600"}`}>
+    <div className="w-full">
+      {toast && <div role={toast.type === "error" ? "alert" : "status"} className={`fixed right-4 top-4 z-50 flex max-w-sm items-center gap-2.5 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-lg ${toast.type === "success" ? "bg-emerald-600" : "bg-red-600"}`}>
         {toast.type === "success" ? <CheckCircle2 size={18} /> : <AlertCircle size={18} />}{toast.message}
       </div>}
 
       <div className="mb-6">
         <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm text-slate-500"><span>Vendor Portal</span><ChevronRight size={14} className="text-slate-300" /><span>Business Profile</span></nav>
-        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">Business Profile</h1>
-        <p className="mt-1 text-sm text-slate-500">Manage your travel business details and contact information.</p>
+        <h1 className="mt-2 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl">Business Profile</h1>
+        <p className="mt-2 text-sm leading-6 text-slate-500">Manage your travel business details and contact information.</p>
       </div>
 
       <input ref={coverInput} type="file" accept="image/*" onChange={pickImage("cover", "Cover")} className="hidden" />
       <input ref={logoInput} type="file" accept="image/*" onChange={pickImage("logo", "Logo")} className="hidden" />
       <input ref={signatureInput} type="file" accept="image/*" onChange={pickImage("invoiceSignature", "Signature")} className="hidden" />
 
+      <section className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <div className="relative h-32 bg-gradient-to-r from-teal-800 via-teal-600 to-sky-500 bg-cover bg-center sm:h-40" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
+          <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent" />
+          <button type="button" onClick={() => openPicker(coverInput)} disabled={uploading.cover} className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-xl bg-slate-900/70 px-3 py-2 text-xs font-medium text-white backdrop-blur hover:bg-slate-900/85 disabled:opacity-60">
+            {uploading.cover ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading.cover ? "Uploading..." : "Change Cover"}
+          </button>
+        </div>
+
+        <div className="px-5 pb-6 sm:px-8">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+            <div className="flex min-w-0 flex-1 flex-col gap-4 sm:flex-row sm:gap-6">
+              {/* Logo banner chya khali edge var overlap hoto */}
+              <div className="relative -mt-12 h-24 w-24 shrink-0 sm:-mt-14 sm:h-28 sm:w-28">
+                <LogoCircle logo={data.logo} initial={initial} className="h-full w-full text-4xl" />
+                <button type="button" onClick={() => openPicker(logoInput)} disabled={uploading.logo} aria-label="Change business logo" className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-white shadow hover:bg-teal-700 disabled:opacity-60">
+                  {uploading.logo ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
+                </button>
+              </div>
+              <div className="min-w-0 sm:pt-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-2xl font-bold tracking-tight text-slate-900">{data.name || "Business name"}</h2>
+                  {status && <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">{status}</span>}
+                  {data.bookingsPaused && <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">Bookings paused</span>}
+                </div>
+                <p className="mt-1 text-sm font-medium text-teal-700">{data.tagline || "Add a short tagline"}</p>
+                <p className="mt-1 text-sm text-slate-500">Travel &amp; Tourism{data.businessType ? ` • ${data.businessType}` : ""}</p>
+                <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">{data.about}</p>
+              </div>
+            </div>
+            <div className="space-y-4 rounded-xl border border-slate-200 bg-slate-50 p-5 lg:mt-5 lg:w-72 lg:shrink-0">
+              <InfoRow icon={ScrollText} label="Registration Number" value={data.registrationNo} />
+              <InfoRow icon={CalendarDays} label="Established Year" value={data.establishedYear} />
+              <InfoRow icon={Building2} label="Business Type" value={data.businessType} />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="min-w-0 space-y-6">
-          <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-            <div className="relative h-44 bg-gradient-to-r from-teal-800 via-teal-600 to-sky-500 bg-cover bg-center sm:h-48" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
-              <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 via-slate-900/20 to-transparent" />
-              <div className="relative flex h-full items-center gap-4 px-5 sm:gap-5 sm:px-8">
-                <LogoCircle logo={data.logo} initial={initial} className="h-20 w-20 shrink-0 text-3xl sm:h-24 sm:w-24" />
-                <div className="min-w-0 text-white"><h2 className="truncate text-2xl font-bold sm:text-3xl">{data.name || "Business name"}</h2><p className="mt-1 truncate text-sm text-white/90">{data.tagline || "Add a short tagline"}</p></div>
-              </div>
-              <button type="button" onClick={() => openPicker(coverInput)} disabled={uploading.cover} className="absolute bottom-4 right-4 inline-flex items-center gap-2 rounded-lg bg-slate-900/70 px-3 py-2 text-xs font-medium text-white backdrop-blur hover:bg-slate-900/85">
-                {uploading.cover ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading.cover ? "Uploading..." : "Change Cover"}
-              </button>
-            </div>
-
-            <div className="flex flex-col gap-6 p-5 sm:p-6 lg:flex-row lg:items-stretch">
-              <div className="flex min-w-0 flex-1 gap-4 sm:gap-5">
-                <div className="relative h-24 w-24 shrink-0">
-                  <LogoCircle logo={data.logo} initial={initial} className="h-24 w-24 text-4xl" />
-                  <button type="button" onClick={() => openPicker(logoInput)} disabled={uploading.logo} aria-label="Change business logo" className="absolute bottom-0 right-0 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-white shadow hover:bg-teal-700">
-                    {uploading.logo ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
-                  </button>
-                </div>
-                <div className="min-w-0">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="text-xl font-semibold text-slate-900">{data.name || "Business name"}</h2>
-                    {status && <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">{status}</span>}
-                    {data.bookingsPaused && <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">Bookings paused</span>}
-                  </div>
-                  <p className="mt-1 text-sm text-slate-500">Travel &amp; Tourism{data.businessType ? ` • ${data.businessType}` : ""}</p>
-                  <p className="mt-3 max-w-md text-sm leading-6 text-slate-600">{data.about}</p>
-                </div>
-              </div>
-              <div className="space-y-4 rounded-xl bg-slate-50 p-5 lg:w-72 lg:shrink-0">
-                <InfoRow icon={ScrollText} label="Registration Number" value={data.registrationNo} />
-                <InfoRow icon={CalendarDays} label="Established Year" value={data.establishedYear} />
-                <InfoRow icon={Building2} label="Business Type" value={data.businessType} />
-              </div>
-            </div>
-          </section>
-
           <div>
-            <div role="tablist" aria-label="Business profile sections" onKeyDown={handleTabKeyDown} className="flex flex-wrap gap-x-1 px-2">
-              {tabs.map((tab) => {
-                const active = activeTab === tab.id;
-                return <button key={tab.id} ref={(element) => { tabRefs.current[tab.id] = element; }} id={`tab-${tab.id}`} type="button" role="tab" aria-selected={active} aria-controls={`panel-${tab.id}`} tabIndex={active ? 0 : -1} onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex shrink-0 items-center gap-2 whitespace-nowrap px-3 py-3.5 text-sm font-medium transition-colors after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 focus:outline-none focus-visible:bg-slate-100 ${active ? "text-teal-700 after:bg-teal-600" : "text-slate-600 after:bg-transparent hover:text-slate-900"}`}>
-                  {tab.label}{tabHasError(tab.id) && <span className="h-2 w-2 rounded-full bg-red-500" aria-label="Has errors" />}
-                </button>;
-              })}
+            {/* Single-row tab bar: jast tabs asle tar scroll + arrows dakhavtat */}
+            <div className="relative mb-5">
+              <div
+                ref={tabScroller}
+                onScroll={updateTabScroll}
+                role="tablist"
+                aria-label="Business profile sections"
+                onKeyDown={handleTabKeyDown}
+                className="flex gap-1 overflow-x-auto border-b border-slate-200 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+              >
+                {tabs.map((tab) => {
+                  const active = activeTab === tab.id;
+                  return <button key={tab.id} ref={(element) => { tabRefs.current[tab.id] = element; }} id={`tab-${tab.id}`} type="button" role="tab" aria-selected={active} aria-controls={`panel-${tab.id}`} tabIndex={active ? 0 : -1} onClick={() => setActiveTab(tab.id)}
+                    className={`-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:bg-slate-100 ${active ? "border-teal-600 text-teal-700" : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"}`}>
+                    {tab.label}{tabHasError(tab.id) && <span className="h-2 w-2 rounded-full bg-red-500" aria-label="Has errors" />}
+                  </button>;
+                })}
+              </div>
+
+              {tabScroll.left && (
+                <button type="button" aria-label="Scroll tabs left" onClick={() => scrollTabs(-1)} className="absolute inset-y-0 left-0 z-10 flex w-12 items-center justify-start bg-gradient-to-r from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-teal-700">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow ring-1 ring-slate-200"><ChevronLeft size={16} /></span>
+                </button>
+              )}
+              {tabScroll.right && (
+                <button type="button" aria-label="Scroll tabs right" onClick={() => scrollTabs(1)} className="absolute inset-y-0 right-0 z-10 flex w-12 items-center justify-end bg-gradient-to-l from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-teal-700">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow ring-1 ring-slate-200"><ChevronRight size={16} /></span>
+                </button>
+              )}
             </div>
 
-            <section role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`} className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <div className="mb-6 flex flex-wrap items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700"><CurrentIcon size={20} /></span>
-                  <div><h3 className="text-base font-semibold text-slate-900">{currentTab.title}</h3><p className="mt-0.5 text-xs text-slate-500">{currentTab.description}</p></div>
+            <section ref={panelRef} role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`} className={`${cardClass} scroll-mt-6`}>
+              <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-5">
+                <div className="flex items-center gap-3">
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><CurrentIcon size={20} /></span>
+                  <div><h3 className="text-base font-bold text-slate-900">{currentTab.title}</h3><p className="mt-0.5 text-xs text-slate-500">{currentTab.description}</p></div>
                 </div>
-                {!editing ? <button type="button" onClick={startEdit} className="inline-flex items-center gap-2 rounded-lg border border-teal-600 bg-white px-4 py-2 text-sm font-medium text-teal-700 hover:bg-teal-50"><Pencil size={14} />Edit</button> :
-                  <div className="flex gap-2"><button type="button" onClick={cancelEdit} disabled={saving} className="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60">Cancel</button><button type="button" onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-teal-800 disabled:opacity-60"><Save size={14} />{saving ? "Saving..." : "Save changes"}</button></div>}
+                {!editing ? <button type="button" onClick={startEdit} className="inline-flex items-center gap-2 rounded-xl border border-teal-600 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 hover:bg-teal-50"><Pencil size={14} />Edit</button> :
+                  <div className="flex gap-2"><button type="button" onClick={cancelEdit} disabled={saving} className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">Cancel</button><button type="button" onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 disabled:opacity-60"><Save size={14} />{saving ? "Saving..." : "Save changes"}</button></div>}
               </div>
 
               {activeTab === "general" && <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
@@ -841,8 +913,16 @@ export default function BusinessProfile({
                     <Field {...common} label="Note on invoice" name="invoiceNote" type="textarea" span={2} maxLength={300} showCount placeholder="e.g. Thank you for travelling with us." />
                   </div>
                 </div>
-                <DocumentUploads data={data} editing={editing} onDocumentChange={handleDocumentChange} onError={showError} />
               </>}
+
+              {activeTab === "documents" && (
+                <DocumentUploads
+                  data={data}
+                  editing={editing}
+                  onDocumentChange={handleDocumentChange}
+                  onStartEdit={startEdit}
+                />
+              )}
 
               {activeTab === "bank" && <div className="space-y-6">
                 <Notice tone="warning" icon={AlertCircle}>Payouts are credited only to this account. The account holder name should match your registered business name to avoid payment delays.</Notice>
@@ -856,7 +936,7 @@ export default function BusinessProfile({
                   <Field {...common} label="UPI ID" name="upiId" placeholder="name@bank" />
                   <Field {...common} label="Payout Cycle" name="payoutCycle" type="select" options={payoutCycles} />
                 </div>
-                <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+                <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
                   <p className="text-sm font-medium text-slate-800">Bank verification</p>
                   <p className="mt-1 text-xs text-slate-500">Status: {data.verificationStatus || "Pending Verification"}</p>
                 </div>
@@ -891,17 +971,18 @@ export default function BusinessProfile({
           </div>
         </div>
 
-        <aside className="space-y-6">
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <h2 className="text-base font-semibold text-slate-900">Quick Actions</h2>
-            <ul className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-lg border border-slate-200">
-              <li><button type="button" onClick={() => { setActiveTab("general"); startEdit(); }} className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-700"><Pencil size={16} /></span>Edit Profile</button></li>
-              <li><Link to="/vendor/settings" className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-8 w-8 items-center justify-center rounded-lg bg-teal-50 text-teal-700"><Lock size={16} /></span>Change Password</Link></li>
+        {/* Side cards: scroll karatana jagevar rahtat, right side rikame disat nahi */}
+        <aside className="space-y-6 lg:sticky lg:top-6">
+          <section className={cardClass}>
+            <h2 className="text-base font-bold text-slate-900">Quick Actions</h2>
+            <ul className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
+              <li><button type="button" onClick={goToEdit} className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><Pencil size={16} /></span>Edit Profile</button></li>
+              <li><Link to="/vendor/settings" className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><Lock size={16} /></span>Change Password</Link></li>
             </ul>
           </section>
-          <section className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="flex items-start gap-4"><span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700"><Headphones size={28} /></span><div><h2 className="text-base font-semibold text-teal-800">Need Help?</h2><p className="mt-1 text-xs leading-5 text-slate-500">Our support team is here to assist you with any queries.</p></div></div>
-            <Link to="/vendor/support" className="mt-4 inline-flex items-center justify-center rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-medium text-white shadow-sm hover:bg-teal-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-600/25">Contact Support</Link>
+          <section className={cardClass}>
+            <div className="flex items-start gap-4"><span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700"><Headphones size={28} /></span><div><h2 className="text-base font-bold text-teal-800">Need Help?</h2><p className="mt-1 text-xs leading-5 text-slate-500">Our support team is here to assist you with any queries.</p></div></div>
+            <Link to="/vendor/support" className="mt-4 inline-flex items-center justify-center rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-600/25">Contact Support</Link>
           </section>
         </aside>
       </div>

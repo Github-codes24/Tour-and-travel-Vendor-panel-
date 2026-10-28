@@ -1,4 +1,3 @@
-
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import {
@@ -77,10 +76,11 @@ function StatusBadge({ status }) {
 
   return (
     <span
-      className={`inline-flex items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${
+      className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset ${
         STATUS_STYLES[normalizedStatus] || STATUS_STYLES.Open
       }`}
     >
+      <span className="h-1.5 w-1.5 rounded-full bg-current" />
       {normalizedStatus}
     </span>
   );
@@ -92,9 +92,9 @@ function PriorityLabel({ priority }) {
   }
 
   return (
-    <span className="inline-flex items-center gap-2 whitespace-nowrap text-slate-700">
+    <span className="inline-flex items-center gap-2 whitespace-nowrap text-sm text-slate-700">
       <span
-        className={`h-2 w-2 rounded-full ${
+        className={`h-2 w-2 shrink-0 rounded-full ${
           PRIORITY_STYLES[priority] || "bg-slate-400"
         }`}
       />
@@ -107,7 +107,7 @@ function Pagination({ page, totalPages, onChange }) {
   const pages = getPageList(totalPages, page);
 
   const base =
-    "flex h-9 min-w-9 items-center justify-center rounded-lg border px-2.5 text-sm font-medium transition";
+    "flex h-9 min-w-9 items-center justify-center rounded-lg border px-2.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-teal-500/30";
 
   return (
     <nav aria-label="Pagination" className="flex items-center gap-1.5">
@@ -116,7 +116,7 @@ function Pagination({ page, totalPages, onChange }) {
         onClick={() => onChange(page - 1)}
         disabled={page <= 1}
         aria-label="Previous page"
-        className={`${base} border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50`}
+        className={`${base} border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40`}
       >
         <ChevronLeft size={16} />
       </button>
@@ -134,8 +134,8 @@ function Pagination({ page, totalPages, onChange }) {
             aria-current={item === page ? "page" : undefined}
             className={`${base} ${
               item === page
-                ? "border-teal-700 bg-teal-700 text-white"
-                : "border-slate-300 bg-white text-slate-700 hover:bg-slate-50"
+                ? "border-teal-700 bg-teal-700 text-white shadow-sm"
+                : "border-slate-200 bg-white text-slate-700 hover:border-teal-300 hover:bg-teal-50"
             }`}
           >
             {item}
@@ -148,7 +148,7 @@ function Pagination({ page, totalPages, onChange }) {
         onClick={() => onChange(page + 1)}
         disabled={page >= totalPages}
         aria-label="Next page"
-        className={`${base} border-slate-300 bg-white text-slate-700 hover:bg-slate-50 disabled:opacity-50`}
+        className={`${base} border-slate-200 bg-white text-slate-700 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40`}
       >
         <ChevronRight size={16} />
       </button>
@@ -170,7 +170,8 @@ export default function SupportDashboard() {
 
   useEffect(() => {
     function handleStorageChange() {
-      refreshTickets();
+      setTickets(getSupportTickets());
+      setPage(1);
     }
 
     window.addEventListener("storage", handleStorageChange);
@@ -246,24 +247,28 @@ export default function SupportDashboard() {
       value: stats.totalTickets,
       icon: Ticket,
       iconClass: "bg-slate-100 text-slate-700",
+      description: "All submitted support requests",
     },
     {
       label: "Open Tickets",
       value: stats.openTickets,
       icon: LifeBuoy,
       iconClass: "bg-blue-50 text-blue-700",
+      description: "Requests awaiting attention",
     },
     {
       label: "In Progress",
       value: stats.inProgressTickets,
       icon: Clock3,
       iconClass: "bg-amber-50 text-amber-700",
+      description: "Requests being worked on",
     },
     {
       label: "Resolved Tickets",
       value: stats.resolvedTickets,
       icon: CheckCircle2,
       iconClass: "bg-emerald-50 text-emerald-700",
+      description: "Successfully resolved requests",
     },
   ];
 
@@ -274,93 +279,121 @@ export default function SupportDashboard() {
   }
 
   return (
-    <div className="w-full space-y-6 text-slate-900">
-      {/* Page heading */}
-      <div className="flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <nav
-            aria-label="Breadcrumb"
-            className="flex items-center gap-2 text-sm text-slate-500"
-          >
-            <span>Vendor Portal</span>
-            <ChevronRight size={14} className="text-slate-300" />
-            <span>Support</span>
-          </nav>
+    <main className="w-full min-w-0 space-y-3 px-0 py-2 text-slate-900">
+      {/* Page heading: My Tickets page sarkhach header */}
+      <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
+        <span
+          aria-hidden="true"
+          className="absolute inset-y-0 left-0 w-1.5 bg-teal-700"
+        />
 
-          <h1 className="mt-2 text-3xl font-bold tracking-tight">
-            Support Center
-          </h1>
-
-          <p className="mt-1 text-sm text-slate-500">
-            Create requests and track updates from the support team.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap gap-2">
-          <Link
-            to="/vendor/support/help"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 transition hover:bg-slate-50"
-          >
-            <BookOpen size={16} />
-            Help Center
-          </Link>
-
-          <Link
-            to="/vendor/support/create"
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-teal-800"
-          >
-            <Plus size={16} />
-            Create Ticket
-          </Link>
-        </div>
-      </div>
-
-      {/* Statistics */}
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {cards.map(({ label, value, icon: Icon, iconClass }) => (
-          <div
-            key={label}
-            className="flex items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm"
-          >
-            <div>
-              <p className="text-sm font-medium text-slate-500">{label}</p>
-              <p className="mt-1 text-3xl font-bold tabular-nums">{value}</p>
+        <div className="flex flex-col gap-4 px-5 py-4 sm:pl-8 sm:pr-6 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex min-w-0 items-center gap-4">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-teal-100 bg-teal-50 text-teal-700 sm:h-14 sm:w-14">
+              <LifeBuoy size={24} strokeWidth={1.8} />
             </div>
 
-            <span
-              className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg ${iconClass}`}
-            >
-              <Icon size={22} />
-            </span>
-          </div>
-        ))}
-      </div>
+            <div className="min-w-0">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-700">
+                Support Center
+              </p>
 
-      {/* Ticket list */}
-      <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-col gap-3 border-b border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-          <div>
-            <h2 className="text-base font-semibold">Support Tickets</h2>
-            <p className="mt-0.5 text-sm text-slate-500">
-              Your requests and their current status.
+              <h1 className="mt-0.5 text-2xl font-bold tracking-tight text-slate-900 sm:text-[28px] sm:leading-8">
+                Support Tickets
+              </h1>
+
+              <p className="mt-1.5 max-w-2xl text-sm leading-5 text-slate-500">
+                Manage your requests, monitor ticket status and stay connected
+                with the support team.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex shrink-0 flex-wrap items-center gap-3">
+            <Link
+              to="/vendor/support/help"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50"
+            >
+              <BookOpen size={17} />
+              Help Center
+            </Link>
+
+            <Link
+              to="/vendor/support/create"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100"
+            >
+              <Plus size={17} />
+              Create ticket
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics cards */}
+      <section
+        aria-label="Ticket statistics"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4"
+      >
+        {cards.map(({ label, value, icon: Icon, iconClass, description }) => (
+          <article
+            key={label}
+            className="min-w-0 rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-sm font-medium text-slate-500">{label}</p>
+
+              <span
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${iconClass}`}
+              >
+                <Icon size={20} strokeWidth={1.8} />
+              </span>
+            </div>
+
+            <p className="mt-1.5 text-3xl font-bold leading-tight tracking-tight text-slate-900 tabular-nums">
+              {value}
             </p>
+
+            <p className="mt-1 text-xs leading-5 text-slate-500">
+              {description}
+            </p>
+          </article>
+        ))}
+      </section>
+
+      {/* Support tickets */}
+      <section className="min-w-0 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+        {/* Section header */}
+        <div className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+          <div className="flex min-w-0 items-center gap-3">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+              <Ticket size={21} />
+            </span>
+
+            <div className="min-w-0">
+              <h2 className="text-base font-bold text-slate-900">
+                All Support Tickets
+              </h2>
+              <p className="mt-0.5 text-sm text-slate-500">
+                View and track your submitted requests.
+              </p>
+            </div>
           </div>
 
           <button
             type="button"
             onClick={refreshTickets}
-            className="inline-flex items-center gap-2 self-start rounded-lg border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800 sm:self-auto"
           >
-            <RefreshCw size={15} />
+            <RefreshCw size={16} />
             Refresh
           </button>
         </div>
 
         {/* Search and filters */}
-        <div className="flex flex-col gap-3 border-b border-slate-100 px-5 py-3 sm:flex-row sm:items-center sm:px-6">
-          <div className="relative w-full sm:max-w-sm">
+        <div className="flex flex-col gap-3 border-b border-slate-100 bg-white px-4 py-3 sm:flex-row sm:items-center sm:px-5">
+          <div className="relative w-full sm:max-w-md">
             <Search
-              size={16}
+              size={17}
               className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
             />
 
@@ -373,7 +406,7 @@ export default function SupportDashboard() {
               }}
               placeholder="Search by subject, ID or category"
               aria-label="Search tickets"
-              className="w-full rounded-lg border border-slate-300 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-600/15"
+              className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-teal-600 focus:bg-white focus:ring-4 focus:ring-teal-600/10"
             />
           </div>
 
@@ -384,7 +417,7 @@ export default function SupportDashboard() {
               setPage(1);
             }}
             aria-label="Filter by status"
-            className="w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-teal-600 focus:ring-4 focus:ring-teal-600/15 sm:w-56"
+            className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10 sm:w-52"
           >
             <option value="">All statuses</option>
             {STATUS_OPTIONS.map((status) => (
@@ -398,9 +431,9 @@ export default function SupportDashboard() {
             <button
               type="button"
               onClick={clearFilters}
-              className="inline-flex items-center gap-1.5 self-start rounded-lg px-3 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 sm:self-auto"
+              className="inline-flex h-10 shrink-0 items-center justify-center gap-1.5 self-start rounded-lg px-3 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900 sm:self-auto"
             >
-              <X size={14} />
+              <X size={15} />
               Clear filters
             </button>
           )}
@@ -408,35 +441,35 @@ export default function SupportDashboard() {
 
         {/* Empty state */}
         {visibleTickets.length === 0 ? (
-          <div className="px-6 py-14 text-center">
-            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-400">
+          <div className="px-5 py-12 text-center sm:py-14">
+            <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100 text-slate-500">
               {hasFilters ? <Search size={22} /> : <Ticket size={22} />}
             </span>
 
-            <h3 className="mt-3 text-sm font-semibold">
+            <h3 className="mt-3 text-sm font-semibold text-slate-900">
               {hasFilters
                 ? "No tickets match your filters"
                 : "No support tickets yet"}
             </h3>
 
-            <p className="mt-1 text-sm text-slate-500">
+            <p className="mx-auto mt-1 max-w-md text-sm leading-6 text-slate-500">
               {hasFilters
-                ? "Try another search term or status."
-                : "Create a ticket if you need help with your vendor account."}
+                ? "Try another search term or select a different status."
+                : "Create a support ticket if you need help with your vendor account."}
             </p>
 
             {hasFilters ? (
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-4 rounded-lg border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                className="mt-4 inline-flex h-9 items-center justify-center rounded-lg border border-slate-200 px-4 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
               >
                 Clear filters
               </button>
             ) : (
               <Link
                 to="/vendor/support/create"
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-medium text-white hover:bg-teal-800"
+                className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
               >
                 <Plus size={16} />
                 Create your first ticket
@@ -445,53 +478,57 @@ export default function SupportDashboard() {
           </div>
         ) : (
           <>
-            {/* Responsive table */}
-            <div className="w-full overflow-x-auto overscroll-x-contain">
-              <table className="w-full min-w-[1000px] table-fixed text-left text-sm">
-                <thead className="bg-slate-50 text-xs font-semibold uppercase tracking-wide text-slate-500">
-                  <tr>
-                    <th className="w-[23%] px-4 py-4">Ticket</th>
-                    <th className="w-[17%] px-3 py-4">Category</th>
-                    <th className="w-[10%] px-3 py-4">Priority</th>
-                    <th className="w-[12%] px-3 py-4">Created</th>
-                    <th className="w-[12%] px-3 py-4">Last updated</th>
-                    <th className="w-[16%] px-3 py-4">Status</th>
-                    <th className="w-[10%] px-3 py-4">Action</th>
+            {/* Responsive ticket table */}
+            <div className="w-full overflow-x-auto">
+              <table className="w-full min-w-[850px] table-auto text-left text-sm">
+                <thead className="border-b border-slate-200 bg-slate-50">
+                  <tr className="text-[11px] font-bold uppercase tracking-wider text-slate-500">
+                    <th className="px-4 py-3.5 sm:px-5">Ticket</th>
+                    <th className="px-3 py-3.5">Category</th>
+                    <th className="px-3 py-3.5">Priority</th>
+                    <th className="whitespace-nowrap px-3 py-3.5">Created</th>
+                    <th className="whitespace-nowrap px-3 py-3.5">
+                      Last updated
+                    </th>
+                    <th className="px-3 py-3.5">Status</th>
+                    <th className="px-4 py-3.5 sm:px-5">Action</th>
                   </tr>
                 </thead>
 
                 <tbody className="divide-y divide-slate-100">
                   {visibleTickets.map((ticket, index) => {
-                    const id =
-                      ticket.ticketId || ticket._id || ticket.id;
+                    const id = ticket.ticketId || ticket._id || ticket.id;
 
                     return (
                       <tr
                         key={id || index}
-                        className="transition-colors hover:bg-slate-50"
+                        className="transition-colors hover:bg-teal-50/30"
                       >
-                        <td className="px-4 py-4">
-                          <p className="break-words font-medium text-slate-900">
+                        <td className="max-w-[280px] px-4 py-3 sm:px-5">
+                          <p className="break-words font-semibold leading-5 text-slate-900">
                             {ticket.subject || "Untitled ticket"}
                           </p>
-                          <p className="mt-0.5 break-all font-mono text-xs text-slate-500">
+
+                          <p className="mt-1 break-all font-mono text-xs text-slate-500">
                             {id || "—"}
                           </p>
                         </td>
 
-                        <td className="break-words px-3 py-4 text-slate-700">
-                          {ticket.category || "—"}
+                        <td className="max-w-[200px] px-3 py-4 text-sm text-slate-600">
+                          <span className="break-words">
+                            {ticket.category || "—"}
+                          </span>
                         </td>
 
                         <td className="px-3 py-4">
                           <PriorityLabel priority={ticket.priority} />
                         </td>
 
-                        <td className="whitespace-nowrap px-3 py-4 text-slate-700">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-600">
                           {getDate(ticket.createdAt)}
                         </td>
 
-                        <td className="whitespace-nowrap px-3 py-4 text-slate-700">
+                        <td className="whitespace-nowrap px-3 py-4 text-sm text-slate-600">
                           {getDate(ticket.updatedAt || ticket.createdAt)}
                         </td>
 
@@ -499,13 +536,13 @@ export default function SupportDashboard() {
                           <StatusBadge status={ticket.status || "Open"} />
                         </td>
 
-                        <td className="px-3 py-4">
+                        <td className="px-4 py-4 sm:px-5">
                           {id ? (
                             <Link
                               to={`/vendor/support/tickets/${encodeURIComponent(id)}`}
-                              className="inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 transition hover:border-teal-600 hover:text-teal-700"
+                              className="inline-flex h-9 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
                             >
-                              View
+                              View details
                               <ChevronRight size={14} />
                             </Link>
                           ) : (
@@ -522,29 +559,33 @@ export default function SupportDashboard() {
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50 px-5 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-6">
-              <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-600">
+            <div className="flex flex-col gap-3 border-t border-slate-200 bg-slate-50/70 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
+              <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm text-slate-600">
                 <p aria-live="polite">
                   Showing{" "}
-                  <span className="font-medium text-slate-900">
-                    {startIndex + 1}–{startIndex + visibleTickets.length}
+                  <span className="font-semibold text-slate-900">
+                    {totalTickets === 0 ? 0 : startIndex + 1}–
+                    {startIndex + visibleTickets.length}
                   </span>{" "}
                   of{" "}
-                  <span className="font-medium text-slate-900">
+                  <span className="font-semibold text-slate-900">
                     {totalTickets}
                   </span>{" "}
                   {totalTickets === 1 ? "ticket" : "tickets"}
                 </p>
 
                 <label className="flex items-center gap-2">
-                  <span className="text-slate-500">Rows per page</span>
+                  <span className="whitespace-nowrap text-slate-500">
+                    Rows per page
+                  </span>
+
                   <select
                     value={pageSize}
                     onChange={(event) => {
                       setPageSize(Number(event.target.value));
                       setPage(1);
                     }}
-                    className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-sm outline-none focus:border-teal-600"
+                    className="h-9 rounded-lg border border-slate-200 bg-white px-2.5 text-sm text-slate-700 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
                   >
                     {PAGE_SIZES.map((size) => (
                       <option key={size} value={size}>
@@ -566,6 +607,6 @@ export default function SupportDashboard() {
           </>
         )}
       </section>
-    </div>
+    </main>
   );
 }
