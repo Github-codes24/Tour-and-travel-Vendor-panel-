@@ -297,7 +297,7 @@ export default function ReportsAnalytics({ section }) {
     <div className="mx-auto max-w-7xl space-y-6">
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div className="space-y-1">
-          <p className="text-sm font-semibold text-teal-700">{pageDetails.eyebrow}</p>
+          <p className="text-sm font-semibold text-violet-700">{pageDetails.eyebrow}</p>
           <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
             Reports &amp; Analytics
           </h1>
@@ -325,7 +325,7 @@ export default function ReportsAnalytics({ section }) {
             type="button"
             onClick={() => handleExport("excel")}
             disabled={!report || Boolean(exporting)}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-3 py-2 text-sm font-medium text-white hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-lg bg-violet-700 px-3 py-2 text-sm font-medium text-white hover:bg-violet-800 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {exporting === "excel" ? <LoaderCircle size={16} className="animate-spin" /> : <FileSpreadsheet size={16} />}
             Export Excel

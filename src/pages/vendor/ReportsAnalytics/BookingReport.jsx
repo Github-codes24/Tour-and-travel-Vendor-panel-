@@ -59,7 +59,7 @@ export default function BookingReports({ report, onGranularity, page, onPage }) 
                 ))}
               </div>
               {GRANULARITIES.map((g) => (
-                <button key={g.id} aria-pressed={report.meta.granularity === g.id} onClick={() => onGranularity(g.id)} className={`rounded-md px-2.5 py-1 text-xs font-medium ${report.meta.granularity === g.id ? "bg-teal-600 text-white" : "text-gray-600 hover:bg-gray-100"}`}>{g.label}</button>
+                <button key={g.id} aria-pressed={report.meta.granularity === g.id} onClick={() => onGranularity(g.id)} className={`rounded-md px-2.5 py-1 text-xs font-medium ${report.meta.granularity === g.id ? "bg-violet-600 text-white" : "text-gray-600 hover:bg-gray-100"}`}>{g.label}</button>
               ))}
             </div>
           }

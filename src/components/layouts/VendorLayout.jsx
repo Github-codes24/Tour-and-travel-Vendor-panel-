@@ -64,7 +64,7 @@ function TopBar({ vendor, notificationCount, onMenuClick, onLogout }) {
         <div className="flex items-center gap-1.5 text-xs font-medium">
           <span className="text-slate-400">Vendor Portal</span>
           <ChevronRight size={13} className="text-slate-400" />
-          <span className="text-teal-600">Management</span>
+          <span className="text-violet-600">Management</span>
         </div>
         <h1 className="truncate text-xl font-bold text-slate-900 sm:text-2xl">
           {getPageTitle(pathname)}
@@ -80,7 +80,7 @@ function TopBar({ vendor, notificationCount, onMenuClick, onLogout }) {
         <input
           type="search"
           placeholder="Search bookings..."
-          className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-500/20"
+          className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50/60 pl-10 pr-4 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-500/20"
         />
       </div>
 
@@ -107,7 +107,7 @@ function TopBar({ vendor, notificationCount, onMenuClick, onLogout }) {
           aria-expanded={menuOpen}
           className="flex items-center gap-3 rounded-xl p-1 transition hover:bg-slate-50"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50 text-sm font-bold text-teal-700 ring-1 ring-teal-200">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 text-sm font-bold text-violet-700 ring-1 ring-violet-200">
             {initial}
           </div>
 

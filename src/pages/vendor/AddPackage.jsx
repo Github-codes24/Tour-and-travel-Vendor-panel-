@@ -126,7 +126,7 @@ const emptyForm = {
 };
 
 const inputClass =
-  "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-800 outline-none focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
+  "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-3 text-sm text-slate-800 outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-100";
 
 /* ---------- helpers ---------- */
 const toLines = (value) =>
@@ -333,7 +333,7 @@ function Section({ title, description, icon: Icon, children }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
       <div className="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4">
-        <div className="rounded-xl bg-emerald-50 p-3 text-emerald-700">
+        <div className="rounded-xl bg-violet-50 p-3 text-violet-700">
           <Icon size={21} />
         </div>
 
@@ -363,7 +363,7 @@ function GalleryTile({ src, index, onRemove, children }) {
       {children}
 
       {index === 0 && (
-        <span className="absolute bottom-2 left-2 rounded-md bg-emerald-700 px-2 py-1 text-xs font-semibold text-white">
+        <span className="absolute bottom-2 left-2 rounded-md bg-violet-700 px-2 py-1 text-xs font-semibold text-white">
           Cover
         </span>
       )}
@@ -875,7 +875,7 @@ export default function AddPackage() {
         <div>
           <Link
             to="/vendor/packages"
-            className="group mb-4 inline-flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 hover:shadow-md"
+            className="group mb-4 inline-flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 hover:shadow-md"
           >
             <ArrowLeft
               size={17}
@@ -919,7 +919,7 @@ export default function AddPackage() {
             type="button"
             disabled={saving}
             onClick={() => savePackage("Published")}
-            className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800 disabled:opacity-50"
           >
             <Send size={17} />
             {saving ? "Saving..." : "Publish Package"}
@@ -990,8 +990,8 @@ export default function AddPackage() {
                     onClick={() => setCategoryOpen((previous) => !previous)}
                     className={`flex h-12 w-full items-center justify-between rounded-xl border bg-white px-3.5 text-left text-sm text-slate-800 outline-none transition ${
                       categoryOpen
-                        ? "border-emerald-600 ring-2 ring-emerald-100"
-                        : "border-slate-200 hover:border-emerald-300"
+                        ? "border-violet-600 ring-2 ring-violet-100"
+                        : "border-slate-200 hover:border-violet-300"
                     }`}
                     aria-haspopup="listbox"
                     aria-expanded={categoryOpen}
@@ -1023,7 +1023,7 @@ export default function AddPackage() {
                             }}
                             className={`w-full rounded-lg px-3 py-2.5 text-left text-sm transition ${
                               form.category === category
-                                ? "bg-emerald-50 font-semibold text-emerald-700"
+                                ? "bg-violet-50 font-semibold text-violet-700"
                                 : "text-slate-700 hover:bg-slate-50"
                             }`}
                           >
@@ -1032,7 +1032,7 @@ export default function AddPackage() {
                               {form.category === category && (
                                 <CheckCircle2
                                   size={16}
-                                  className="text-emerald-600"
+                                  className="text-violet-600"
                                 />
                               )}
                             </span>
@@ -1302,7 +1302,7 @@ export default function AddPackage() {
               <div className="mb-3 flex items-center justify-between gap-3">
                 <div>
                   <h3 className="flex items-center gap-2 text-sm font-bold text-slate-900">
-                    <Tags size={16} className="text-emerald-700" />
+                    <Tags size={16} className="text-violet-700" />
                     Tour types
                   </h3>
                   <p className="mt-0.5 text-xs text-slate-500">
@@ -1314,7 +1314,7 @@ export default function AddPackage() {
                 <button
                   type="button"
                   onClick={addTourType}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-emerald-200 px-3.5 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-violet-200 px-3.5 py-2 text-sm font-semibold text-violet-700 hover:bg-violet-50"
                 >
                   <Plus size={16} />
                   Add tour type
@@ -1479,7 +1479,7 @@ export default function AddPackage() {
                   className="rounded-xl border border-slate-200 bg-slate-50 p-4"
                 >
                   <div className="mb-3 flex items-center justify-between">
-                    <span className="rounded-lg bg-emerald-100 px-3 py-1.5 text-sm font-bold text-emerald-800">
+                    <span className="rounded-lg bg-violet-100 px-3 py-1.5 text-sm font-bold text-violet-800">
                       Day {day.day}
                     </span>
 
@@ -1575,7 +1575,7 @@ export default function AddPackage() {
               <button
                 type="button"
                 onClick={addDay}
-                className="inline-flex items-center gap-2 rounded-xl border border-emerald-200 px-4 py-2.5 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-violet-200 px-4 py-2.5 text-sm font-semibold text-violet-700 hover:bg-violet-50"
               >
                 <Plus size={16} />
                 Add itinerary day
@@ -1601,15 +1601,15 @@ export default function AddPackage() {
                       key={option.key}
                       className={`flex cursor-pointer items-center gap-2 rounded-xl border px-3.5 py-2 text-sm font-medium transition ${
                         checked
-                          ? "border-emerald-600 bg-emerald-50 text-emerald-700"
-                          : "border-slate-200 bg-white text-slate-600 hover:border-emerald-300"
+                          ? "border-violet-600 bg-violet-50 text-violet-700"
+                          : "border-slate-200 bg-white text-slate-600 hover:border-violet-300"
                       }`}
                     >
                       <input
                         type="checkbox"
                         checked={checked}
                         onChange={() => toggleInclusion(option.key)}
-                        className="h-4 w-4 accent-emerald-600"
+                        className="h-4 w-4 accent-violet-600"
                       />
                       {option.label}
                     </label>
@@ -1633,7 +1633,7 @@ export default function AddPackage() {
                 <button
                   type="button"
                   onClick={addHotel}
-                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-emerald-200 px-3.5 py-2 text-sm font-semibold text-emerald-700 hover:bg-emerald-50"
+                  className="inline-flex shrink-0 items-center gap-2 rounded-xl border border-violet-200 px-3.5 py-2 text-sm font-semibold text-violet-700 hover:bg-violet-50"
                 >
                   <Plus size={16} />
                   Add city
@@ -1787,7 +1787,7 @@ export default function AddPackage() {
             description="Upload multiple photos, up to 2 MB each"
             icon={ImagePlus}
           >
-            <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center hover:border-emerald-500">
+            <label className="flex h-32 cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-300 bg-slate-50 text-center hover:border-violet-500">
               <ImagePlus size={28} className="text-slate-400" />
 
               <span className="mt-2 text-sm font-semibold text-slate-700">
@@ -1813,8 +1813,8 @@ export default function AddPackage() {
             </p>
           </Section>
 
-          <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
-            <h3 className="font-bold text-emerald-950">Package checklist</h3>
+          <div className="rounded-2xl border border-violet-100 bg-violet-50/70 p-5">
+            <h3 className="font-bold text-violet-950">Package checklist</h3>
 
             <ul className="mt-3 space-y-3 text-sm">
               {[
@@ -1859,7 +1859,7 @@ export default function AddPackage() {
               type="button"
               disabled={saving}
               onClick={() => savePackage("Published")}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-700 px-4 py-3 text-sm font-semibold text-white hover:bg-emerald-800 disabled:opacity-50"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 py-3 text-sm font-semibold text-white hover:bg-violet-800 disabled:opacity-50"
             >
               <Send size={17} />
               {saving ? "Saving..." : "Publish Package"}

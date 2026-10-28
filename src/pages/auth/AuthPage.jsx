@@ -774,12 +774,6 @@ function Registration() {
                 autoComplete="postal-code"
               />
             </div>
-
-            <p className="rounded-xl border border-amber-200 bg-amber-50 px-3.5 py-3 text-xs leading-5 text-amber-900">
-              Demo mode: OTPs are generated and verified in this browser
-              only. They are not sent to email or mobile, so this is not
-              suitable for production account security.
-            </p>
           </div>
         )}
 
@@ -941,13 +935,6 @@ function Registration() {
                 />
               )}
             </div>
-
-            <p className="rounded-xl border border-blue-100 bg-blue-50 px-3.5 py-3 text-xs leading-5 text-blue-900">
-              GST and business registration documents are requested only
-              when applicable to your business structure and legal
-              requirements. Aadhaar documents should only be collected
-              when necessary and handled securely.
-            </p>
           </div>
         )}
 

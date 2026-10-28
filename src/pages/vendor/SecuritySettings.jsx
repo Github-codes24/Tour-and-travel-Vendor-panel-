@@ -93,7 +93,7 @@ const NOTIFICATION_ITEMS = [
 /* ------------------------------------------------------------------ */
 function Card({ icon: Icon, title, subtitle, children, tone = "default" }) {
   const iconTone =
-    tone === "danger" ? "bg-red-50 text-red-600" : "bg-teal-50 text-teal-600";
+    tone === "danger" ? "bg-red-50 text-red-600" : "bg-violet-50 text-violet-600";
   return (
     <section
       className={`rounded-xl border bg-white shadow-sm ${
@@ -123,8 +123,8 @@ function Toggle({ checked, onChange, disabled, label }) {
       aria-label={label}
       disabled={disabled}
       onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-        checked ? "bg-teal-600" : "bg-gray-300"
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+        checked ? "bg-violet-600" : "bg-gray-300"
       }`}
     >
       <span
@@ -165,7 +165,7 @@ function PasswordField({ id, label, value, onChange, error, autoComplete }) {
           className={`w-full rounded-lg border px-3.5 py-2.5 pr-11 text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 ${
             error
               ? "border-red-400 focus:ring-red-200"
-              : "border-gray-300 focus:border-teal-500 focus:ring-teal-100"
+              : "border-gray-300 focus:border-violet-500 focus:ring-violet-100"
           }`}
         />
         <button
@@ -207,7 +207,7 @@ function Modal({ open, onClose, title, children }) {
           <button
             onClick={onClose}
             aria-label="Close"
-            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            className="rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-violet-500"
           >
             <X size={18} />
           </button>
@@ -423,7 +423,7 @@ function PasswordSecurityCard({ notify }) {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:opacity-60"
+            className="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:opacity-60"
           >
             {saving ? "Changing…" : "Change password"}
           </button>
@@ -466,7 +466,7 @@ function PasswordSecurityCard({ notify }) {
             type="button"
             onClick={() => verify(row.type)}
             disabled={verifying === row.type}
-            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-teal-600 px-3.5 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+            className="inline-flex min-h-9 items-center justify-center rounded-lg border border-violet-600 px-3.5 py-2 text-sm font-semibold text-violet-700 transition hover:bg-violet-50 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
           >
             {verifying === row.type ? "Sending..." : "Verify now"}
           </button>
@@ -512,8 +512,8 @@ function PasswordSecurityCard({ notify }) {
       >
         <form onSubmit={submitOtp} className="space-y-5">
           <div className="flex flex-col items-center text-center">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 ring-8 ring-teal-50/60">
-              <ShieldCheck size={27} strokeWidth={1.8} className="text-teal-700" />
+            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-violet-50 ring-8 ring-violet-50/60">
+              <ShieldCheck size={27} strokeWidth={1.8} className="text-violet-700" />
             </div>
             <p className="max-w-sm text-sm leading-6 text-gray-600">
               Enter the 6-digit verification code sent to
@@ -539,7 +539,7 @@ function PasswordSecurityCard({ notify }) {
               onChange={(event) => setOtp(event.target.value.replace(/\D/g, "").slice(0, 6))}
               placeholder="••••••"
               aria-describedby="mobile-otp-help"
-              className="h-14 w-full rounded-xl border border-gray-300 bg-gray-50 px-4 text-center font-mono text-2xl font-semibold tracking-[0.55em] text-gray-900 placeholder:tracking-[0.45em] placeholder:text-gray-300 focus:border-teal-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-teal-100"
+              className="h-14 w-full rounded-xl border border-gray-300 bg-gray-50 px-4 text-center font-mono text-2xl font-semibold tracking-[0.55em] text-gray-900 placeholder:tracking-[0.45em] placeholder:text-gray-300 focus:border-violet-600 focus:bg-white focus:outline-none focus:ring-4 focus:ring-violet-100"
               required
             />
             <p id="mobile-otp-help" className="mt-2 text-xs text-gray-500">
@@ -558,7 +558,7 @@ function PasswordSecurityCard({ notify }) {
             <button
               type="submit"
               disabled={otpSubmitting || otp.length !== 6}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-teal-300 disabled:shadow-none"
+              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-violet-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:bg-violet-300 disabled:shadow-none"
             >
               {otpSubmitting ? "Verifying…" : "Verify code"}
             </button>
@@ -618,7 +618,7 @@ function NotificationsCard({ notify }) {
         <button
           onClick={save}
           disabled={!dirty || saving}
-          className="rounded-lg bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          className="rounded-lg bg-violet-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-violet-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
         >
           {saving ? "Saving…" : "Save preferences"}
         </button>
@@ -839,7 +839,7 @@ function AccountManagementCard({ notify }) {
               rows={3}
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
+              className="w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm focus:border-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-100"
               placeholder="Tell us why you're leaving"
             />
 

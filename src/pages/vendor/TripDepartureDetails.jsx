@@ -138,7 +138,7 @@ function Card({ title, subtitle, action, icon: Icon, children, className = "" })
         <div className="mb-5 flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           <div className="flex items-start gap-3">
             {Icon && (
-              <div className="rounded-xl bg-teal-50 p-2.5 text-teal-700">
+              <div className="rounded-xl bg-violet-50 p-2.5 text-violet-700">
                 <Icon size={18} />
               </div>
             )}
@@ -238,7 +238,7 @@ export default function TripDepartureDetails() {
         <button
           type="button"
           onClick={() => navigate("/vendor/trips")}
-          className="mt-5 rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white hover:bg-teal-800"
+          className="mt-5 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800"
         >
           Back to Trips
         </button>
@@ -375,7 +375,7 @@ export default function TripDepartureDetails() {
         <button
           type="button"
           onClick={() => navigate("/vendor/trips")}
-          className="inline-flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-white hover:text-teal-700"
+          className="inline-flex items-center gap-2 rounded-lg px-2 py-1 transition hover:bg-white hover:text-violet-700"
         >
           <ArrowLeft size={16} />
           Trips & Departures
@@ -385,8 +385,8 @@ export default function TripDepartureDetails() {
       </nav>
 
       {/* Hero */}
-      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-teal-900 via-teal-800 to-slate-900 p-6 text-white shadow-lg sm:p-8">
-        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-teal-400/20 blur-3xl" />
+      <header className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-violet-900 via-violet-800 to-slate-900 p-6 text-white shadow-lg sm:p-8">
+        <div className="pointer-events-none absolute -right-16 -top-16 h-64 w-64 rounded-full bg-violet-400/20 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-20 left-1/3 h-56 w-56 rounded-full bg-sky-400/10 blur-3xl" />
 
         <div className="relative flex flex-col justify-between gap-6 xl:flex-row xl:items-start">
@@ -404,12 +404,12 @@ export default function TripDepartureDetails() {
               </span>
 
               {countdown && (
-                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-teal-50 ring-1 ring-inset ring-white/20">
+                <span className="rounded-full bg-white/10 px-3 py-1 text-xs font-medium text-violet-50 ring-1 ring-inset ring-white/20">
                   {countdown}
                 </span>
               )}
 
-              <span className="max-w-full break-all rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-teal-100">
+              <span className="max-w-full break-all rounded-full bg-black/20 px-3 py-1 text-xs font-medium text-violet-100">
                 {trip.id}
               </span>
             </div>
@@ -418,13 +418,13 @@ export default function TripDepartureDetails() {
               {trip.packageName}
             </h1>
 
-            <p className="mt-2 flex items-center gap-2 text-sm text-teal-100">
+            <p className="mt-2 flex items-center gap-2 text-sm text-violet-100">
               <MapPin size={17} className="shrink-0" />
               {trip.destination}
             </p>
 
             {trip.description && (
-              <p className="mt-4 max-w-3xl text-sm leading-6 text-teal-50/90">
+              <p className="mt-4 max-w-3xl text-sm leading-6 text-violet-50/90">
                 {trip.description}
               </p>
             )}
@@ -435,7 +435,7 @@ export default function TripDepartureDetails() {
                   key={text}
                   className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-3.5 py-2 text-sm font-medium text-white ring-1 ring-inset ring-white/15 backdrop-blur"
                 >
-                  <Icon size={15} className="text-teal-200" />
+                  <Icon size={15} className="text-violet-200" />
                   {text}
                 </span>
               ))}
@@ -455,7 +455,7 @@ export default function TripDepartureDetails() {
             <button
               type="button"
               onClick={() => navigate("/vendor/trips")}
-              className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-teal-900 transition hover:bg-teal-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-violet-900 transition hover:bg-violet-50"
             >
               <ArrowLeft size={16} />
               Back to Trips
@@ -478,7 +478,7 @@ export default function TripDepartureDetails() {
           label="Booked Seats"
           value={`${trip.bookedSeats} / ${trip.totalSeats}`}
           helper={`${availableSeats} seats remaining`}
-          iconClass="bg-teal-50 text-teal-700"
+          iconClass="bg-violet-50 text-violet-700"
         />
         <StatCard
           icon={IndianRupee}
@@ -509,8 +509,8 @@ export default function TripDepartureDetails() {
                   onClick={() => setActiveTab(key)}
                   className={`inline-flex flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-xl px-4 py-2.5 text-sm font-semibold transition ${
                     activeTab === key
-                      ? "bg-teal-700 text-white shadow-sm"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-teal-800"
+                      ? "bg-violet-700 text-white shadow-sm"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-violet-800"
                   }`}
                 >
                   <Icon size={16} />
@@ -542,9 +542,9 @@ export default function TripDepartureDetails() {
                 {departureInfo.map(({ icon: Icon, label, value }) => (
                   <div
                     key={label}
-                    className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition hover:border-teal-100 hover:bg-teal-50/40"
+                    className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-4 transition hover:border-violet-100 hover:bg-violet-50/40"
                   >
-                    <div className="rounded-lg bg-white p-2.5 text-teal-700 shadow-sm">
+                    <div className="rounded-lg bg-white p-2.5 text-violet-700 shadow-sm">
                       <Icon size={18} />
                     </div>
                     <div className="min-w-0">
@@ -580,16 +580,16 @@ export default function TripDepartureDetails() {
                       className="relative flex gap-4 pb-6 last:pb-0"
                     >
                       <div className="relative flex flex-col items-center">
-                        <div className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white shadow-sm ring-4 ring-teal-50">
+                        <div className="z-10 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-700 text-sm font-bold text-white shadow-sm ring-4 ring-violet-50">
                           {index + 1}
                         </div>
                         {index !== trip.itinerary.length - 1 && (
-                          <div className="absolute bottom-0 top-10 w-px bg-teal-100" />
+                          <div className="absolute bottom-0 top-10 w-px bg-violet-100" />
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1 rounded-xl border border-slate-100 bg-slate-50/60 p-4">
-                        <span className="rounded-md bg-teal-50 px-2 py-1 text-xs font-bold uppercase tracking-wide text-teal-700">
+                        <span className="rounded-md bg-violet-50 px-2 py-1 text-xs font-bold uppercase tracking-wide text-violet-700">
                           {item.day}
                         </span>
                         <h3 className="mt-3 font-semibold text-slate-900">
@@ -625,7 +625,7 @@ export default function TripDepartureDetails() {
                   type="button"
                   onClick={exportTravellers}
                   disabled={bookings.length === 0}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800 disabled:cursor-not-allowed disabled:opacity-50 print:hidden"
+                  className="inline-flex items-center justify-center gap-2 rounded-lg border border-slate-200 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-800 disabled:cursor-not-allowed disabled:opacity-50 print:hidden"
                 >
                   <Download size={15} />
                   Export CSV
@@ -642,14 +642,14 @@ export default function TripDepartureDetails() {
                     value={search}
                     onChange={(event) => setSearch(event.target.value)}
                     placeholder="Search customer, traveller or booking ID..."
-                    className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                    className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
                   />
                 </div>
 
                 <select
                   value={bookingFilter}
                   onChange={(event) => setBookingFilter(event.target.value)}
-                  className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500 sm:w-44"
+                  className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500 sm:w-44"
                 >
                   <option value="All">All bookings</option>
                   <option value="confirmed">Confirmed</option>
@@ -670,11 +670,11 @@ export default function TripDepartureDetails() {
                     return (
                       <li
                         key={booking.bookingId}
-                        className="rounded-xl border border-slate-100 p-4 transition hover:border-teal-100 hover:bg-teal-50/30"
+                        className="rounded-xl border border-slate-100 p-4 transition hover:border-violet-100 hover:bg-violet-50/30"
                       >
                         <div className="flex flex-wrap items-start justify-between gap-3">
                           <div className="flex min-w-0 items-center gap-3">
-                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-teal-100 text-sm font-bold text-teal-800">
+                            <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-violet-100 text-sm font-bold text-violet-800">
                               {getInitials(customer)}
                             </div>
                             <div className="min-w-0">
@@ -815,7 +815,7 @@ export default function TripDepartureDetails() {
                 </p>
                 <p className="mt-1 text-sm text-slate-500">Seats available</p>
               </div>
-              <span className="rounded-full bg-teal-50 px-3 py-1 text-sm font-semibold text-teal-800">
+              <span className="rounded-full bg-violet-50 px-3 py-1 text-sm font-semibold text-violet-800">
                 {occupancy}% booked
               </span>
             </div>
@@ -825,7 +825,7 @@ export default function TripDepartureDetails() {
                 <div
                   key={index}
                   className={`h-3 flex-1 rounded-full ${
-                    index < filledSegments ? "bg-teal-600" : "bg-slate-100"
+                    index < filledSegments ? "bg-violet-600" : "bg-slate-100"
                   }`}
                 />
               ))}
@@ -845,7 +845,7 @@ export default function TripDepartureDetails() {
 
           {/* Booking summary */}
           <Card title="Booking Summary">
-            <div className="rounded-xl bg-gradient-to-br from-teal-50 to-slate-50 p-4">
+            <div className="rounded-xl bg-gradient-to-br from-violet-50 to-slate-50 p-4">
               <p className="text-sm text-slate-500">Estimated booking value</p>
               <p className="mt-2 text-2xl font-bold text-slate-900">
                 {formatCurrency(trip.price * trip.bookedSeats)}
@@ -897,7 +897,7 @@ export default function TripDepartureDetails() {
                   className={`rounded-xl border px-3 py-2.5 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-60 ${
                     status === item
                       ? statusChipStyles[item]
-                      : "border-slate-200 bg-white text-slate-700 hover:border-teal-300 hover:bg-teal-50"
+                      : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50"
                   }`}
                 >
                   {item}
@@ -910,7 +910,7 @@ export default function TripDepartureDetails() {
                 type="button"
                 onClick={saveStatus}
                 disabled={status === trip.status}
-                className="mt-3 w-full rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+                className="mt-3 w-full rounded-xl bg-violet-700 px-4 py-3 text-sm font-semibold text-white transition hover:bg-violet-800 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Save Changes
               </button>
@@ -919,7 +919,7 @@ export default function TripDepartureDetails() {
             {statusMessage && (
               <p
                 role="status"
-                className="mt-3 flex items-start gap-2 text-sm leading-5 text-teal-700"
+                className="mt-3 flex items-start gap-2 text-sm leading-5 text-violet-700"
               >
                 <CheckCircle2 size={16} className="mt-0.5 shrink-0" />
                 {statusMessage}
@@ -937,17 +937,17 @@ export default function TripDepartureDetails() {
 
           {/* Coordinator */}
           {(trip.coordinator || trip.coordinatorPhone) && (
-            <section className="rounded-2xl border border-teal-100 bg-gradient-to-br from-teal-50 to-white p-5 shadow-sm">
+            <section className="rounded-2xl border border-violet-100 bg-gradient-to-br from-violet-50 to-white p-5 shadow-sm">
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-teal-700 text-sm font-bold text-white">
+                <div className="flex h-11 w-11 items-center justify-center rounded-full bg-violet-700 text-sm font-bold text-white">
                   {getInitials(trip.coordinator)}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-violet-700">
                     Trip Coordinator
                   </p>
                   {trip.coordinator && (
-                    <p className="truncate font-semibold text-teal-950">
+                    <p className="truncate font-semibold text-violet-950">
                       {trip.coordinator}
                     </p>
                   )}
@@ -956,7 +956,7 @@ export default function TripDepartureDetails() {
               {trip.coordinatorPhone && (
                 <a
                   href={`tel:${trip.coordinatorPhone}`}
-                  className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-teal-200 bg-white px-4 py-2.5 text-sm font-semibold text-teal-800 transition hover:bg-teal-50"
+                  className="mt-4 flex items-center justify-center gap-2 rounded-xl border border-violet-200 bg-white px-4 py-2.5 text-sm font-semibold text-violet-800 transition hover:bg-violet-50"
                 >
                   <Phone size={15} />
                   {trip.coordinatorPhone}

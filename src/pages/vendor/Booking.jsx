@@ -190,7 +190,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
 
   return (
     <div className="mx-auto w-full max-w-6xl overflow-hidden rounded-3xl border border-slate-200 bg-slate-50 shadow-sm">
-      <section className="relative isolate overflow-hidden bg-teal-950 px-5 py-8 text-white sm:px-8 sm:py-10">
+      <section className="relative isolate overflow-hidden bg-violet-950 px-5 py-8 text-white sm:px-8 sm:py-10">
         {booking.pkgImage && (
           <img
             src={booking.pkgImage}
@@ -198,7 +198,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
             className="absolute inset-0 -z-20 h-full w-full object-cover opacity-20 blur-sm"
           />
         )}
-        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-teal-950/95 via-teal-900/90 to-cyan-900/80" />
+        <div className="absolute inset-0 -z-10 bg-gradient-to-br from-violet-950/95 via-violet-900/90 to-violet-900/80" />
         <div className="mx-auto grid max-w-5xl items-center gap-8 md:grid-cols-[1fr_300px]">
           <div className="min-w-0">
             <Link
@@ -225,19 +225,19 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                 Sample booking
               </span>
             )}
-            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-teal-100">
+            <p className="mt-3 flex flex-wrap items-center gap-2 text-sm text-violet-100">
               <Ticket size={16} />
               Booking ID
               <span className="font-mono font-semibold text-white">
                 {booking.id}
               </span>
             </p>
-            <p className="mt-2 flex items-center gap-2 text-sm text-teal-100/90">
+            <p className="mt-2 flex items-center gap-2 text-sm text-violet-100/90">
               <MapPin size={16} />
               {booking.destination}
             </p>
           </div>
-          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-teal-900 ring-4 ring-white/80">
+          <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-violet-900 ring-4 ring-white/80">
             {booking.pkgImage ? (
               <img
                 src={booking.pkgImage}
@@ -245,11 +245,11 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                 className="h-full w-full object-cover"
               />
             ) : (
-              <div className="flex h-full items-center justify-center text-teal-100">
+              <div className="flex h-full items-center justify-center text-violet-100">
                 <Plane size={42} />
               </div>
             )}
-            <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-teal-800">
+            <span className="absolute bottom-3 left-3 rounded-full bg-white/95 px-3 py-1 text-xs font-bold text-violet-800">
               {booking.destination}
             </span>
           </div>
@@ -280,7 +280,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
               key={label}
               className="flex items-center gap-3 border-b border-slate-100 px-4 py-4 last:border-0 sm:border-r lg:border-b-0"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 text-violet-700">
                 <Icon size={19} />
               </span>
               <div className="min-w-0">
@@ -304,7 +304,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                   Primary contact for this booking
                 </p>
               </div>
-              <Users className="text-teal-700" size={22} />
+              <Users className="text-violet-700" size={22} />
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
               <div className="rounded-xl bg-slate-50 p-4">
@@ -324,11 +324,11 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                 </p>
               </div>
               <p className="flex min-w-0 items-center gap-2 break-all text-sm text-slate-600">
-                <Mail size={16} className="shrink-0 text-teal-700" />
+                <Mail size={16} className="shrink-0 text-violet-700" />
                 {booking.email || "Email not provided"}
               </p>
               <p className="flex items-center gap-2 text-sm text-slate-600">
-                <Phone size={16} className="shrink-0 text-teal-700" />
+                <Phone size={16} className="shrink-0 text-violet-700" />
                 {booking.phone || "Phone not provided"}
               </p>
             </div>
@@ -336,7 +336,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
 
           <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-6">
             <div className="flex items-center gap-3">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-600 text-white">
+              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-violet-500 text-white">
                 <Clock size={19} />
               </span>
               <h2 className="text-lg font-bold text-slate-900">
@@ -352,7 +352,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                   {index < timeline.length - 1 && (
                     <span className="absolute left-[11px] top-6 h-[calc(100%+0.25rem)] w-px bg-slate-200" />
                   )}
-                  <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700">
+                  <span className="relative z-10 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-violet-50 text-violet-700">
                     {index === timeline.length - 1 ? (
                       <Plane size={13} />
                     ) : (
@@ -385,7 +385,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                 {travellers.length === 1 ? "traveller" : "travellers"}
               </p>
             </div>
-            <BedDouble className="text-teal-700" size={22} />
+            <BedDouble className="text-violet-700" size={22} />
           </div>
           {rooms.length ? (
             <div className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -459,7 +459,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                     key={`${booking.id}-traveller-${index}`}
                     className="overflow-hidden rounded-2xl border border-slate-200"
                   >
-                    <div className="h-1.5 bg-gradient-to-r from-teal-600 to-cyan-500" />
+                    <div className="h-1.5 bg-gradient-to-r from-violet-600 to-violet-500" />
                     <div className="p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
@@ -482,7 +482,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
                       </div>
                       <div className="mt-3 flex flex-wrap gap-2">
                         {traveller.type && (
-                          <span className="rounded-full bg-teal-50 px-2.5 py-1 text-xs font-semibold text-teal-700">
+                          <span className="rounded-full bg-violet-50 px-2.5 py-1 text-xs font-semibold text-violet-700">
                             {traveller.type}
                           </span>
                         )}
@@ -595,14 +595,14 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
               </p>
             )}
           </div>
-          <div className="flex items-center justify-between gap-4 rounded-2xl border border-teal-100 bg-teal-50/70 p-5">
+          <div className="flex items-center justify-between gap-4 rounded-2xl border border-violet-100 bg-violet-50/70 p-5">
             <div>
               <p className="text-sm text-slate-600">Total booking amount</p>
               <p className="mt-1 text-2xl font-bold text-slate-900">
                 {formatCurrency(booking.amount)}
               </p>
             </div>
-            <IndianRupee size={30} className="text-teal-700" />
+            <IndianRupee size={30} className="text-violet-700" />
           </div>
         </section>
 
@@ -618,7 +618,7 @@ function BookingDetailsPageContent({ booking, onStatusChange }) {
             <button
               type="button"
               onClick={() => onStatusChange(booking.id, "confirmed")}
-              className="rounded-xl bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-700 print:hidden"
+              className="rounded-xl bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700 print:hidden"
             >
               Confirm booking
             </button>
@@ -940,14 +940,14 @@ export default function Bookings() {
           value={formatCurrency(stats.revenue)}
           description={`${stats.travelers} travellers on active bookings`}
           icon={IndianRupee}
-          color="bg-teal-50 text-teal-700"
+          color="bg-violet-50 text-violet-700"
         />
       </div>
 
       {/* Filters */}
       <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
         <div className="mb-4 flex items-center gap-2">
-          <Filter size={17} className="text-teal-700" />
+          <Filter size={17} className="text-violet-700" />
           <h2 className="font-semibold text-slate-900">Filter bookings</h2>
         </div>
 
@@ -965,7 +965,7 @@ export default function Bookings() {
                 setCurrentPage(1);
               }}
               placeholder="Search ID, customer, package..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10"
+              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/10"
             />
           </div>
 
@@ -975,7 +975,7 @@ export default function Bookings() {
               setStatusFilter(event.target.value);
               setCurrentPage(1);
             }}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-teal-500"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-violet-500"
             aria-label="Filter by booking status"
           >
             <option value="All">All booking statuses</option>
@@ -992,7 +992,7 @@ export default function Bookings() {
               setCurrentPage(1);
             }}
             aria-label="Filter by departure date"
-            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-teal-500 sm:col-span-2 xl:col-span-1"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm text-slate-700 outline-none focus:border-violet-500 sm:col-span-2 xl:col-span-1"
           />
         </div>
 
@@ -1004,7 +1004,7 @@ export default function Bookings() {
           <button
             type="button"
             onClick={resetFilters}
-            className="text-sm font-semibold text-teal-700 hover:text-teal-800"
+            className="text-sm font-semibold text-violet-700 hover:text-violet-800"
           >
             Clear filters
           </button>
@@ -1021,7 +1021,7 @@ export default function Bookings() {
             </p>
           </div>
 
-          <span className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
+          <span className="rounded-full bg-violet-50 px-3 py-1 text-xs font-semibold text-violet-700">
             {filteredBookings.length} results
           </span>
         </div>
@@ -1040,7 +1040,7 @@ export default function Bookings() {
             <button
               type="button"
               onClick={resetFilters}
-              className="mt-4 rounded-xl bg-teal-600 px-4 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+              className="mt-4 rounded-xl bg-violet-600 px-4 py-2 text-sm font-semibold text-white hover:bg-violet-700"
             >
               Reset filters
             </button>
@@ -1144,7 +1144,7 @@ export default function Bookings() {
                       <td className="px-4 py-4 pr-5">
                         <Link
                           to={`/vendor/bookings/${encodeURIComponent(booking.id)}`}
-                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700"
+                          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
                         >
                           <Eye size={14} />
                           View
@@ -1174,7 +1174,7 @@ export default function Bookings() {
                       setPageSize(Number(event.target.value));
                       setCurrentPage(1);
                     }}
-                    className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-teal-500"
+                    className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-violet-500"
                   >
                     {PAGE_SIZE_OPTIONS.map((size) => (
                       <option key={size} value={size}>
@@ -1215,7 +1215,7 @@ export default function Bookings() {
                       aria-current={page === displayedPage ? "page" : undefined}
                       className={`min-w-9 rounded-lg border px-3 py-2 text-sm font-medium transition ${
                         page === displayedPage
-                          ? "border-teal-600 bg-teal-600 text-white"
+                          ? "border-violet-600 bg-violet-600 text-white"
                           : "border-slate-200 text-slate-700 hover:bg-slate-50"
                       }`}
                     >
@@ -1345,7 +1345,7 @@ export function BookingDetailsPage() {
         </p>
         <Link
           to="/vendor/bookings"
-          className="mt-4 inline-flex rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white"
+          className="mt-4 inline-flex rounded-lg bg-violet-700 px-4 py-2 text-sm font-semibold text-white"
         >
           Back to bookings
         </Link>

@@ -201,9 +201,9 @@ const linkBase =
   "group flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm transition-all duration-200";
 
 const linkActive =
-  "bg-teal-600 font-semibold text-white shadow-lg shadow-teal-600/25";
+  "bg-violet-600 font-semibold text-white shadow-lg shadow-violet-600/25";
 
-const linkIdle = "text-slate-600 hover:bg-teal-50 hover:text-teal-700";
+const linkIdle = "text-slate-600 hover:bg-violet-50 hover:text-violet-700";
 
 const scrollbarSlim =
   "[color-scheme:light] " +
@@ -225,7 +225,7 @@ function CountBadge({ count, active }) {
   return (
     <span
       className={`ml-auto flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full px-1.5 text-[11px] font-semibold ${
-        active ? "bg-white text-teal-700" : "bg-teal-100 text-teal-700"
+        active ? "bg-white text-violet-700" : "bg-violet-100 text-violet-700"
       }`}
     >
       {count > 99 ? "99+" : count}
@@ -259,7 +259,7 @@ function MenuLink({ item, badges, onNavigate, collapsed }) {
             className={`shrink-0 ${
               isActive
                 ? "text-white"
-                : "text-slate-400 group-hover:text-teal-600"
+                : "text-slate-400 group-hover:text-violet-600"
             }`}
           />
 
@@ -270,7 +270,7 @@ function MenuLink({ item, badges, onNavigate, collapsed }) {
           {!collapsed && <CountBadge count={count} active={isActive} />}
 
           {collapsed && count > 0 && (
-            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-teal-500" />
+            <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-violet-500" />
           )}
         </>
       )}
@@ -308,16 +308,16 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
           collapsed ? "justify-center px-2" : ""
         } ${
           isGroupActive
-            ? "bg-teal-50 font-semibold text-teal-700"
-            : "text-slate-600 hover:bg-teal-50 hover:text-teal-700"
+            ? "bg-violet-50 font-semibold text-violet-700"
+            : "text-slate-600 hover:bg-violet-50 hover:text-violet-700"
         }`}
       >
         <Icon
           size={19}
           className={`shrink-0 ${
             isGroupActive
-              ? "text-teal-600"
-              : "text-slate-400 group-hover:text-teal-600"
+              ? "text-violet-600"
+              : "text-slate-400 group-hover:text-violet-600"
           }`}
         />
 
@@ -349,7 +349,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
                 className={({ isActive }) =>
                   `group flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-colors ${
                     isActive
-                      ? "bg-teal-50 font-semibold text-teal-700 ring-1 ring-inset ring-teal-200"
+                      ? "bg-violet-50 font-semibold text-violet-700 ring-1 ring-inset ring-violet-200"
                       : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
                   }`
                 }
@@ -358,7 +358,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
                   size={16}
                   className={`shrink-0 ${
                     pathname === child.path
-                      ? "text-teal-600"
+                      ? "text-violet-600"
                       : "text-slate-400 group-hover:text-slate-600"
                   }`}
                 />
@@ -405,7 +405,7 @@ export default function VendorSidebar({
         {!collapsed &&
           (logoFailed ? (
             <span className="min-w-0 flex-1 truncate text-lg font-extrabold tracking-wide text-violet-800">
-              Safar<span className="text-teal-600">2</span>You
+              Safar<span className="text-violet-600">2</span>You
             </span>
           ) : (
             <img
@@ -421,7 +421,7 @@ export default function VendorSidebar({
           onClick={() => setCollapsed((previous) => !previous)}
           aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
           title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-          className={`flex shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-teal-600 ${
+          className={`flex shrink-0 items-center justify-center rounded-lg p-1.5 text-slate-500 transition hover:bg-slate-100 hover:text-violet-600 ${
             collapsed ? "order-1" : ""
           }`}
         >
@@ -463,7 +463,7 @@ export default function VendorSidebar({
         }`}
         title={collapsed ? `${vendorName} — ${accountType}` : undefined}
       >
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-600 font-bold text-white">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-600 font-bold text-white">
           {initial}
         </div>
 

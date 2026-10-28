@@ -103,7 +103,7 @@ export default function VendorNavbar({ onMenuClick }) {
             type="button"
             onClick={onMenuClick}
             aria-label="Open navigation menu"
-            className="rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700 lg:hidden"
+            className="rounded-xl border border-slate-200 p-2.5 text-slate-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 lg:hidden"
           >
             <Menu size={21} />
           </button>
@@ -116,14 +116,14 @@ export default function VendorNavbar({ onMenuClick }) {
                   <button
                     type="button"
                     onClick={() => navigate("/vendor")}
-                    className="font-medium text-slate-400 transition hover:text-teal-700"
+                    className="font-medium text-slate-400 transition hover:text-violet-700"
                   >
                     Vendor Portal
                   </button>
 
                   <ChevronRight size={13} className="shrink-0 text-slate-400" />
 
-                  <span className="font-semibold text-teal-700">
+                  <span className="font-semibold text-violet-700">
                     Management
                   </span>
                 </div>
@@ -142,7 +142,7 @@ export default function VendorNavbar({ onMenuClick }) {
           {location.pathname === "/vendor" && (
             <form
               onSubmit={handleSearch}
-              className="hidden w-56 items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-3 transition focus-within:border-teal-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-teal-500/10 md:flex lg:w-72"
+              className="hidden w-56 items-center gap-2.5 rounded-xl border border-slate-200 bg-slate-50/80 px-3.5 py-3 transition focus-within:border-violet-400 focus-within:bg-white focus-within:ring-4 focus-within:ring-violet-500/10 md:flex lg:w-72"
             >
               <Search size={19} className="shrink-0 text-slate-400" />
 
@@ -180,8 +180,8 @@ export default function VendorNavbar({ onMenuClick }) {
               aria-expanded={notificationsOpen}
               className={`relative rounded-xl border p-3 transition ${
                 notificationsOpen
-                  ? "border-teal-200 bg-teal-50 text-teal-700"
-                  : "border-slate-200 bg-white text-slate-600 hover:border-teal-200 hover:bg-teal-50 hover:text-teal-700"
+                  ? "border-violet-200 bg-violet-50 text-violet-700"
+                  : "border-slate-200 bg-white text-slate-600 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
               }`}
             >
               <Bell size={20} />
@@ -211,7 +211,7 @@ export default function VendorNavbar({ onMenuClick }) {
 
                 <div className="mt-4 rounded-xl bg-slate-50 p-3">
                   <div className="flex gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-teal-700">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-100 text-violet-700">
                       <Bell size={17} />
                     </span>
                     <div>
@@ -229,7 +229,7 @@ export default function VendorNavbar({ onMenuClick }) {
                 <button
                   type="button"
                   onClick={() => navigate("/vendor/notifications")}
-                  className="mt-3 w-full rounded-xl bg-teal-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-700"
+                  className="mt-3 w-full rounded-xl bg-violet-600 px-3 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-700"
                 >
                   View all notifications
                 </button>
@@ -252,7 +252,7 @@ export default function VendorNavbar({ onMenuClick }) {
               aria-haspopup="menu"
               className="flex items-center gap-2 rounded-xl p-1.5 transition hover:bg-slate-50 sm:gap-3"
             >
-              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-teal-50 text-base font-bold text-teal-800 ring-1 ring-teal-100 sm:h-12 sm:w-12">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-violet-50 text-base font-bold text-violet-800 ring-1 ring-violet-100 sm:h-12 sm:w-12">
                 V
               </span>
 
@@ -291,7 +291,7 @@ export default function VendorNavbar({ onMenuClick }) {
                   type="button"
                   role="menuitem"
                   onClick={() => navigate("/vendor/business-profile")}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-teal-50 hover:text-teal-800"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-violet-50 hover:text-violet-800"
                 >
                   <UserRound size={17} />
                   Business Profile
@@ -301,7 +301,7 @@ export default function VendorNavbar({ onMenuClick }) {
                   type="button"
                   role="menuitem"
                   onClick={() => navigate("/vendor/settings")}
-                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-teal-50 hover:text-teal-800"
+                  className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-700 transition hover:bg-violet-50 hover:text-violet-800"
                 >
                   <Settings size={17} />
                   Account Settings

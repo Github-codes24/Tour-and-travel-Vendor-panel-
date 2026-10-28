@@ -7,7 +7,7 @@ function Metric({ icon: Icon, label, definition, loading, children, change, show
     <div className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium text-gray-600">{label}</p>
-        <span className="rounded-lg bg-teal-50 p-2 text-teal-600"><Icon size={18} /></span>
+        <span className="rounded-lg bg-violet-50 p-2 text-violet-600"><Icon size={18} /></span>
       </div>
       {loading ? (
         <div className="mt-3 space-y-2"><Skeleton className="h-8 w-28" /><Skeleton className="h-3 w-40" /></div>

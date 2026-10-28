@@ -167,9 +167,9 @@ const notificationConfig = {
   },
   account: {
     icon: ShieldCheck,
-    color: "text-teal-700",
-    bg: "bg-teal-50",
-    border: "border-teal-100",
+    color: "text-violet-700",
+    bg: "bg-violet-50",
+    border: "border-violet-100",
   },
   review: {
     icon: CheckCircle2,
@@ -403,7 +403,7 @@ export default function VendorNotifications() {
               </h1>
 
               {unreadCount > 0 && (
-                <span className="rounded-full bg-teal-100 px-3 py-1 text-xs font-semibold text-teal-800">
+                <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-800">
                   {unreadCount} unread
                 </span>
               )}
@@ -419,7 +419,7 @@ export default function VendorNotifications() {
             <button
               type="button"
               onClick={resetDemoNotifications}
-              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-teal-300 hover:text-teal-700"
+              className="inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-violet-300 hover:text-violet-700"
             >
               <RefreshCw size={16} />
               Reset demo
@@ -429,7 +429,7 @@ export default function VendorNotifications() {
               type="button"
               onClick={markAllAsRead}
               disabled={unreadCount === 0}
-              className="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 disabled:cursor-not-allowed disabled:opacity-50"
+              className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 disabled:cursor-not-allowed disabled:opacity-50"
             >
               <CheckCheck size={17} />
               Mark all as read
@@ -465,7 +465,7 @@ export default function VendorNotifications() {
                 <p className="text-sm font-medium text-slate-500">
                   Unread notifications
                 </p>
-                <p className="mt-2 text-3xl font-bold text-teal-700">
+                <p className="mt-2 text-3xl font-bold text-violet-700">
                   {unreadCount}
                 </p>
                 <p className="mt-1 text-xs text-slate-400">
@@ -473,7 +473,7 @@ export default function VendorNotifications() {
                 </p>
               </div>
 
-              <div className="rounded-2xl bg-teal-50 p-3.5 text-teal-700">
+              <div className="rounded-2xl bg-violet-50 p-3.5 text-violet-700">
                 <AlertCircle size={24} />
               </div>
             </div>
@@ -518,7 +518,7 @@ export default function VendorNotifications() {
                     setSearchQuery(event.target.value)
                   }
                   placeholder="Search notifications..."
-                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-10 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:bg-white focus:ring-2 focus:ring-teal-100"
+                  className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-10 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:bg-white focus:ring-2 focus:ring-violet-100"
                 />
 
                 {searchQuery && (
@@ -539,7 +539,7 @@ export default function VendorNotifications() {
                   onClick={() => setShowFilters((value) => !value)}
                   className={`inline-flex items-center gap-2 rounded-xl border px-3.5 py-2.5 text-sm font-medium transition ${
                     showFilters
-                      ? "border-teal-300 bg-teal-50 text-teal-800"
+                      ? "border-violet-300 bg-violet-50 text-violet-800"
                       : "border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
                   }`}
                 >
@@ -575,7 +575,7 @@ export default function VendorNotifications() {
                     onClick={() => setActiveCategory(category)}
                     className={`inline-flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-sm font-medium transition ${
                       activeCategory === category
-                        ? "bg-teal-700 text-white shadow-sm"
+                        ? "bg-violet-700 text-white shadow-sm"
                         : "bg-slate-100 text-slate-600 hover:bg-slate-200"
                     }`}
                   >
@@ -613,7 +613,7 @@ export default function VendorNotifications() {
                     className={`rounded-lg px-3 py-2 text-sm font-medium transition ${
                       activeFilter === filter.value
                         ? "bg-slate-900 text-white"
-                        : "border border-slate-200 bg-white text-slate-600 hover:border-teal-300"
+                        : "border border-slate-200 bg-white text-slate-600 hover:border-violet-300"
                     }`}
                   >
                     {filter.label}
@@ -648,11 +648,11 @@ export default function VendorNotifications() {
                   <div
                     key={item.id}
                     className={`group relative flex flex-col gap-3 p-4 transition hover:bg-slate-50 sm:p-5 lg:flex-row lg:items-center lg:gap-4 ${
-                      !item.read ? "bg-teal-50/30" : "bg-white"
+                      !item.read ? "bg-violet-50/30" : "bg-white"
                     }`}
                   >
                     {!item.read && (
-                      <span className="absolute inset-y-0 left-0 w-1 bg-teal-600" />
+                      <span className="absolute inset-y-0 left-0 w-1 bg-violet-600" />
                     )}
 
                     {/* Icon + Content */}
@@ -676,7 +676,7 @@ export default function VendorNotifications() {
                           </h3>
 
                           {!item.read && (
-                            <span className="h-2 w-2 rounded-full bg-teal-600" />
+                            <span className="h-2 w-2 rounded-full bg-violet-600" />
                           )}
 
                           {item.priority === "high" && (
@@ -715,7 +715,7 @@ export default function VendorNotifications() {
                         <button
                           type="button"
                           onClick={() => markAsRead(item.id)}
-                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-teal-700 transition hover:bg-teal-50"
+                          className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-medium text-violet-700 transition hover:bg-violet-50"
                         >
                           <CheckCheck size={14} />
                           Mark as read
@@ -725,7 +725,7 @@ export default function VendorNotifications() {
                       <button
                         type="button"
                         onClick={() => openNotification(item)}
-                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-teal-300 hover:text-teal-700"
+                        className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-violet-300 hover:text-violet-700"
                       >
                         View details
                         <ArrowUpRight size={13} />
@@ -798,7 +798,7 @@ export default function VendorNotifications() {
                   setActiveFilter("all");
                   setSearchQuery("");
                 }}
-                className="mt-4 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+                className="mt-4 rounded-xl bg-violet-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-800"
               >
                 Clear filters
               </button>
@@ -833,7 +833,7 @@ export default function VendorNotifications() {
                   onChange={(event) =>
                     setPageSize(Number(event.target.value))
                   }
-                  className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-xs font-medium text-slate-700 outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
                 >
                   {PAGE_SIZE_OPTIONS.map((size) => (
                     <option key={size} value={size}>
@@ -850,7 +850,7 @@ export default function VendorNotifications() {
                 onClick={() => goToPage(safePage - 1)}
                 disabled={safePage === 1}
                 aria-label="Previous page"
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-600 transition hover:border-teal-300 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-600 transition hover:border-violet-300 hover:text-violet-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
               >
                 <ChevronLeft size={14} />
                 Prev
@@ -872,8 +872,8 @@ export default function VendorNotifications() {
                     aria-current={page === safePage ? "page" : undefined}
                     className={`h-8 min-w-8 rounded-lg px-2 text-xs font-semibold transition ${
                       page === safePage
-                        ? "bg-teal-700 text-white shadow-sm"
-                        : "border border-slate-200 bg-white text-slate-600 hover:border-teal-300 hover:text-teal-700"
+                        ? "bg-violet-700 text-white shadow-sm"
+                        : "border border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-700"
                     }`}
                   >
                     {page}
@@ -886,7 +886,7 @@ export default function VendorNotifications() {
                 onClick={() => goToPage(safePage + 1)}
                 disabled={safePage === totalPages}
                 aria-label="Next page"
-                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-600 transition hover:border-teal-300 hover:text-teal-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
+                className="inline-flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2.5 py-2 text-xs font-medium text-slate-600 transition hover:border-violet-300 hover:text-violet-700 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:border-slate-200 disabled:hover:text-slate-600"
               >
                 Next
                 <ChevronRight size={14} />
@@ -927,7 +927,7 @@ export default function VendorNotifications() {
                 })()}
 
                 <div>
-                  <p className="text-xs font-medium uppercase tracking-wide text-teal-700">
+                  <p className="text-xs font-medium uppercase tracking-wide text-violet-700">
                     {selectedNotification.category}
                   </p>
 
@@ -1006,7 +1006,7 @@ export default function VendorNotifications() {
               <button
                 type="button"
                 onClick={() => setSelectedNotification(null)}
-                className="rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-teal-800"
+                className="rounded-xl bg-violet-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-violet-800"
               >
                 Close
               </button>

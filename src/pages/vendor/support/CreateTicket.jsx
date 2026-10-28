@@ -49,7 +49,7 @@ function fieldClass(hasError) {
   return `${baseFieldClass} ${
     hasError
       ? "border-red-400 focus:border-red-500 focus:ring-red-100"
-      : "border-slate-300 focus:border-emerald-600 focus:ring-emerald-600/10"
+      : "border-slate-300 focus:border-violet-600 focus:ring-violet-600/10"
   }`;
 }
 
@@ -61,7 +61,7 @@ const cardClass =
 function CardHeader({ icon: Icon, title, description }) {
   return (
     <div className="mb-5 flex items-center gap-3 border-b border-slate-100 pb-4">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
         <Icon size={20} />
       </span>
 
@@ -226,7 +226,7 @@ export default function CreateTicket() {
             <button
               type="button"
               onClick={() => navigate("/vendor/support")}
-              className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-600/15"
+              className="mb-6 inline-flex items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-violet-600/15"
             >
               <ArrowLeft size={17} />
               Back to Support
@@ -247,7 +247,7 @@ export default function CreateTicket() {
               type="button"
               disabled={submitting}
               onClick={() => navigate("/vendor/support")}
-              className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-emerald-600/15 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
+              className="inline-flex flex-1 items-center justify-center rounded-xl border border-slate-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus:outline-none focus:ring-4 focus:ring-violet-600/15 disabled:cursor-not-allowed disabled:opacity-50 sm:flex-none"
             >
               Cancel
             </button>
@@ -256,7 +256,7 @@ export default function CreateTicket() {
               type="submit"
               form={FORM_ID}
               disabled={submitting}
-              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-emerald-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-700/25 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
+              className="inline-flex flex-1 items-center justify-center gap-2 rounded-xl bg-violet-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-700/25 disabled:cursor-not-allowed disabled:opacity-60 sm:flex-none"
             >
               {submitting ? (
                 <>
@@ -446,9 +446,9 @@ export default function CreateTicket() {
               {!attachment ? (
                 <label
                   htmlFor="ticket-attachment"
-                  className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-4 py-6 text-center transition hover:border-emerald-500 hover:bg-emerald-50/40"
+                  className="flex cursor-pointer flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-4 py-6 text-center transition hover:border-violet-500 hover:bg-violet-50/40"
                 >
-                  <span className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-emerald-700 shadow-sm ring-1 ring-slate-200">
+                  <span className="mb-2.5 flex h-10 w-10 items-center justify-center rounded-xl bg-white text-violet-700 shadow-sm ring-1 ring-slate-200">
                     <Upload size={19} />
                   </span>
 
@@ -462,7 +462,7 @@ export default function CreateTicket() {
                 </label>
               ) : (
                 <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/70 p-3">
-                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
                     <FileText size={19} />
                   </span>
 
@@ -509,7 +509,7 @@ export default function CreateTicket() {
                   <button
                     type="button"
                     onClick={() => navigate("/vendor/support/help")}
-                    className="font-semibold text-emerald-700 hover:text-emerald-900"
+                    className="font-semibold text-violet-700 hover:text-violet-900"
                   >
                     Help Center
                   </button>

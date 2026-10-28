@@ -1,5 +1,19 @@
 @import "tailwindcss";
 
+@theme {
+  --color-violet-50: #fcf4ff;
+  --color-violet-100: #f8e5ff;
+  --color-violet-200: #efc7ff;
+  --color-violet-300: #e19aff;
+  --color-violet-400: #cd60f4;
+  --color-violet-500: #b227dc;
+  --color-violet-600: #9400c2;
+  --color-violet-700: #76009e;
+  --color-violet-800: #5d007d;
+  --color-violet-900: #490061;
+  --color-violet-950: #2d003d;
+}
+
 html,
 body,
 #root {
@@ -15,23 +29,23 @@ body {
 }
 
 .auth-primary-action {
-  background-color: #6d28d9;
+  background-color: #9400c2;
   color: #fff;
 }
 
 .auth-primary-action:hover {
-  background-color: #5b21b6;
+  background-color: #76009e;
 }
 
 .auth-primary-action:focus-visible {
-  outline: 2px solid #8b5cf6;
+  outline: 2px solid #cd60f4;
   outline-offset: 3px;
 }
 
-/* Dark thin scrollbar for sidebar */
+/* Brand-accent thin scrollbar */
 .sidebar-scroll {
   scrollbar-width: thin;
-  scrollbar-color: rgb(51 65 85) transparent;
+  scrollbar-color: #76009e transparent;
 }
 .sidebar-scroll::-webkit-scrollbar {
   width: 6px;
@@ -40,6 +54,6 @@ body {
   background: transparent;
 }
 .sidebar-scroll::-webkit-scrollbar-thumb {
-  background: rgb(51 65 85);
+  background: #76009e;
   border-radius: 9999px;
 }

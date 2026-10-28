@@ -118,13 +118,13 @@ function FilterField({ label, htmlFor, children }) {
 }
 
 const inputClass =
-  "h-11 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10";
+  "h-11 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3.5 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-violet-600 focus:ring-4 focus:ring-violet-600/10";
 
 function TicketDetailsLink({ id }) {
   return (
     <Link
       to={`/vendor/support/tickets/${encodeURIComponent(id)}`}
-      className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-600/10"
+      className="inline-flex h-9 items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:border-violet-600 hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/10"
     >
       View details
       <ArrowUpRight size={14} />
@@ -220,17 +220,17 @@ export default function MyTickets() {
     <main className="mx-auto w-full max-w-[1600px] space-y-6 pb-8">
       {/* Page header */}
       <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="absolute inset-y-0 left-0 w-1 bg-teal-700" />
+        <div className="absolute inset-y-0 left-0 w-1 bg-violet-700" />
 
         <div className="flex flex-col gap-5 p-5 sm:p-7 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-start gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700 ring-1 ring-inset ring-teal-100">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-700 ring-1 ring-inset ring-violet-100">
               <LifeBuoy size={24} strokeWidth={1.8} />
             </div>
 
             <div className="min-w-0">
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-teal-700">
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-violet-700">
                   Support Center
                 </p>
               </div>
@@ -248,7 +248,7 @@ export default function MyTickets() {
 
           <Link
             to="/vendor/support/create"
-            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-600/20"
+            className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/20"
           >
             <Plus size={18} />
             Create ticket
@@ -278,7 +278,7 @@ export default function MyTickets() {
             type="button"
             onClick={clearFilters}
             disabled={!hasActiveFilters}
-            className="inline-flex h-9 shrink-0 items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-600 transition hover:border-teal-200 hover:bg-teal-50 hover:text-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-600/10 disabled:cursor-not-allowed disabled:opacity-40 lg:self-center"
+            className="inline-flex h-9 shrink-0 items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-600/10 disabled:cursor-not-allowed disabled:opacity-40 lg:self-center"
           >
             <RotateCcw size={15} />
             Reset filters
@@ -401,7 +401,7 @@ export default function MyTickets() {
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex flex-col gap-2 border-b border-slate-100 px-5 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
               <Ticket size={18} />
             </div>
 
@@ -425,7 +425,7 @@ export default function MyTickets() {
 
         {loading ? (
           <div className="flex min-h-64 flex-col items-center justify-center gap-3 px-5 py-16">
-            <LoaderCircle size={27} className="animate-spin text-teal-700" />
+            <LoaderCircle size={27} className="animate-spin text-violet-700" />
             <p className="text-sm font-medium text-slate-600">
               Loading your tickets...
             </p>
@@ -471,7 +471,7 @@ export default function MyTickets() {
             ) : (
               <Link
                 to="/vendor/support/create"
-                className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
+                className="mt-5 inline-flex h-10 items-center gap-2 rounded-lg bg-violet-700 px-4 text-sm font-semibold text-white transition hover:bg-violet-800"
               >
                 <Plus size={16} />
                 Create your first ticket
@@ -583,10 +583,10 @@ export default function MyTickets() {
                 return (
                   <article
                     key={id}
-                    className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-teal-200"
+                    className="rounded-xl border border-slate-200 bg-white p-4 transition hover:border-violet-200"
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+                      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
                         <Ticket size={19} />
                       </div>
 
@@ -638,7 +638,7 @@ export default function MyTickets() {
 
                     <Link
                       to={`/vendor/support/tickets/${encodeURIComponent(id)}`}
-                      className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-800"
+                      className="mt-4 inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white text-sm font-semibold text-slate-700 transition hover:border-violet-600 hover:bg-violet-50 hover:text-violet-800"
                     >
                       View ticket details
                       <ArrowUpRight size={16} />

@@ -53,7 +53,7 @@ const INCLUSIONS = {
   flights: { label: "Flights", Icon: Plane, tone: "bg-orange-50 text-orange-500" },
   hotels: { label: "Hotels", Icon: Building2, tone: "bg-indigo-50 text-indigo-500" },
   sightseeing: { label: "Sightseeing", Icon: Camera, tone: "bg-sky-50 text-sky-500" },
-  visa: { label: "Visa", Icon: FileCheck, tone: "bg-teal-50 text-teal-600" },
+  visa: { label: "Visa", Icon: FileCheck, tone: "bg-violet-50 text-violet-600" },
   meal: { label: "Meal", Icon: Utensils, tone: "bg-amber-50 text-amber-500" },
   meals: { label: "Meal", Icon: Utensils, tone: "bg-amber-50 text-amber-500" },
   tourManager: { label: "Tour Manager", Icon: UserCheck, tone: "bg-rose-50 text-rose-500" },
@@ -131,7 +131,7 @@ function PackageHero({ title, image, onSearch }) {
   const [text, setText] = useState("");
 
   return (
-    <section className="relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-teal-900 px-4 py-8">
+    <section className="relative flex min-h-[190px] items-center justify-center overflow-hidden rounded-2xl bg-violet-900 px-4 py-8">
       {image && (
         <img
           src={image}
@@ -139,7 +139,7 @@ function PackageHero({ title, image, onSearch }) {
           className="absolute inset-0 h-full w-full object-cover"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-teal-950/70 via-teal-950/50 to-teal-950/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-violet-950/70 via-violet-950/50 to-violet-950/80" />
       <div className="relative z-10 flex w-full max-w-3xl flex-col items-center gap-5 text-center">
         <h1 className="text-2xl font-semibold text-white drop-shadow md:text-4xl">
           {title}
@@ -164,7 +164,7 @@ function PackageHero({ title, image, onSearch }) {
           <button
             type="submit"
             aria-label="Search"
-            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 text-white transition hover:brightness-110"
+            className="flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-violet-500 text-white transition hover:brightness-110"
           >
             <Search className="h-5 w-5" />
           </button>
@@ -182,7 +182,7 @@ function CategoryTabs({ categories, active, onChange, onFilterClick, filterOpen 
         type="button"
         onClick={onFilterClick}
         aria-pressed={filterOpen}
-        className="flex h-12 shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-teal-700 to-cyan-700 px-5 text-base font-semibold text-white shadow-lg shadow-teal-700/25 transition hover:brightness-110"
+        className="flex h-12 shrink-0 cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-violet-700 to-violet-600 px-5 text-base font-semibold text-white shadow-lg shadow-violet-700/25 transition hover:brightness-110"
       >
         Filter{" "}
         <ChevronsRight
@@ -203,8 +203,8 @@ function CategoryTabs({ categories, active, onChange, onFilterClick, filterOpen 
             onClick={() => onChange(c.key)}
             className={`relative h-12 shrink-0 cursor-pointer whitespace-nowrap text-base font-medium transition-colors ${
               active === c.key
-                ? "text-teal-700 after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-amber-400 after:to-teal-500"
-                : "text-slate-700 hover:text-teal-700"
+                ? "text-violet-700 after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-amber-400 after:to-violet-500"
+                : "text-slate-700 hover:text-violet-700"
             }`}
           >
             {c.label} ({c.count})
@@ -227,7 +227,7 @@ function PackagesToolbar({ total, name, sort, onSortChange, view, onViewChange }
 
       <div className="flex flex-wrap items-center gap-5">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-teal-600 to-cyan-600 text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-violet-600 to-violet-500 text-white">
             <ArrowUpDown className="h-5 w-5" />
           </span>
           <label className="relative flex items-center gap-2 text-slate-700">
@@ -259,7 +259,7 @@ function PackagesToolbar({ total, name, sort, onSortChange, view, onViewChange }
               aria-pressed={view === key}
               onClick={() => onViewChange(key)}
               className={`flex h-9 w-9 cursor-pointer items-center justify-center rounded-lg transition-colors ${
-                view === key ? "bg-teal-600 text-white" : "text-slate-500 hover:bg-teal-50"
+                view === key ? "bg-violet-600 text-white" : "text-slate-500 hover:bg-violet-50"
               }`}
             >
               <Icon className="h-5 w-5" />
@@ -289,7 +289,7 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
 
   return (
     <article
-      className={`flex flex-col rounded-2xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-xl hover:shadow-teal-900/10 ${
+      className={`flex flex-col rounded-2xl border border-slate-200 bg-white p-4 transition-shadow hover:shadow-xl hover:shadow-violet-900/10 ${
         isList ? "md:flex-row md:gap-6" : ""
       }`}
     >
@@ -343,7 +343,7 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
             {[pkg.duration, ...(pkg.tags || [])].filter(Boolean).map((t) => (
               <span
                 key={t}
-                className="rounded-lg bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800"
+                className="rounded-lg bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-800"
               >
                 {t}
               </span>
@@ -367,7 +367,7 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
           {pkg.route?.length
             ? pkg.route.map((stop, i) => (
                 <span key={stop} className="flex items-center gap-2">
-                  {i > 0 && <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />}
+                  {i > 0 && <span className="h-1.5 w-1.5 rounded-full bg-violet-300" />}
                   {stop}
                 </span>
               ))
@@ -395,13 +395,13 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
         </ul>
 
         {/* Calendar: next departure + dates count */}
-        <div className="mt-4 flex items-center gap-2 rounded-lg bg-teal-50 px-3 py-2 text-sm text-teal-900">
-          <CalendarDays className="h-4 w-4 shrink-0 text-teal-700" />
+        <div className="mt-4 flex items-center gap-2 rounded-lg bg-violet-50 px-3 py-2 text-sm text-violet-900">
+          <CalendarDays className="h-4 w-4 shrink-0 text-violet-700" />
           <span>
             Next departure:{" "}
             <span className="font-semibold">{prettyShort(departureInfo.next)}</span>
             {departureInfo.count > 1 && (
-              <span className="text-teal-700">
+              <span className="text-violet-700">
                 {" "}
                 · {departureInfo.count} dates
               </span>
@@ -437,7 +437,7 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
           <div className="flex shrink-0 items-center gap-2">
             <Link
               to={`/vendor/packages/new?edit=${pkg.id}`}
-              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700"
+              className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 transition hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700"
             >
               <Pencil size={15} />
               Edit
@@ -454,7 +454,7 @@ function PackageCard({ pkg, layout = "grid", onDelete }) {
             <Link
               to={`/vendor/packages/${pkg.id}`}
               state={{ packageData: pkg }}
-              className="rounded-full bg-gradient-to-r from-teal-700 to-cyan-700 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-teal-700/25 transition hover:brightness-110"
+              className="rounded-full bg-gradient-to-r from-violet-700 to-violet-600 px-5 py-2.5 text-sm font-semibold text-white shadow-md shadow-violet-700/25 transition hover:brightness-110"
             >
               View Details
             </Link>
@@ -590,8 +590,8 @@ export default function MyPackages() {
               onClick={() => setStatus(s)}
               className={`cursor-pointer rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
                 status === s
-                  ? "bg-teal-600 text-white"
-                  : "bg-slate-100 text-slate-600 hover:bg-teal-50 hover:text-teal-700"
+                  ? "bg-violet-600 text-white"
+                  : "bg-slate-100 text-slate-600 hover:bg-violet-50 hover:text-violet-700"
               }`}
             >
               {s}

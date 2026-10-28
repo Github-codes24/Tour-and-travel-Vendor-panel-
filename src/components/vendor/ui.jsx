@@ -5,7 +5,7 @@ const toneClasses = {
   red: "bg-rose-50 text-rose-700 ring-rose-200",
   blue: "bg-sky-50 text-sky-700 ring-sky-200",
   slate: "bg-slate-100 text-slate-700 ring-slate-200",
-  teal: "bg-teal-50 text-teal-700 ring-teal-200",
+  violet: "bg-violet-50 text-violet-700 ring-violet-200",
 };
 
 const statusTone = {
@@ -46,7 +46,7 @@ export function StatCard({ label, value, hint, icon: Icon }) {
   return (
     <div className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-5 shadow-sm">
       {Icon && (
-        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-violet-50 text-violet-700">
           <Icon size={22} />
         </div>
       )}
@@ -68,19 +68,19 @@ export function PageIntro({ children, action }) {
   );
 }
 
-const btnBase = "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
+const btnBase = "inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 const btnVariants = {
-  primary: "bg-teal-600 text-white hover:bg-teal-700",
+  primary: "bg-violet-600 text-white hover:bg-violet-700",
   secondary: "border border-slate-300 bg-white text-slate-700 hover:bg-slate-50",
   danger: "border border-rose-200 bg-white text-rose-600 hover:bg-rose-50",
-  ghost: "text-teal-700 hover:bg-teal-50",
+  ghost: "text-violet-700 hover:bg-violet-50",
 };
 
 export function Button({ variant = "primary", className = "", ...props }) {
   return <button type="button" className={`${btnBase} ${btnVariants[variant]} ${className}`} {...props} />;
 }
 
-const inputBase = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-100 disabled:bg-slate-50 disabled:text-slate-500";
+const inputBase = "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-violet-500 focus:ring-2 focus:ring-violet-100 disabled:bg-slate-50 disabled:text-slate-500";
 
 export function Field({ label, hint, children, className = "" }) {
   return (
@@ -110,7 +110,7 @@ export function Toggle({ checked, onChange, label }) {
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className={`relative h-6 w-11 shrink-0 rounded-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 focus-visible:ring-offset-2 ${checked ? "bg-teal-600" : "bg-slate-300"}`}
+      className={`relative h-6 w-11 shrink-0 rounded-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 focus-visible:ring-offset-2 ${checked ? "bg-violet-600" : "bg-slate-300"}`}
     >
       <span className={`absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform ${checked ? "translate-x-5" : ""}`} />
     </button>
@@ -154,7 +154,7 @@ export function Tabs({ tabs, value, onChange }) {
           type="button"
           onClick={() => onChange(t)}
           className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
-            value === t ? "bg-teal-600 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
+            value === t ? "bg-violet-600 text-white" : "border border-slate-200 bg-white text-slate-600 hover:bg-slate-50"
           }`}
         >
           {t}
