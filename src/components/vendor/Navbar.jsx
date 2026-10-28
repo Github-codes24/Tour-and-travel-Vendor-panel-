@@ -11,7 +11,7 @@ export function Navbar() {
     <header className="fixed inset-x-0 top-0 z-40 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 sm:px-6">
         <Link to="/vendor/packages" className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-600 text-white shadow-lg shadow-teal-700/20">
+          <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-violet-500 text-white shadow-lg shadow-violet-700/20">
             <Plane className="h-5 w-5" />
           </span>
           <div>
@@ -28,7 +28,7 @@ export function Navbar() {
               className={({ isActive }) =>
                 `rounded-full px-4 py-2 text-sm font-semibold transition ${
                   isActive
-                    ? "bg-teal-50 text-teal-700 ring-1 ring-teal-200"
+                    ? "bg-violet-50 text-violet-700 ring-1 ring-violet-200"
                     : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
                 }`
               }

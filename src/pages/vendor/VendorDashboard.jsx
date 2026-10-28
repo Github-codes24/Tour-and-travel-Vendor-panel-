@@ -154,7 +154,7 @@ function SectionHeading({ icon: Icon, title, subtitle, action }) {
     <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
       <div>
         <h2 className="flex items-center gap-2 text-base font-bold text-slate-900">
-          {Icon && <Icon size={19} className="text-teal-600" />}
+          {Icon && <Icon size={19} className="text-violet-600" />}
           {title}
         </h2>
         {subtitle && <p className="mt-1 text-xs text-slate-500">{subtitle}</p>}
@@ -184,7 +184,7 @@ function RevenueTrendChart() {
           <select
             value={period}
             onChange={(e) => setPeriod(e.target.value)}
-            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 outline-none focus:border-teal-500"
+            className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs text-slate-700 outline-none focus:border-violet-500"
             aria-label="Revenue chart period"
           >
             <option>6 months</option>
@@ -220,7 +220,7 @@ function RevenueTrendChart() {
               <div className="flex flex-1 items-end justify-center">
                 <div
                   title={`${item.month}: ${inr(item.revenue)}`}
-                  className="w-full max-w-12 rounded-t-lg bg-gradient-to-t from-teal-600 to-teal-400 transition-all duration-300 hover:from-teal-700 hover:to-teal-500"
+                  className="w-full max-w-12 rounded-t-lg bg-gradient-to-t from-violet-600 to-violet-400 transition-all duration-300 hover:from-violet-700 hover:to-violet-500"
                   style={{ height: `${height}%` }}
                 />
               </div>
@@ -231,7 +231,7 @@ function RevenueTrendChart() {
       </div>
 
       <div className="mt-4 flex items-center gap-2 text-xs text-slate-500">
-        <span className="h-2.5 w-2.5 rounded-sm bg-teal-500" />
+        <span className="h-2.5 w-2.5 rounded-sm bg-violet-500" />
         Gross revenue · illustrative monthly figures
       </div>
     </section>
@@ -257,7 +257,7 @@ function BookingPerformanceChart({ bookings }) {
       />
 
       <div className="mb-6 flex items-center gap-4">
-        <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-full border-[7px] border-teal-100">
+        <div className="flex h-20 w-20 shrink-0 flex-col items-center justify-center rounded-full border-[7px] border-violet-100">
           <span className="text-xl font-bold text-slate-900">{bookings.length}</span>
           <span className="text-[10px] text-slate-500">Bookings</span>
         </div>
@@ -348,7 +348,7 @@ function TopPackages({ bookings }) {
         action={
           <Link
             to="/vendor/packages"
-            className="text-xs font-semibold text-teal-700 hover:underline"
+            className="text-xs font-semibold text-violet-700 hover:underline"
           >
             All packages
           </Link>
@@ -361,7 +361,7 @@ function TopPackages({ bookings }) {
         <div className="space-y-5">
           {packagePerformance.map((pkg, index) => (
             <div key={pkg.id} className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-sm font-bold text-teal-700">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-sm font-bold text-violet-700">
                 {index + 1}
               </div>
 
@@ -382,7 +382,7 @@ function TopPackages({ bookings }) {
 
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-teal-500 to-cyan-400"
+                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400"
                     style={{ width: `${(pkg.revenue / maxRevenue) * 100}%` }}
                   />
                 </div>
@@ -429,7 +429,7 @@ function MiniBars({ data, valueKey, format }) {
             <div className="flex flex-1 items-end justify-center">
               <div
                 title={`${item.month}: ${format(item[valueKey])}`}
-                className="w-full max-w-12 rounded-t-lg bg-gradient-to-t from-teal-600 to-teal-400 transition-all duration-300 hover:from-teal-700 hover:to-teal-500"
+                className="w-full max-w-12 rounded-t-lg bg-gradient-to-t from-violet-600 to-violet-400 transition-all duration-300 hover:from-violet-700 hover:to-violet-500"
                 style={{ height: `${height}%` }}
               />
             </div>
@@ -518,7 +518,7 @@ function ReportsHub({ bookings }) {
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <MiniStat icon={Wallet} label="Total Revenue" value={inr(gross)} note="From listed transactions" box="bg-violet-50 text-violet-600" />
-          <MiniStat icon={CalendarCheck} label="Total Bookings" value={bookings.length} note="All statuses" box="bg-emerald-50 text-emerald-600" />
+          <MiniStat icon={CalendarCheck} label="Total Bookings" value={bookings.length} note="All statuses" box="bg-violet-50 text-violet-600" />
           <MiniStat icon={Users} label="Customers" value={customerRows.length} note="Unique customers" box="bg-blue-50 text-blue-600" />
           <MiniStat
             icon={Target}
@@ -544,7 +544,7 @@ function ReportsHub({ bookings }) {
     sales: (
       <div className="space-y-5">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-          <MiniStat icon={TrendingUp} label="6-month Sales" value={inr(monthlyRevenue.reduce((s, m) => s + m.revenue, 0))} box="bg-teal-50 text-teal-600" />
+          <MiniStat icon={TrendingUp} label="6-month Sales" value={inr(monthlyRevenue.reduce((s, m) => s + m.revenue, 0))} box="bg-violet-50 text-violet-600" />
           <MiniStat icon={BarChart3} label="Best Month" value="Oct" note={inr(125500)} box="bg-violet-50 text-violet-600" />
           <MiniStat icon={CalendarCheck} label="Bookings (6 months)" value={monthlyRevenue.reduce((s, m) => s + m.bookings, 0)} box="bg-blue-50 text-blue-600" />
         </div>
@@ -594,7 +594,7 @@ function ReportsHub({ bookings }) {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <MiniStat icon={Wallet} label="Gross sales" value={inr(gross)} box="bg-violet-50 text-violet-600" />
           <MiniStat icon={BarChart3} label="Commission (12%)" value={inr(commission)} box="bg-rose-50 text-rose-600" />
-          <MiniStat icon={TrendingUp} label="Net earnings" value={inr(gross - commission)} box="bg-emerald-50 text-emerald-600" />
+          <MiniStat icon={TrendingUp} label="Net earnings" value={inr(gross - commission)} box="bg-violet-50 text-violet-600" />
         </div>
         <Table columns={["Transaction", "Date", "Booking", "Gross", "Commission", "Net"]}>
           {transactions.map((t) => {
@@ -621,7 +621,7 @@ function ReportsHub({ bookings }) {
         <div className="space-y-5">
           {packageRows.map((r, i) => (
             <div key={r.name} className="flex items-start gap-3">
-              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-sm font-bold text-teal-700">
+              <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-sm font-bold text-violet-700">
                 {i + 1}
               </div>
               <div className="min-w-0 flex-1">
@@ -636,7 +636,7 @@ function ReportsHub({ bookings }) {
                 </div>
                 <div className="mt-2 h-2 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-gradient-to-r from-teal-500 to-cyan-400"
+                    className="h-full rounded-full bg-gradient-to-r from-violet-500 to-violet-400"
                     style={{ width: `${(r.revenue / maxPackageRevenue) * 100}%` }}
                   />
                 </div>
@@ -941,8 +941,8 @@ export default function VendorDashboard() {
       note: `${pending.length} waiting for confirmation`,
       tone: "up",
       icon: CalendarCheck,
-      card: "from-emerald-50 border-emerald-100",
-      box: "bg-emerald-100 text-emerald-600",
+      card: "from-violet-50 border-violet-100",
+      box: "bg-violet-100 text-violet-600",
     },
     {
       key: "payouts",
@@ -997,7 +997,7 @@ export default function VendorDashboard() {
       title: "Add New Package",
       sub: "Create a new tour package",
       icon: PlusCircle,
-      box: "bg-teal-500",
+      box: "bg-violet-500",
     },
     {
       to: "/vendor/bookings",
@@ -1036,7 +1036,7 @@ export default function VendorDashboard() {
             <button
               type="button"
               onClick={() => setParams({ report: "overview" }, { replace: true })}
-              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-teal-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-700"
+              className="mt-5 inline-flex items-center gap-2 rounded-lg bg-violet-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-700"
             >
               View analytics <ArrowRight size={16} />
             </button>
@@ -1056,7 +1056,7 @@ export default function VendorDashboard() {
               onClick={() => setSelected((current) => current === key ? null : key)}
               aria-pressed={active}
               aria-controls="dashboard-detail"
-              className={`rounded-2xl border bg-gradient-to-br to-white p-5 text-left shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500 ${card} ${active ? "ring-2 ring-teal-500" : "hover:shadow-md"}`}
+              className={`rounded-2xl border bg-gradient-to-br to-white p-5 text-left shadow-sm transition focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500 ${card} ${active ? "ring-2 ring-violet-500" : "hover:shadow-md"}`}
             >
               <div className={`flex h-12 w-12 items-center justify-center rounded-full ${box}`}>
                 <Icon size={22} />
@@ -1088,7 +1088,7 @@ export default function VendorDashboard() {
         </div>
 
         <div className="flex items-center gap-4 rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-violet-50 text-violet-600">
             <Target size={23} />
           </div>
           <div>
@@ -1117,7 +1117,7 @@ export default function VendorDashboard() {
             title={panel.title}
             action={
               <div className="flex items-center gap-3">
-                <Link to={panel.link[0]} className="text-sm font-semibold text-teal-700 hover:underline">
+                <Link to={panel.link[0]} className="text-sm font-semibold text-violet-700 hover:underline">
                   {panel.link[1]}
                 </Link>
                 <button
@@ -1154,7 +1154,7 @@ export default function VendorDashboard() {
           <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-4">
               <h2 className="flex items-center gap-2 text-base font-semibold text-slate-900">
-                <CalendarDays size={21} className="text-teal-600" />
+                <CalendarDays size={21} className="text-violet-600" />
                 Recent Bookings
               </h2>
               <Link
@@ -1172,12 +1172,12 @@ export default function VendorDashboard() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Search ID, customer or package..."
-                className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                className="min-w-0 flex-1 rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none transition focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
               />
               <select
                 value={bookingFilter}
                 onChange={(e) => setBookingFilter(e.target.value)}
-                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-teal-500"
+                className="rounded-lg border border-slate-200 bg-white px-3 py-2 text-sm outline-none focus:border-violet-500"
                 aria-label="Filter bookings by status"
               >
                 <option>All</option>
@@ -1238,7 +1238,7 @@ export default function VendorDashboard() {
                 <button
                   type="button"
                   onClick={() => setShowAllBookings((current) => !current)}
-                  className="text-sm font-semibold text-teal-700 hover:underline"
+                  className="text-sm font-semibold text-violet-700 hover:underline"
                 >
                   {showAllBookings ? "Show fewer bookings" : `Show all ${filteredBookings.length} bookings`}
                 </button>
@@ -1251,7 +1251,7 @@ export default function VendorDashboard() {
             <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Plane size={18} className="text-teal-600" />
+                  <Plane size={18} className="text-violet-600" />
                   Today's Departures
                 </h2>
                 <span className="text-xs text-slate-500">{departures.length} trips</span>
@@ -1285,7 +1285,7 @@ export default function VendorDashboard() {
             <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Clock size={18} className="text-teal-600" />
+                  <Clock size={18} className="text-violet-600" />
                   Pending Bookings
                 </h2>
                 <span className="text-xs text-slate-500">{pending.length} bookings</span>
@@ -1317,7 +1317,7 @@ export default function VendorDashboard() {
             <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
               <div className="flex items-center justify-between gap-2">
                 <h2 className="flex items-center gap-2 text-sm font-semibold text-slate-900">
-                  <Bell size={18} className="text-teal-600" />
+                  <Bell size={18} className="text-violet-600" />
                   Notifications
                 </h2>
                 <Link to="/vendor/notifications" className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:underline">
@@ -1342,9 +1342,9 @@ export default function VendorDashboard() {
 
         {/* Quick actions and extra information */}
         <div className="space-y-6">
-          <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-teal-50/60 to-white p-5 shadow-sm">
+          <section className="rounded-2xl border border-slate-200 bg-gradient-to-b from-violet-50/60 to-white p-5 shadow-sm">
             <h2 className="flex items-center gap-3 text-base font-semibold text-slate-900">
-              <Zap size={22} className="text-teal-600" />
+              <Zap size={22} className="text-violet-600" />
               Quick Actions
             </h2>
 
@@ -1353,7 +1353,7 @@ export default function VendorDashboard() {
                 <li key={to}>
                   <Link
                     to={to}
-                    className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-teal-300 hover:shadow-sm"
+                    className="flex items-center gap-4 rounded-xl border border-slate-200 bg-white p-3 transition hover:border-violet-300 hover:shadow-sm"
                   >
                     <span className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-white ${box}`}>
                       <Icon size={20} />
@@ -1446,7 +1446,7 @@ export default function VendorDashboard() {
               </div>
               <Link
                 to="/vendor/earnings"
-                className="inline-flex items-center gap-2 text-sm font-semibold text-teal-700 hover:underline"
+                className="inline-flex items-center gap-2 text-sm font-semibold text-violet-700 hover:underline"
               >
                 View earnings details <ArrowRight size={15} />
               </Link>

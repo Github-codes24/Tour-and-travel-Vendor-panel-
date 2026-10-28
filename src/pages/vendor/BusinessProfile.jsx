@@ -199,7 +199,7 @@ const inputClass = (hasError) =>
   `w-full rounded-xl border bg-white px-4 py-3 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:ring-4 ${
     hasError
       ? "border-red-300 focus:border-red-400 focus:ring-red-100"
-      : "border-slate-300 focus:border-teal-600 focus:ring-teal-600/15"
+      : "border-slate-300 focus:border-violet-600 focus:ring-violet-600/15"
   }`;
 
 const viewBoxClass = "rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-slate-900";
@@ -213,8 +213,8 @@ function ViewValue({ kind, name, value }) {
   if (kind === "days") return `${value} ${String(value) === "1" ? "day" : "days"}`;
   if (kind === "mask") return <span className="font-mono tracking-wide">{maskAccount(value)}</span>;
   if (kind === "mono") return <span className="font-mono tracking-wide">{value}</span>;
-  if (kind === "email") return <a href={`mailto:${value}`} className="text-teal-700 hover:underline">{value}</a>;
-  if (kind === "link") return <a href={value} target="_blank" rel="noreferrer noopener" className="break-all text-teal-700 hover:underline">{value}</a>;
+  if (kind === "email") return <a href={`mailto:${value}`} className="text-violet-700 hover:underline">{value}</a>;
+  if (kind === "link") return <a href={value} target="_blank" rel="noreferrer noopener" className="break-all text-violet-700 hover:underline">{value}</a>;
   return <span className={kind === "multiline" || name === "about" ? "whitespace-pre-line font-normal leading-6" : ""}>{value}</span>;
 }
 
@@ -318,9 +318,9 @@ function TagField({ label, name, data, errors, editing, onChange, placeholder, r
         <div className="flex flex-wrap items-center gap-2">
           {!tags.length && !editing && <span className="px-2 py-1 text-sm text-slate-400">Not provided</span>}
           {tags.map((tag) => (
-            <span key={tag} className="inline-flex items-center gap-1.5 rounded-lg bg-teal-50 px-2.5 py-1 text-xs font-medium text-teal-800 ring-1 ring-inset ring-teal-100">
+            <span key={tag} className="inline-flex items-center gap-1.5 rounded-lg bg-violet-50 px-2.5 py-1 text-xs font-medium text-violet-800 ring-1 ring-inset ring-violet-100">
               {tag}
-              {editing && <button type="button" aria-label={`Remove ${tag}`} onClick={() => onChange(name, tags.filter((item) => item !== tag))} className="text-teal-600 hover:text-red-600"><X size={13} /></button>}
+              {editing && <button type="button" aria-label={`Remove ${tag}`} onClick={() => onChange(name, tags.filter((item) => item !== tag))} className="text-violet-600 hover:text-red-600"><X size={13} /></button>}
             </span>
           ))}
           {editing && (
@@ -328,7 +328,7 @@ function TagField({ label, name, data, errors, editing, onChange, placeholder, r
               <input value={text} placeholder={placeholder} onChange={(e) => setText(e.target.value)} onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === ",") { e.preventDefault(); addTag(); }
               }} className="min-w-0 flex-1 bg-transparent px-1.5 py-1 text-sm outline-none placeholder:text-slate-400" />
-              <button type="button" onClick={addTag} aria-label={`Add ${label}`} className="rounded-md p-1.5 text-teal-700 hover:bg-teal-50"><Plus size={16} /></button>
+              <button type="button" onClick={addTag} aria-label={`Add ${label}`} className="rounded-md p-1.5 text-violet-700 hover:bg-violet-50"><Plus size={16} /></button>
             </div>
           )}
         </div>
@@ -346,7 +346,7 @@ function Notice({ tone = "info", icon: Icon, children }) {
 function Switch({ checked, onChange, disabled, label }) {
   return (
     <button type="button" role="switch" aria-checked={checked} aria-label={label} disabled={disabled} onClick={() => onChange(!checked)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-600/25 ${checked ? "bg-teal-600" : "bg-slate-300"} ${disabled ? "cursor-default opacity-60" : ""}`}>
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-600/25 ${checked ? "bg-violet-600" : "bg-slate-300"} ${disabled ? "cursor-default opacity-60" : ""}`}>
       <span className={`inline-block h-5 w-5 rounded-full bg-white shadow transition-transform ${checked ? "translate-x-5" : "translate-x-0.5"}`} />
     </button>
   );
@@ -458,7 +458,7 @@ function GalleryField({ data, editing, onChange, onError, onStartEdit, onUpload 
           {editing && <button type="button" aria-label={`Remove ${photo.name}`} onClick={() => onChange("gallery", photos.filter((item) => item.id !== photo.id))} className="absolute right-1.5 top-1.5 flex h-7 w-7 items-center justify-center rounded-full bg-slate-900/70 text-white hover:bg-red-600"><X size={14} /></button>}
         </div>)}
         {editing && photos.length < MAX_PHOTOS && <>
-          <button type="button" onClick={() => inputRef.current?.click()} disabled={busy} className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700">{busy ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}{busy ? "Uploading..." : "Add photos"}</button>
+          <button type="button" onClick={() => inputRef.current?.click()} disabled={busy} className="flex aspect-[4/3] flex-col items-center justify-center gap-1.5 rounded-xl border border-dashed border-slate-300 text-sm font-medium text-slate-500 hover:border-violet-600 hover:bg-violet-50 hover:text-violet-700">{busy ? <Loader2 size={20} className="animate-spin" /> : <Plus size={20} />}{busy ? "Uploading..." : "Add photos"}</button>
           <input ref={inputRef} type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
         </>}
       </div>
@@ -509,7 +509,7 @@ function DocumentUploads({ data, editing, onDocumentChange, onStartEdit }) {
                 </div>
               </div>
 
-              <label className="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-teal-600 hover:bg-teal-50 hover:text-teal-700 focus-within:ring-4 focus-within:ring-teal-600/15">
+              <label className="inline-flex w-fit shrink-0 cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:border-violet-600 hover:bg-violet-50 hover:text-violet-700 focus-within:ring-4 focus-within:ring-violet-600/15">
                 <Upload size={15} />
                 {file ? "Replace File" : "Upload"}
                 <input type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png" className="sr-only" onChange={(event) => handleSelect(event, doc.name)} />
@@ -531,7 +531,7 @@ function InfoRow({ icon: Icon, label, value }) {
 function LogoCircle({ logo, initial, className = "" }) {
   return logo
     ? <img src={logo} alt="Business logo" className={`rounded-full border-4 border-white bg-white object-cover shadow-sm ${className}`} />
-    : <div className={`flex items-center justify-center rounded-full border-4 border-white bg-white font-semibold text-teal-700 shadow-sm ${className}`}>{initial}</div>;
+    : <div className={`flex items-center justify-center rounded-full border-4 border-white bg-white font-semibold text-violet-700 shadow-sm ${className}`}>{initial}</div>;
 }
 
 export default function BusinessProfile({
@@ -783,7 +783,7 @@ export default function BusinessProfile({
       <input ref={signatureInput} type="file" accept="image/*" onChange={pickImage("invoiceSignature", "Signature")} className="hidden" />
 
       <section className="mb-6 overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-        <div className="relative h-32 bg-gradient-to-r from-teal-800 via-teal-600 to-sky-500 bg-cover bg-center sm:h-40" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
+        <div className="relative h-32 bg-gradient-to-r from-violet-800 via-violet-600 to-sky-500 bg-cover bg-center sm:h-40" style={data.cover ? { backgroundImage: `url(${data.cover})` } : undefined}>
           <div className="absolute inset-0 bg-gradient-to-t from-slate-900/30 to-transparent" />
           <button type="button" onClick={() => openPicker(coverInput)} disabled={uploading.cover} className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-xl bg-slate-900/70 px-3 py-2 text-xs font-medium text-white backdrop-blur hover:bg-slate-900/85 disabled:opacity-60">
             {uploading.cover ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}{uploading.cover ? "Uploading..." : "Change Cover"}
@@ -796,7 +796,7 @@ export default function BusinessProfile({
               {/* Logo banner chya khali edge var overlap hoto */}
               <div className="relative -mt-12 h-24 w-24 shrink-0 sm:-mt-14 sm:h-28 sm:w-28">
                 <LogoCircle logo={data.logo} initial={initial} className="h-full w-full text-4xl" />
-                <button type="button" onClick={() => openPicker(logoInput)} disabled={uploading.logo} aria-label="Change business logo" className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-white shadow hover:bg-teal-700 disabled:opacity-60">
+                <button type="button" onClick={() => openPicker(logoInput)} disabled={uploading.logo} aria-label="Change business logo" className="absolute bottom-1 right-1 flex h-8 w-8 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-white shadow hover:bg-violet-700 disabled:opacity-60">
                   {uploading.logo ? <Loader2 size={14} className="animate-spin" /> : <Camera size={14} />}
                 </button>
               </div>
@@ -806,7 +806,7 @@ export default function BusinessProfile({
                   {status && <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-700">{status}</span>}
                   {data.bookingsPaused && <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-800">Bookings paused</span>}
                 </div>
-                <p className="mt-1 text-sm font-medium text-teal-700">{data.tagline || "Add a short tagline"}</p>
+                <p className="mt-1 text-sm font-medium text-violet-700">{data.tagline || "Add a short tagline"}</p>
                 <p className="mt-1 text-sm text-slate-500">Travel &amp; Tourism{data.businessType ? ` • ${data.businessType}` : ""}</p>
                 <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600">{data.about}</p>
               </div>
@@ -836,19 +836,19 @@ export default function BusinessProfile({
                 {tabs.map((tab) => {
                   const active = activeTab === tab.id;
                   return <button key={tab.id} ref={(element) => { tabRefs.current[tab.id] = element; }} id={`tab-${tab.id}`} type="button" role="tab" aria-selected={active} aria-controls={`panel-${tab.id}`} tabIndex={active ? 0 : -1} onClick={() => setActiveTab(tab.id)}
-                    className={`-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:bg-slate-100 ${active ? "border-teal-600 text-teal-700" : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"}`}>
+                    className={`-mb-px flex shrink-0 items-center gap-2 whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold transition-colors focus:outline-none focus-visible:bg-slate-100 ${active ? "border-violet-600 text-violet-700" : "border-transparent text-slate-600 hover:border-slate-300 hover:text-slate-900"}`}>
                     {tab.label}{tabHasError(tab.id) && <span className="h-2 w-2 rounded-full bg-red-500" aria-label="Has errors" />}
                   </button>;
                 })}
               </div>
 
               {tabScroll.left && (
-                <button type="button" aria-label="Scroll tabs left" onClick={() => scrollTabs(-1)} className="absolute inset-y-0 left-0 z-10 flex w-12 items-center justify-start bg-gradient-to-r from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-teal-700">
+                <button type="button" aria-label="Scroll tabs left" onClick={() => scrollTabs(-1)} className="absolute inset-y-0 left-0 z-10 flex w-12 items-center justify-start bg-gradient-to-r from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-violet-700">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow ring-1 ring-slate-200"><ChevronLeft size={16} /></span>
                 </button>
               )}
               {tabScroll.right && (
-                <button type="button" aria-label="Scroll tabs right" onClick={() => scrollTabs(1)} className="absolute inset-y-0 right-0 z-10 flex w-12 items-center justify-end bg-gradient-to-l from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-teal-700">
+                <button type="button" aria-label="Scroll tabs right" onClick={() => scrollTabs(1)} className="absolute inset-y-0 right-0 z-10 flex w-12 items-center justify-end bg-gradient-to-l from-slate-100 via-slate-100/90 to-transparent pb-px text-slate-500 transition hover:text-violet-700">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white shadow ring-1 ring-slate-200"><ChevronRight size={16} /></span>
                 </button>
               )}
@@ -857,11 +857,11 @@ export default function BusinessProfile({
             <section ref={panelRef} role="tabpanel" id={`panel-${activeTab}`} aria-labelledby={`tab-${activeTab}`} className={`${cardClass} scroll-mt-6`}>
               <div className="mb-6 flex flex-wrap items-start justify-between gap-4 border-b border-slate-100 pb-5">
                 <div className="flex items-center gap-3">
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><CurrentIcon size={20} /></span>
+                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-700"><CurrentIcon size={20} /></span>
                   <div><h3 className="text-base font-bold text-slate-900">{currentTab.title}</h3><p className="mt-0.5 text-xs text-slate-500">{currentTab.description}</p></div>
                 </div>
-                {!editing ? <button type="button" onClick={startEdit} className="inline-flex items-center gap-2 rounded-xl border border-teal-600 bg-white px-4 py-2.5 text-sm font-semibold text-teal-700 hover:bg-teal-50"><Pencil size={14} />Edit</button> :
-                  <div className="flex gap-2"><button type="button" onClick={cancelEdit} disabled={saving} className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">Cancel</button><button type="button" onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 disabled:opacity-60"><Save size={14} />{saving ? "Saving..." : "Save changes"}</button></div>}
+                {!editing ? <button type="button" onClick={startEdit} className="inline-flex items-center gap-2 rounded-xl border border-violet-600 bg-white px-4 py-2.5 text-sm font-semibold text-violet-700 hover:bg-violet-50"><Pencil size={14} />Edit</button> :
+                  <div className="flex gap-2"><button type="button" onClick={cancelEdit} disabled={saving} className="rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60">Cancel</button><button type="button" onClick={handleSave} disabled={saving} className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-violet-800 disabled:opacity-60"><Save size={14} />{saving ? "Saving..." : "Save changes"}</button></div>}
               </div>
 
               {activeTab === "general" && <div className="grid gap-x-6 gap-y-5 sm:grid-cols-2">
@@ -976,20 +976,20 @@ export default function BusinessProfile({
           <section className={cardClass}>
             <h2 className="text-base font-bold text-slate-900">Quick Actions</h2>
             <ul className="mt-4 divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200">
-              <li><button type="button" onClick={goToEdit} className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><Pencil size={16} /></span>Edit Profile</button></li>
-              <li><Link to="/vendor/settings" className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-teal-50 text-teal-700"><Lock size={16} /></span>Change Password</Link></li>
+              <li><button type="button" onClick={goToEdit} className="flex w-full items-center gap-3 px-3 py-3 text-left text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-700"><Pencil size={16} /></span>Edit Profile</button></li>
+              <li><Link to="/vendor/settings" className="flex items-center gap-3 px-3 py-3 text-sm font-medium text-slate-800 hover:bg-slate-50"><span className="flex h-9 w-9 items-center justify-center rounded-xl bg-violet-50 text-violet-700"><Lock size={16} /></span>Change Password</Link></li>
             </ul>
           </section>
           <section className={cardClass}>
-            <div className="flex items-start gap-4"><span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700"><Headphones size={28} /></span><div><h2 className="text-base font-bold text-teal-800">Need Help?</h2><p className="mt-1 text-xs leading-5 text-slate-500">Our support team is here to assist you with any queries.</p></div></div>
-            <Link to="/vendor/support" className="mt-4 inline-flex items-center justify-center rounded-xl bg-teal-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-teal-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-teal-600/25">Contact Support</Link>
+            <div className="flex items-start gap-4"><span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-violet-50 text-violet-700"><Headphones size={28} /></span><div><h2 className="text-base font-bold text-violet-800">Need Help?</h2><p className="mt-1 text-xs leading-5 text-slate-500">Our support team is here to assist you with any queries.</p></div></div>
+            <Link to="/vendor/support" className="mt-4 inline-flex items-center justify-center rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-violet-800 focus:outline-none focus-visible:ring-4 focus-visible:ring-violet-600/25">Contact Support</Link>
           </section>
         </aside>
       </div>
 
       {dirty && <div className="sticky bottom-4 z-40 mx-auto mt-6 flex w-full max-w-xl items-center justify-between gap-3 rounded-xl bg-slate-900 px-5 py-3 text-sm text-white shadow-xl">
         <span className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-amber-400" />You have unsaved changes</span>
-        <div className="flex gap-2"><button type="button" onClick={cancelEdit} className="rounded-lg px-3 py-1.5 text-slate-300 hover:bg-white/10">Discard</button><button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-teal-500 px-3 py-1.5 font-medium text-white hover:bg-teal-400 disabled:opacity-60">{saving ? "Saving..." : "Save"}</button></div>
+        <div className="flex gap-2"><button type="button" onClick={cancelEdit} className="rounded-lg px-3 py-1.5 text-slate-300 hover:bg-white/10">Discard</button><button type="button" onClick={handleSave} disabled={saving} className="rounded-lg bg-violet-500 px-3 py-1.5 font-medium text-white hover:bg-violet-400 disabled:opacity-60">{saving ? "Saving..." : "Save"}</button></div>
       </div>}
     </div>
   );

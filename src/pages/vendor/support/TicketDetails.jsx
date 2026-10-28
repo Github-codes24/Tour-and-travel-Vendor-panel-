@@ -184,7 +184,7 @@ export default function TicketDetails() {
     return (
       <div className="flex min-h-72 items-center justify-center">
         <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm text-slate-600 shadow-sm">
-          <LoaderCircle className="animate-spin text-teal-700" size={20} />
+          <LoaderCircle className="animate-spin text-violet-700" size={20} />
           Loading ticket details...
         </div>
       </div>
@@ -207,7 +207,7 @@ export default function TicketDetails() {
           <button
             type="button"
             onClick={retryLoadTicket}
-            className="inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-800"
+            className="inline-flex items-center gap-2 rounded-lg bg-violet-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-800"
           >
             <RefreshCw size={16} /> Try again
           </button>
@@ -232,13 +232,13 @@ export default function TicketDetails() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Link
           to="/vendor/support/tickets"
-          className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-teal-700"
+          className="inline-flex items-center gap-2 rounded-lg px-2 py-2 text-sm font-medium text-slate-600 transition hover:bg-white hover:text-violet-700"
         >
           <ArrowLeft size={17} /> Back to My Tickets
         </Link>
         <Link
           to="/vendor/support/create"
-          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-teal-700 bg-white px-4 py-2 text-sm font-semibold text-teal-700 transition hover:bg-teal-50"
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-lg border border-violet-700 bg-white px-4 py-2 text-sm font-semibold text-violet-700 transition hover:bg-violet-50"
         >
           <LifeBuoy size={16} /> Create another ticket
         </Link>
@@ -303,7 +303,7 @@ export default function TicketDetails() {
           <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
             <div className="min-w-0 flex-1">
               <div className="mb-3 flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-teal-50 px-2.5 py-1 font-mono text-xs font-bold text-teal-800">
+                <span className="rounded-md bg-violet-50 px-2.5 py-1 font-mono text-xs font-bold text-violet-800">
                   {ticketNumber}
                 </span>
                 <StatusBadge value={ticket.status} />
@@ -345,7 +345,7 @@ export default function TicketDetails() {
 
         <div className="border-t border-slate-100 p-5 sm:p-6">
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
               <ShieldCheck size={19} />
             </div>
             <div>
@@ -367,7 +367,7 @@ export default function TicketDetails() {
                   Attachment
                 </p>
                 <div className="inline-flex max-w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2.5">
-                  <Paperclip size={16} className="shrink-0 text-teal-700" />
+                  <Paperclip size={16} className="shrink-0 text-violet-700" />
                   <span className="break-all text-sm font-medium text-slate-700">
                     {ticket.attachmentName}
                   </span>
@@ -396,7 +396,7 @@ export default function TicketDetails() {
         <div className="space-y-5 p-5 sm:p-6">
           {messages.length === 0 ? (
             <div className="flex flex-col items-center rounded-xl border border-dashed border-slate-300 bg-slate-50/70 px-5 py-10 text-center">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-teal-700 shadow-sm ring-1 ring-slate-200">
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white text-violet-700 shadow-sm ring-1 ring-slate-200">
                 <LifeBuoy size={23} />
               </div>
               <h3 className="mt-4 text-sm font-semibold text-slate-900">
@@ -424,7 +424,7 @@ export default function TicketDetails() {
                   <div
                     className={`w-full max-w-[92%] rounded-2xl border p-4 sm:max-w-[78%] ${
                       isVendor
-                        ? "border-teal-100 bg-teal-50"
+                        ? "border-violet-100 bg-violet-50"
                         : "border-slate-200 bg-white"
                     }`}
                   >
@@ -433,7 +433,7 @@ export default function TicketDetails() {
                         <div
                           className={`flex h-9 w-9 items-center justify-center rounded-full text-xs font-bold ${
                             isVendor
-                              ? "bg-teal-100 text-teal-800"
+                              ? "bg-violet-100 text-violet-800"
                               : "bg-slate-200 text-slate-700"
                           }`}
                         >
@@ -462,7 +462,7 @@ export default function TicketDetails() {
                           href={file.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="mt-3 inline-flex max-w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-teal-700 transition hover:border-teal-300 hover:bg-teal-50"
+                          className="mt-3 inline-flex max-w-full items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-violet-700 transition hover:border-violet-300 hover:bg-violet-50"
                         >
                           <Paperclip size={14} className="shrink-0" />
                           <span className="break-all">
@@ -505,7 +505,7 @@ export default function TicketDetails() {
               onChange={(event) => setReply(event.target.value)}
               maxLength={5000}
               placeholder="Write your reply here..."
-              className="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-teal-600 focus:ring-4 focus:ring-teal-50"
+              className="w-full resize-y rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm leading-6 text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-violet-600 focus:ring-4 focus:ring-violet-50"
             />
             <div className="mt-2 text-right text-xs text-slate-400">
               {reply.length}/5000 characters
@@ -524,7 +524,7 @@ export default function TicketDetails() {
                 </label>
                 {attachment && (
                   <div className="flex min-w-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 py-2">
-                    <Paperclip size={14} className="shrink-0 text-teal-700" />
+                    <Paperclip size={14} className="shrink-0 text-violet-700" />
                     <span className="max-w-[160px] truncate text-xs text-slate-600">
                       {attachment.name}
                     </span>
@@ -541,7 +541,7 @@ export default function TicketDetails() {
               <button
                 type="submit"
                 disabled={sending || (!reply.trim() && !attachment)}
-                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-teal-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100 disabled:cursor-not-allowed disabled:opacity-50"
+                className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-violet-700 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {sending ? (
                   <LoaderCircle size={17} className="animate-spin" />

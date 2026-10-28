@@ -181,7 +181,7 @@ function DetailCard({ label, value, icon: Icon }) {
   return (
     <div className="flex min-w-0 items-start gap-3 rounded-xl border border-slate-200 bg-white p-4 transition hover:border-slate-300">
       {Icon && (
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-teal-700">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-50 text-violet-700">
           <Icon size={17} />
         </span>
       )}
@@ -214,7 +214,7 @@ export default function PayoutDetails() {
         <button
           type="button"
           onClick={() => navigate("/vendor/earnings")}
-          className="mt-5 rounded-xl bg-teal-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-teal-800"
+          className="mt-5 rounded-xl bg-violet-700 px-4 py-2.5 text-sm font-semibold text-white hover:bg-violet-800"
         >
           Back to Earnings
         </button>
@@ -227,7 +227,7 @@ export default function PayoutDetails() {
       <button
         type="button"
         onClick={() => navigate("/vendor/earnings")}
-        className="inline-flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-semibold text-slate-600 transition hover:bg-white hover:text-teal-700"
+        className="inline-flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm font-semibold text-slate-600 transition hover:bg-white hover:text-violet-700"
       >
         <ArrowLeft size={17} />
         Earnings & Payouts
@@ -236,7 +236,7 @@ export default function PayoutDetails() {
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex flex-col justify-between gap-4 border-b border-slate-100 px-5 py-5 sm:flex-row sm:items-center sm:px-6">
           <div className="min-w-0">
-            <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
+            <p className="text-xs font-semibold uppercase tracking-wider text-violet-700">
               Payout transaction
             </p>
             <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
@@ -295,11 +295,11 @@ export default function PayoutDetails() {
             </p>
           </div>
 
-          <div className="bg-teal-50/70 px-5 py-4 sm:px-6">
-            <p className="text-xs font-medium text-teal-800">
+          <div className="bg-violet-50/70 px-5 py-4 sm:px-6">
+            <p className="text-xs font-medium text-violet-800">
               Net payout amount
             </p>
-            <p className="mt-1.5 text-xl font-bold tracking-tight text-teal-800">
+            <p className="mt-1.5 text-xl font-bold tracking-tight text-violet-800">
               {money(payout.netAmount)}
             </p>
           </div>

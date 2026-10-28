@@ -128,9 +128,9 @@ function getStatus(event) {
 const STATUS = {
   open: {
     label: "Seats available",
-    chip: "border-teal-200 bg-teal-50 text-teal-800",
-    bar: "bg-teal-500",
-    dot: "bg-teal-500",
+    chip: "border-violet-200 bg-violet-50 text-violet-800",
+    bar: "bg-violet-500",
+    dot: "bg-violet-500",
   },
   filling: {
     label: "Filling fast",
@@ -279,7 +279,7 @@ export function AvailabilityCalendar({ departures = {} }) {
                   index % 7 === 6 ? "border-r-0" : ""
                 } ${
                   key === selectedKey
-                    ? "bg-emerald-50 ring-2 ring-inset ring-emerald-600"
+                    ? "bg-violet-50 ring-2 ring-inset ring-violet-600"
                     : inMonth
                       ? "bg-white hover:bg-slate-50"
                       : "bg-slate-50/70 text-slate-400"
@@ -288,7 +288,7 @@ export function AvailabilityCalendar({ departures = {} }) {
                 <span
                   className={`flex h-7 w-7 items-center justify-center rounded-full text-xs font-semibold sm:text-sm ${
                     key === todayKey
-                      ? "bg-emerald-700 text-white"
+                      ? "bg-violet-700 text-white"
                       : inMonth
                         ? "text-slate-800"
                         : "text-slate-400"
@@ -316,7 +316,7 @@ export function AvailabilityCalendar({ departures = {} }) {
       <aside className="min-w-0 rounded-xl border border-slate-200 bg-white">
         <div className="border-b border-slate-200 px-4 py-3">
           <div className="flex items-center gap-2">
-            <CalendarDays size={18} className="shrink-0 text-emerald-700" />
+            <CalendarDays size={18} className="shrink-0 text-violet-700" />
             <h3 className="font-semibold text-slate-900">{selectedLabel}</h3>
           </div>
           <p className="mt-1 text-sm text-slate-500">
@@ -791,7 +791,7 @@ export default function VendorCalendar({
               value={packageFilter}
               onChange={(e) => setPackageFilter(e.target.value)}
               aria-label="Filter packages"
-              className="h-10 min-w-0 max-w-full flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-teal-500 sm:flex-none xl:w-64"
+              className="h-10 min-w-0 max-w-full flex-1 rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-violet-500 sm:flex-none xl:w-64"
             >
               <option value="all">All packages</option>
               {packages.map((pkg) => (
@@ -852,7 +852,7 @@ export default function VendorCalendar({
           <button
             type="button"
             onClick={openAddModal}
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-teal-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-teal-700"
+            className="inline-flex h-10 items-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white shadow-sm hover:bg-violet-700"
           >
             <Plus size={16} />
             Add departure
@@ -861,7 +861,7 @@ export default function VendorCalendar({
       </div>
 
       {notice && (
-        <div className="flex items-center justify-between rounded-lg border border-teal-200 bg-teal-50 px-4 py-3 text-sm text-teal-800">
+        <div className="flex items-center justify-between rounded-lg border border-violet-200 bg-violet-50 px-4 py-3 text-sm text-violet-800">
           <span>{notice}</span>
           <button
             type="button"
@@ -914,11 +914,11 @@ export default function VendorCalendar({
                           : inMonth
                             ? "bg-white hover:bg-slate-50"
                             : "bg-slate-50/70 hover:bg-slate-100"
-                      } ${isSelected ? "relative z-10 outline outline-2 -outline-offset-2 outline-teal-600" : ""}`}
+                      } ${isSelected ? "relative z-10 outline outline-2 -outline-offset-2 outline-violet-600" : ""}`}
                     >
                       <div className="flex w-full items-center justify-between">
                         <span className={`flex h-7 min-w-7 items-center justify-center rounded-full px-1 text-sm font-semibold ${
-                          isToday ? "bg-teal-600 text-white" : inMonth ? "text-slate-800" : "text-slate-400"
+                          isToday ? "bg-violet-600 text-white" : inMonth ? "text-slate-800" : "text-slate-400"
                         }`}>
                           {date.getDate()}
                         </span>
@@ -977,7 +977,7 @@ export default function VendorCalendar({
         <aside className="self-start rounded-xl border border-slate-200 bg-white">
           <div className="border-b border-slate-200 px-5 py-4">
             <div className="flex items-center gap-2">
-              <CalendarDays size={19} className="text-teal-600" />
+              <CalendarDays size={19} className="text-violet-600" />
               <h2 className="text-lg font-semibold text-slate-900">
                 {selectedLabel}
               </h2>
@@ -1002,7 +1002,7 @@ export default function VendorCalendar({
                 <button
                   type="button"
                   onClick={openAddModal}
-                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                  className="mt-3 inline-flex items-center gap-1.5 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700"
                 >
                   <Plus size={15} /> Add departure
                 </button>
@@ -1081,7 +1081,7 @@ export default function VendorCalendar({
                             min="0"
                             value={editPrice}
                             onChange={(e) => setEditPrice(e.target.value)}
-                            className="h-10 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                            className="h-10 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                           />
                         </div>
 
@@ -1096,7 +1096,7 @@ export default function VendorCalendar({
                             step="1"
                             value={editCapacity}
                             onChange={(e) => setEditCapacity(e.target.value)}
-                            className="h-10 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
+                            className="h-10 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20"
                           />
                         </div>
 
@@ -1108,7 +1108,7 @@ export default function VendorCalendar({
                           <button
                             type="button"
                             onClick={() => saveAvailabilityPricing(event)}
-                            className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-teal-600 px-3 py-2 text-sm font-semibold text-white hover:bg-teal-700"
+                            className="inline-flex flex-1 items-center justify-center gap-2 rounded-lg bg-violet-600 px-3 py-2 text-sm font-semibold text-white hover:bg-violet-700"
                           >
                             <Save size={15} /> Save changes
                           </button>
@@ -1132,7 +1132,7 @@ export default function VendorCalendar({
                         </div>
                         <div className="rounded-lg bg-slate-50 p-3">
                           <p className="text-xs text-slate-500">Available seats</p>
-                          <p className="mt-1 text-lg font-semibold text-teal-700">
+                          <p className="mt-1 text-lg font-semibold text-violet-700">
                             {Math.max(0, event.capacity - event.booked)}
                           </p>
                         </div>
@@ -1189,7 +1189,7 @@ export default function VendorCalendar({
       </div>
 
       {!departureMode && (
-        <div className="grid grid-cols-2 divide-x divide-y divide-teal-100 overflow-hidden rounded-xl border border-teal-100 bg-teal-50/70 sm:grid-cols-4 sm:divide-y-0">
+        <div className="grid grid-cols-2 divide-x divide-y divide-violet-100 overflow-hidden rounded-xl border border-violet-100 bg-violet-50/70 sm:grid-cols-4 sm:divide-y-0">
           <Stat icon={Plane} label="Total departures" value={summary.departures} />
           <Stat icon={Users} label="Booked seats" value={summary.booked} />
           <Stat icon={Armchair} label="Available seats" value={summary.left} />
@@ -1240,7 +1240,7 @@ export default function VendorCalendar({
                   required
                   value={form.packageId}
                   onChange={(e) => updateFormPackage(e.target.value)}
-                  className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-teal-500"
+                  className="h-11 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm outline-none focus:border-violet-500"
                 >
                   {packages.map((pkg) => (
                     <option key={pkg.id} value={pkg.id}>{pkg.title}</option>
@@ -1258,7 +1258,7 @@ export default function VendorCalendar({
                   required
                   value={form.date}
                   onChange={(e) => setForm((previous) => ({ ...previous, date: e.target.value }))}
-                  className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-teal-500"
+                  className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-violet-500"
                 />
               </div>
 
@@ -1275,7 +1275,7 @@ export default function VendorCalendar({
                     required
                     value={form.capacity}
                     onChange={(e) => setForm((previous) => ({ ...previous, capacity: e.target.value }))}
-                    className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-teal-500"
+                    className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-violet-500"
                   />
                 </div>
                 <div>
@@ -1289,7 +1289,7 @@ export default function VendorCalendar({
                     required
                     value={form.price}
                     onChange={(e) => setForm((previous) => ({ ...previous, price: e.target.value }))}
-                    className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-teal-500"
+                    className="h-11 w-full rounded-lg border border-slate-200 px-3 text-sm outline-none focus:border-violet-500"
                   />
                 </div>
               </div>
@@ -1310,7 +1310,7 @@ export default function VendorCalendar({
                 </button>
                 <button
                   type="submit"
-                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-teal-600 px-4 text-sm font-semibold text-white hover:bg-teal-700"
+                  className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-violet-600 px-4 text-sm font-semibold text-white hover:bg-violet-700"
                 >
                   <Plus size={16} /> Add departure
                 </button>

@@ -50,7 +50,7 @@ const TABS = [
 const INCLUSION_ICONS = {
   flights: { Icon: Plane, label: "Flights", tone: "bg-sky-50 text-sky-600" },
   hotels: { Icon: Building2, label: "Hotels", tone: "bg-indigo-50 text-indigo-600" },
-  sightseeing: { Icon: Camera, label: "Sightseeing", tone: "bg-teal-50 text-teal-600" },
+  sightseeing: { Icon: Camera, label: "Sightseeing", tone: "bg-violet-50 text-violet-600" },
   meals: { Icon: Utensils, label: "Meals", tone: "bg-amber-50 text-amber-600" },
   meal: { Icon: Utensils, label: "Meal", tone: "bg-amber-50 text-amber-600" },
   visa: { Icon: FileCheck, label: "Visa", tone: "bg-emerald-50 text-emerald-600" },
@@ -85,7 +85,7 @@ function Section({ title, icon: Icon, children }) {
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:p-5">
       <div className="mb-4 flex items-center gap-3">
-        <div className="rounded-lg bg-emerald-50 p-2 text-emerald-700">
+        <div className="rounded-lg bg-violet-50 p-2 text-violet-700">
           <Icon size={21} />
         </div>
         <h2 className="text-base font-bold text-slate-900 sm:text-lg">{title}</h2>
@@ -129,7 +129,7 @@ function BackLink() {
   return (
     <Link
       to="/vendor/packages"
-      className="group inline-flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:border-emerald-200 hover:bg-emerald-50 hover:text-emerald-700 hover:shadow-md"
+      className="group inline-flex items-center gap-2.5 rounded-xl border border-slate-200 bg-white px-4 py-2.5 text-sm font-semibold text-slate-600 shadow-sm transition-all duration-200 hover:border-violet-200 hover:bg-violet-50 hover:text-violet-700 hover:shadow-md"
     >
       <ArrowLeft
         size={17}
@@ -249,7 +249,7 @@ function PackageHeader({ pkg }) {
           {[pkg.duration, ...(pkg.tags || [])].filter(Boolean).map((t) => (
             <span
               key={t}
-              className="rounded-lg bg-teal-50 px-3 py-1.5 text-sm font-semibold text-teal-800"
+              className="rounded-lg bg-violet-50 px-3 py-1.5 text-sm font-semibold text-violet-800"
             >
               {t}
             </span>
@@ -279,14 +279,14 @@ function PackageHeader({ pkg }) {
           <p className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-1 text-slate-600">
             {pkg.route.map((stop, i) => (
               <span key={stop} className="flex items-center gap-2">
-                {i > 0 && <span className="h-1.5 w-1.5 rounded-full bg-teal-300" />}
+                {i > 0 && <span className="h-1.5 w-1.5 rounded-full bg-violet-300" />}
                 {stop}
               </span>
             ))}
           </p>
         ) : (
           <p className="mt-3 flex items-center gap-2 text-slate-600">
-            <MapPin size={18} className="text-emerald-700" />
+            <MapPin size={18} className="text-violet-700" />
             {pkg.destination}
           </p>
         )}
@@ -338,8 +338,8 @@ function DetailTabs({ active, onChange, onShare, onDownload }) {
             onClick={() => onChange(t.key)}
             className={`relative cursor-pointer py-3 text-base font-medium transition-colors ${
               active === t.key
-                ? "text-teal-700 after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-amber-400 after:to-teal-500"
-                : "text-slate-600 hover:text-teal-700"
+                ? "text-violet-700 after:absolute after:inset-x-0 after:bottom-0 after:h-[3px] after:rounded-full after:bg-gradient-to-r after:from-amber-400 after:to-violet-500"
+                : "text-slate-600 hover:text-violet-700"
             }`}
           >
             {t.label}
@@ -347,7 +347,7 @@ function DetailTabs({ active, onChange, onShare, onDownload }) {
         ))}
       </div>
 
-      <div className="flex items-center gap-4 text-teal-700">
+      <div className="flex items-center gap-4 text-violet-700">
         <button
           type="button"
           onClick={onShare}
@@ -397,7 +397,7 @@ function ItineraryTab({ itinerary = [] }) {
               onClick={() => goTo(d.day)}
               className={`w-full cursor-pointer border-l-4 px-4 py-2.5 text-left text-base transition-colors ${
                 open === d.day
-                  ? "border-teal-600 bg-teal-50 text-teal-700"
+                  ? "border-violet-600 bg-violet-50 text-violet-700"
                   : "border-transparent text-slate-700 hover:bg-slate-50"
               }`}
             >
@@ -422,7 +422,7 @@ function ItineraryTab({ itinerary = [] }) {
                 onClick={() => setOpen(isOpen ? null : d.day)}
                 className="flex w-full cursor-pointer items-center gap-4 p-4 text-left"
               >
-                <span className="shrink-0 rounded-full bg-gradient-to-r from-teal-700 to-cyan-600 px-3.5 py-2 text-sm font-semibold text-white">
+                <span className="shrink-0 rounded-full bg-gradient-to-r from-violet-800 to-violet-600 px-3.5 py-2 text-sm font-semibold text-white">
                   Day {d.day}
                 </span>
                 <span className="flex-1 text-base font-medium text-slate-800">
@@ -511,7 +511,7 @@ function InclusionsTab({ pkg }) {
                 s.warn
                   ? "border-transparent bg-orange-50 text-orange-600 hover:bg-orange-100"
                   : active === s.key
-                    ? "border-teal-600 bg-teal-50 text-teal-700"
+                    ? "border-violet-600 bg-violet-50 text-violet-700"
                     : "border-transparent text-slate-700 hover:bg-slate-50"
               }`}
             >
@@ -532,7 +532,7 @@ function InclusionsTab({ pkg }) {
               className={`flex items-center gap-3 px-5 py-3 text-base font-semibold text-white ${
                 warn
                   ? "bg-gradient-to-r from-orange-500 to-amber-500"
-                  : "bg-gradient-to-r from-teal-700 to-cyan-600"
+                  : "bg-gradient-to-r from-violet-800 to-violet-600"
               }`}
             >
               <Icon className="h-5 w-5" /> {title ?? label}
@@ -580,13 +580,13 @@ function SummaryTab({ pkg }) {
     <div className="space-y-4">
       {pkg.inclusionDetails?.flights && (
         <div className="flex items-center gap-3 rounded-lg bg-sky-100 px-5 py-3.5 text-slate-700">
-          <Plane className="h-5 w-5 text-teal-700" /> Return economy class airfare
+          <Plane className="h-5 w-5 text-violet-700" /> Return economy class airfare
           included
         </div>
       )}
 
       <div className="overflow-hidden rounded-xl bg-white shadow-sm">
-        <h3 className="bg-gradient-to-r from-teal-700 to-cyan-600 px-5 py-3 text-base font-semibold text-white">
+        <h3 className="bg-gradient-to-r from-violet-800 to-violet-600 px-5 py-3 text-base font-semibold text-white">
           Day wise summary
         </h3>
 
@@ -594,8 +594,8 @@ function SummaryTab({ pkg }) {
           <div className="grid md:grid-cols-2">
             {itinerary.map((d) => (
               <div key={d.day} className="border-b border-slate-200 md:odd:border-r">
-                <div className="flex items-center gap-4 bg-teal-50/70 px-5 py-3">
-                  <span className="shrink-0 rounded-full bg-teal-100 px-4 py-1.5 font-semibold text-teal-800">
+                <div className="flex items-center gap-4 bg-violet-50/70 px-5 py-3">
+                  <span className="shrink-0 rounded-full bg-violet-100 px-4 py-1.5 font-semibold text-violet-800">
                     Day {d.day}
                   </span>
                   <span className="text-sm font-medium text-slate-800">{d.title}</span>
@@ -750,7 +750,7 @@ export default function PackageDetails() {
 
         <Link
           to={`/vendor/packages/new?edit=${pkg.id}`}
-          className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800"
         >
           <Pencil size={16} />
           Edit Package
@@ -932,7 +932,7 @@ export default function PackageDetails() {
         <BackLink />
         <Link
           to={`/vendor/packages/new?edit=${pkg.id}`}
-          className="inline-flex items-center gap-2 rounded-xl bg-emerald-700 px-5 py-3 text-sm font-semibold text-white hover:bg-emerald-800"
+          className="inline-flex items-center gap-2 rounded-xl bg-violet-700 px-5 py-3 text-sm font-semibold text-white hover:bg-violet-800"
         >
           <Pencil size={16} />
           Edit Package

@@ -38,7 +38,7 @@ const statCardTones = {
   blue: "bg-blue-50 text-blue-700 ring-blue-100",
   amber: "bg-amber-50 text-amber-700 ring-amber-100",
   green: "bg-emerald-50 text-emerald-700 ring-emerald-100",
-  teal: "bg-teal-50 text-teal-700 ring-teal-100",
+  violet: "bg-violet-50 text-violet-700 ring-violet-100",
 };
 
 const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
@@ -127,7 +127,7 @@ function Seats({ booked, total }) {
         aria-valuenow={Math.round(percentage)}
       >
         <span
-          className="block h-full rounded-full bg-teal-600 transition-[width]"
+          className="block h-full rounded-full bg-violet-600 transition-[width]"
           style={{ width: `${percentage}%` }}
         />
       </div>
@@ -141,7 +141,7 @@ function ViewButton({ onClick, label, className = "" }) {
       type="button"
       onClick={onClick}
       aria-label={label}
-      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800 ${className}`}
+      className={`inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3.5 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800 ${className}`}
     >
       <Eye size={15} />
       View Details
@@ -309,7 +309,7 @@ export default function TripsDepartures() {
           value={totalTravellers}
           description="Across non-cancelled trips"
           icon={Users}
-          tone="teal"
+          tone="violet"
         />
       </section>
 
@@ -340,7 +340,7 @@ export default function TripsDepartures() {
                   setCurrentPage(1);
                 }}
                 placeholder="Search trip, destination or ID..."
-                className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
               />
             </label>
 
@@ -352,7 +352,7 @@ export default function TripsDepartures() {
                   setStatusFilter(event.target.value);
                   setCurrentPage(1);
                 }}
-                className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
               >
                 <option value="All">All statuses</option>
                 <option value="Scheduled">Scheduled</option>
@@ -374,7 +374,7 @@ export default function TripsDepartures() {
                   setDateFilter(event.target.value);
                   setCurrentPage(1);
                 }}
-                className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
               >
                 <option value="All">All dates</option>
                 <option value="Upcoming">Upcoming</option>
@@ -576,7 +576,7 @@ export default function TripsDepartures() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800"
+                className="mt-4 inline-flex items-center gap-2 rounded-lg bg-violet-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-800"
               >
                 <X size={15} />
                 Clear all filters
@@ -617,7 +617,7 @@ export default function TripsDepartures() {
                       setPageSize(Number(event.target.value));
                       setCurrentPage(1);
                     }}
-                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
                   >
                     {PAGE_SIZE_OPTIONS.map((size) => (
                       <option key={size} value={size}>
@@ -663,7 +663,7 @@ export default function TripsDepartures() {
                     aria-current={page === displayedPage ? "page" : undefined}
                     className={`h-9 min-w-9 rounded-lg border px-3 text-sm font-semibold tabular-nums transition ${
                       page === displayedPage
-                        ? "border-teal-600 bg-teal-600 text-white shadow-sm"
+                        ? "border-violet-600 bg-violet-600 text-white shadow-sm"
                         : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                     }`}
                   >

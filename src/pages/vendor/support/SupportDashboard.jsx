@@ -107,7 +107,7 @@ function Pagination({ page, totalPages, onChange }) {
   const pages = getPageList(totalPages, page);
 
   const base =
-    "flex h-9 min-w-9 items-center justify-center rounded-lg border px-2.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-teal-500/30";
+    "flex h-9 min-w-9 items-center justify-center rounded-lg border px-2.5 text-sm font-medium transition focus:outline-none focus:ring-2 focus:ring-violet-500/30";
 
   return (
     <nav aria-label="Pagination" className="flex items-center gap-1.5">
@@ -134,8 +134,8 @@ function Pagination({ page, totalPages, onChange }) {
             aria-current={item === page ? "page" : undefined}
             className={`${base} ${
               item === page
-                ? "border-teal-700 bg-teal-700 text-white shadow-sm"
-                : "border-slate-200 bg-white text-slate-700 hover:border-teal-300 hover:bg-teal-50"
+                ? "border-violet-700 bg-violet-700 text-white shadow-sm"
+                : "border-slate-200 bg-white text-slate-700 hover:border-violet-300 hover:bg-violet-50"
             }`}
           >
             {item}
@@ -284,17 +284,17 @@ export default function SupportDashboard() {
       <section className="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <span
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 w-1.5 bg-teal-700"
+          className="absolute inset-y-0 left-0 w-1.5 bg-violet-700"
         />
 
         <div className="flex flex-col gap-4 px-5 py-4 sm:pl-8 sm:pr-6 lg:flex-row lg:items-center lg:justify-between">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-teal-100 bg-teal-50 text-teal-700 sm:h-14 sm:w-14">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-700 sm:h-14 sm:w-14">
               <LifeBuoy size={24} strokeWidth={1.8} />
             </div>
 
             <div className="min-w-0">
-              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-teal-700">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-violet-700">
                 Support Center
               </p>
 
@@ -312,7 +312,7 @@ export default function SupportDashboard() {
           <div className="flex shrink-0 flex-wrap items-center gap-3">
             <Link
               to="/vendor/support/help"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-violet-300 hover:bg-violet-50"
             >
               <BookOpen size={17} />
               Help Center
@@ -320,7 +320,7 @@ export default function SupportDashboard() {
 
             <Link
               to="/vendor/support/create"
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-teal-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800 focus:outline-none focus:ring-4 focus:ring-teal-100"
+              className="inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-violet-700 px-5 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800 focus:outline-none focus:ring-4 focus:ring-violet-100"
             >
               <Plus size={17} />
               Create ticket
@@ -365,7 +365,7 @@ export default function SupportDashboard() {
         {/* Section header */}
         <div className="flex flex-col gap-3 border-b border-slate-200 px-4 py-3 sm:flex-row sm:items-center sm:justify-between sm:px-5">
           <div className="flex min-w-0 items-center gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-teal-700">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-violet-50 text-violet-700">
               <Ticket size={21} />
             </span>
 
@@ -382,7 +382,7 @@ export default function SupportDashboard() {
           <button
             type="button"
             onClick={refreshTickets}
-            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800 sm:self-auto"
+            className="inline-flex h-10 shrink-0 items-center justify-center gap-2 self-start rounded-lg border border-slate-200 bg-white px-4 text-sm font-semibold text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800 sm:self-auto"
           >
             <RefreshCw size={16} />
             Refresh
@@ -406,7 +406,7 @@ export default function SupportDashboard() {
               }}
               placeholder="Search by subject, ID or category"
               aria-label="Search tickets"
-              className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-teal-600 focus:bg-white focus:ring-4 focus:ring-teal-600/10"
+              className="h-10 w-full rounded-lg border border-slate-200 bg-slate-50/70 py-2 pl-9 pr-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-violet-600 focus:bg-white focus:ring-4 focus:ring-violet-600/10"
             />
           </div>
 
@@ -417,7 +417,7 @@ export default function SupportDashboard() {
               setPage(1);
             }}
             aria-label="Filter by status"
-            className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-4 focus:ring-teal-600/10 sm:w-52"
+            className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-violet-600 focus:ring-4 focus:ring-violet-600/10 sm:w-52"
           >
             <option value="">All statuses</option>
             {STATUS_OPTIONS.map((status) => (
@@ -469,7 +469,7 @@ export default function SupportDashboard() {
             ) : (
               <Link
                 to="/vendor/support/create"
-                className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 text-sm font-semibold text-white transition hover:bg-teal-800"
+                className="mt-4 inline-flex h-10 items-center justify-center gap-2 rounded-lg bg-violet-700 px-4 text-sm font-semibold text-white transition hover:bg-violet-800"
               >
                 <Plus size={16} />
                 Create your first ticket
@@ -502,7 +502,7 @@ export default function SupportDashboard() {
                     return (
                       <tr
                         key={id || index}
-                        className="transition-colors hover:bg-teal-50/30"
+                        className="transition-colors hover:bg-violet-50/30"
                       >
                         <td className="max-w-[280px] px-4 py-3 sm:px-5">
                           <p className="break-words font-semibold leading-5 text-slate-900">
@@ -540,7 +540,7 @@ export default function SupportDashboard() {
                           {id ? (
                             <Link
                               to={`/vendor/support/tickets/${encodeURIComponent(id)}`}
-                              className="inline-flex h-9 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
+                              className="inline-flex h-9 items-center justify-center gap-1.5 whitespace-nowrap rounded-lg border border-slate-200 bg-white px-3 text-xs font-semibold text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800"
                             >
                               View details
                               <ChevronRight size={14} />
@@ -585,7 +585,7 @@ export default function SupportDashboard() {
                       setPageSize(Number(event.target.value));
                       setPage(1);
                     }}
-                    className="h-9 rounded-lg border border-slate-200 bg-white px-2.5 text-sm text-slate-700 outline-none focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                    className="h-9 rounded-lg border border-slate-200 bg-white px-2.5 text-sm text-slate-700 outline-none focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
                   >
                     {PAGE_SIZES.map((size) => (
                       <option key={size} value={size}>

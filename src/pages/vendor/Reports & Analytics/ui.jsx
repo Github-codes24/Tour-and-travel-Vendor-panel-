@@ -89,7 +89,7 @@ export function Pagination({ page, pageSize, total, onChange }) {
   if (total <= pageSize) return null;
   const from = (page - 1) * pageSize + 1;
   const to = Math.min(total, page * pageSize);
-  const btn = "rounded-lg border border-gray-300 p-2 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-500";
+  const btn = "rounded-lg border border-gray-300 p-2 text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500";
   return (
     <nav aria-label="Pagination" className="mt-4 flex flex-wrap items-center justify-between gap-3 text-sm text-gray-600">
       <span>Showing {from}–{to} of {total}</span>

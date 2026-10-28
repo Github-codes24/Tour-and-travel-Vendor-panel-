@@ -299,7 +299,7 @@ export default function EarningsPayouts() {
       {/* Page heading */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <p className="text-sm font-medium text-teal-700">
+          <p className="text-sm font-medium text-violet-700">
             Finance & Insights
           </p>
           <h1 className="mt-1 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
@@ -313,7 +313,7 @@ export default function EarningsPayouts() {
         <button
           type="button"
           onClick={exportCSV}
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-teal-800"
+          className="inline-flex items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-violet-800"
         >
           <Download size={17} />
           Export Report
@@ -327,7 +327,7 @@ export default function EarningsPayouts() {
           label="Total Gross Bookings"
           amount={totals.gross}
           helper="Gross value in sample records"
-          iconStyle="bg-teal-50 text-teal-700"
+          iconStyle="bg-violet-50 text-violet-700"
         />
         <StatCard
           icon={CheckCircle2}
@@ -409,7 +409,7 @@ export default function EarningsPayouts() {
                     setCurrentPage(1);
                   }}
                   placeholder="Search payout, booking, customer..."
-                  className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
+                  className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-violet-500 focus:ring-2 focus:ring-violet-100"
                 />
               </div>
 
@@ -419,7 +419,7 @@ export default function EarningsPayouts() {
                   setStatusFilter(event.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500"
                 aria-label="Filter by payout status"
               >
                 <option value="All">All statuses</option>
@@ -435,7 +435,7 @@ export default function EarningsPayouts() {
                   setDateFilter(event.target.value);
                   setCurrentPage(1);
                 }}
-                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
+                className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-violet-500"
                 aria-label="Filter by date"
               >
                 <option value="All">All dates</option>
@@ -523,7 +523,7 @@ export default function EarningsPayouts() {
                     <button
                       type="button"
                       onClick={() => navigate(`/vendor/earnings/${item.id}`)}
-                      className="inline-flex min-w-[132px] items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold leading-none text-slate-700 transition hover:border-teal-300 hover:bg-teal-50 hover:text-teal-800"
+                      className="inline-flex min-w-[132px] items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-slate-200 px-3 py-2 text-sm font-semibold leading-none text-slate-700 transition hover:border-violet-300 hover:bg-violet-50 hover:text-violet-800"
                     >
                       <Eye size={16} />
                       View Details
@@ -547,7 +547,7 @@ export default function EarningsPayouts() {
                 <button
                   type="button"
                   onClick={clearFilters}
-                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800"
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-violet-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-violet-800"
                 >
                   <X size={15} />
                   Clear all filters
@@ -592,7 +592,7 @@ export default function EarningsPayouts() {
                       setPageSize(Number(event.target.value));
                       setCurrentPage(1);
                     }}
-                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-violet-600 focus:ring-2 focus:ring-violet-600/10"
                   >
                     {PAGE_SIZE_OPTIONS.map((size) => (
                       <option key={size} value={size}>
@@ -638,7 +638,7 @@ export default function EarningsPayouts() {
                     aria-current={page === displayedPage ? "page" : undefined}
                     className={`h-9 min-w-9 rounded-lg border px-3 text-sm font-semibold tabular-nums transition ${
                       page === displayedPage
-                        ? "border-teal-600 bg-teal-600 text-white shadow-sm"
+                        ? "border-violet-600 bg-violet-600 text-white shadow-sm"
                         : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
                     }`}
                   >
@@ -672,7 +672,7 @@ export default function EarningsPayouts() {
           >
             <div className="flex items-start justify-between border-b border-slate-100 p-5 sm:p-6">
               <div>
-                <p className="text-xs font-semibold uppercase tracking-wider text-teal-700">
+                <p className="text-xs font-semibold uppercase tracking-wider text-violet-700">
                   Payout Details
                 </p>
                 <h2

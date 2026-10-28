@@ -69,7 +69,7 @@ export function BarChart({ data, format = String, formatAxis = format, height = 
               width={bw}
               height={Math.max(h, 0)}
               rx={2}
-              className={`${hover === i ? "fill-teal-700" : "fill-teal-500"} outline-none focus-visible:stroke-teal-900`}
+              className={`${hover === i ? "fill-violet-700" : "fill-violet-500"} outline-none focus-visible:stroke-violet-900`}
               onMouseEnter={() => setHover(i)}
               onMouseLeave={() => setHover(null)}
               onFocus={() => setHover(i)}
@@ -97,8 +97,8 @@ export function LineChart({ data, format = String, formatAxis = format, height =
       <Readout item={hover !== null ? data[hover] : null} format={format} />
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label={label}>
         <Axes max={max} H={H} data={data} formatAxis={formatAxis} />
-        <path d={area} className="fill-teal-50" />
-        <path d={line} fill="none" strokeWidth="2" strokeLinejoin="round" className="stroke-teal-600" />
+        <path d={area} className="fill-violet-50" />
+        <path d={line} fill="none" strokeWidth="2" strokeLinejoin="round" className="stroke-violet-600" />
         {data.map((d, i) => (
           <g key={d.key ?? d.label}>
             <rect
@@ -106,7 +106,7 @@ export function LineChart({ data, format = String, formatAxis = format, height =
               tabIndex={0} role="img" aria-label={`${d.title ?? d.label}: ${format(d.value)}`}
               onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)} onFocus={() => setHover(i)} onBlur={() => setHover(null)}
             />
-            {(hover === i || data.length <= 31) && <circle cx={pts[i][0]} cy={pts[i][1]} r={hover === i ? 4 : 2.5} className="fill-teal-600 stroke-white" strokeWidth="1" />}
+            {(hover === i || data.length <= 31) && <circle cx={pts[i][0]} cy={pts[i][1]} r={hover === i ? 4 : 2.5} className="fill-violet-600 stroke-white" strokeWidth="1" />}
           </g>
         ))}
       </svg>
@@ -172,7 +172,7 @@ export function HBarChart({ data, format = String }) {
             <span className="shrink-0 tabular-nums font-medium text-gray-900">{format(d.value)}</span>
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-gray-100" role="presentation">
-            <div className="h-full rounded-full bg-teal-500" style={{ width: `${Math.max((d.value / max) * 100, 2)}%` }} />
+            <div className="h-full rounded-full bg-violet-500" style={{ width: `${Math.max((d.value / max) * 100, 2)}%` }} />
           </div>
         </li>
       ))}
@@ -186,7 +186,7 @@ export function Sparkline({ values, label }) {
   const pts = values.map((v, i) => `${values.length === 1 ? 40 : (i / (values.length - 1)) * 80},${22 - (v / max) * 20}`).join(" ");
   return (
     <svg viewBox="0 0 80 24" className="h-6 w-20" role="img" aria-label={label}>
-      <polyline points={pts} fill="none" strokeWidth="1.5" className="stroke-teal-600" />
+      <polyline points={pts} fill="none" strokeWidth="1.5" className="stroke-violet-600" />
     </svg>
   );
 }

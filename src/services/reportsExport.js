@@ -50,7 +50,7 @@ export async function buildPdf(report) {
   const M = 40;
   const pageW = doc.internal.pageSize.getWidth();
   const pageH = doc.internal.pageSize.getHeight();
-  const teal = [13, 148, 136];
+  const accent = [118, 0, 158];
 
   doc.setFont("helvetica", "bold").setFontSize(18).setTextColor(17, 24, 39).text("Reports & Analytics", M, 50);
   doc.setFont("helvetica", "normal").setFontSize(9).setTextColor(75, 85, 99);
@@ -69,7 +69,7 @@ export async function buildPdf(report) {
       body: body.length ? body : [[{ content: "No data for this selection", colSpan: head.length, styles: { halign: "center", textColor: [107, 114, 128] } }]],
       margin: { left: M, right: M },
       styles: { fontSize: 8, cellPadding: 4 },
-      headStyles: { fillColor: teal, textColor: 255 },
+      headStyles: { fillColor: accent, textColor: 255 },
       alternateRowStyles: { fillColor: [249, 250, 251] },
       ...opts,
     });

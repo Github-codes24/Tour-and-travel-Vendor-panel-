@@ -129,7 +129,7 @@ export default function HelpCenter() {
   return (
     <div className="mx-auto max-w-5xl space-y-6">
       <section className="overflow-hidden rounded-2xl bg-slate-900 px-6 py-10 text-white sm:px-10">
-        <p className="text-sm font-semibold text-teal-300">Vendor resources</p>
+        <p className="text-sm font-semibold text-violet-300">Vendor resources</p>
         <h1 className="mt-2 text-3xl font-bold">Help Center</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-300">
           Find answers about bookings, packages, verification, and payouts.
@@ -148,7 +148,7 @@ export default function HelpCenter() {
             }}
             placeholder="Search help articles..."
             aria-label="Search help articles"
-            className="w-full rounded-xl border border-slate-700 bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-teal-400"
+            className="w-full rounded-xl border border-slate-700 bg-white py-3.5 pl-11 pr-4 text-sm text-slate-900 outline-none focus:ring-2 focus:ring-violet-400"
           />
         </div>
       </section>
@@ -164,8 +164,8 @@ export default function HelpCenter() {
             }}
             className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
               category === item
-                ? "border-teal-700 bg-teal-700 text-white"
-                : "border-slate-200 bg-white text-slate-600 hover:border-teal-300 hover:text-teal-800"
+                ? "border-violet-700 bg-violet-700 text-white"
+                : "border-slate-200 bg-white text-slate-600 hover:border-violet-300 hover:text-violet-800"
             }`}
           >
             {item}
@@ -209,7 +209,7 @@ export default function HelpCenter() {
                     className="flex w-full items-center justify-between gap-4 px-5 py-5 text-left hover:bg-slate-50"
                   >
                     <span>
-                      <span className="mb-1 block text-xs font-semibold text-teal-700">
+                      <span className="mb-1 block text-xs font-semibold text-violet-700">
                         {faq.category}
                       </span>
                       <span className="text-sm font-semibold text-slate-800">
@@ -238,9 +238,9 @@ export default function HelpCenter() {
         )}
       </section>
 
-      <section className="flex flex-col gap-4 rounded-2xl border border-teal-100 bg-teal-50 p-5 sm:flex-row sm:items-center sm:justify-between">
+      <section className="flex flex-col gap-4 rounded-2xl border border-violet-100 bg-violet-50 p-5 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-start gap-3">
-          <span className="rounded-xl bg-white p-3 text-teal-700">
+          <span className="rounded-xl bg-white p-3 text-violet-700">
             <LifeBuoy size={23} />
           </span>
           <div>
@@ -255,7 +255,7 @@ export default function HelpCenter() {
 
         <Link
           to="/vendor/support/create"
-          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-teal-700 px-4 py-3 text-sm font-semibold text-white hover:bg-teal-800"
+          className="inline-flex shrink-0 items-center justify-center gap-2 rounded-xl bg-violet-700 px-4 py-3 text-sm font-semibold text-white hover:bg-violet-800"
         >
           <Plus size={17} /> Create Ticket
         </Link>
