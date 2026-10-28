@@ -43,6 +43,8 @@ const statusStyles = {
   completed: "bg-blue-50 text-blue-700 ring-blue-200",
 };
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+
 const formatCurrency = (amount) =>
   new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -60,6 +62,22 @@ const formatDate = (date) => {
     year: "numeric",
   });
 };
+
+// Returns e.g. [1, "...", 4, 5, 6, "...", 12]
+function getPageNumbers(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const pages = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  if (start > 2) pages.push("...");
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push("...");
+  pages.push(total);
+
+  return pages;
+}
 
 function toVendorBooking(booking) {
   const travellers = Array.isArray(booking.travellers)
@@ -626,8 +644,7 @@ export default function Bookings() {
   const [statusFilter, setStatusFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-
-  const pageSize = 5;
+  const [pageSize, setPageSize] = useState(5);
 
   useEffect(() => {
     const refreshBookings = () => {
@@ -1141,44 +1158,82 @@ export default function Bookings() {
             </div>
 
             {/* Pagination */}
-            <div className="flex flex-col gap-3 border-t border-slate-200 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm text-slate-500">
-                Showing {(displayedPage - 1) * pageSize + 1}–
-                {Math.min(displayedPage * pageSize, filteredBookings.length)} of{" "}
-                {filteredBookings.length}
-              </p>
+            <div className="flex flex-col gap-3 border-t border-slate-200 px-5 py-4 lg:flex-row lg:items-center lg:justify-between">
+              <div className="flex flex-wrap items-center gap-4">
+                <p className="text-sm text-slate-500">
+                  Showing {(displayedPage - 1) * pageSize + 1}–
+                  {Math.min(displayedPage * pageSize, filteredBookings.length)}{" "}
+                  of {filteredBookings.length}
+                </p>
 
-              <div className="flex items-center gap-2">
+                <label className="flex items-center gap-2 text-sm text-slate-500">
+                  Rows per page
+                  <select
+                    value={pageSize}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-slate-700 outline-none focus:border-teal-500"
+                  >
+                    {PAGE_SIZE_OPTIONS.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+
+              <nav
+                className="flex flex-wrap items-center gap-1.5"
+                aria-label="Pagination"
+              >
                 <button
                   type="button"
                   disabled={displayedPage === 1}
-                  onClick={() =>
-                    setCurrentPage((page) =>
-                      Math.max(1, Math.min(totalPages, page - 1)),
-                    )
-                  }
+                  onClick={() => setCurrentPage(displayedPage - 1)}
                   className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Previous page"
                 >
                   <ChevronLeft size={17} />
                 </button>
 
-                <span className="min-w-20 text-center text-sm font-medium text-slate-700">
-                  Page {displayedPage} of {totalPages}
-                </span>
+                {getPageNumbers(displayedPage, totalPages).map((page, index) =>
+                  page === "..." ? (
+                    <span
+                      key={`dots-${index}`}
+                      className="px-2 text-sm text-slate-400"
+                    >
+                      …
+                    </span>
+                  ) : (
+                    <button
+                      key={page}
+                      type="button"
+                      onClick={() => setCurrentPage(page)}
+                      aria-current={page === displayedPage ? "page" : undefined}
+                      className={`min-w-9 rounded-lg border px-3 py-2 text-sm font-medium transition ${
+                        page === displayedPage
+                          ? "border-teal-600 bg-teal-600 text-white"
+                          : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                      }`}
+                    >
+                      {page}
+                    </button>
+                  ),
+                )}
 
                 <button
                   type="button"
                   disabled={displayedPage === totalPages}
-                  onClick={() =>
-                    setCurrentPage((page) => Math.min(totalPages, page + 1))
-                  }
+                  onClick={() => setCurrentPage(displayedPage + 1)}
                   className="rounded-lg border border-slate-200 p-2 text-slate-600 hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Next page"
                 >
                   <ChevronRight size={17} />
                 </button>
-              </div>
+              </nav>
             </div>
           </>
         )}

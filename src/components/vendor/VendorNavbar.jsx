@@ -123,7 +123,9 @@ export default function VendorNavbar({ onMenuClick }) {
 
                   <ChevronRight size={13} className="shrink-0 text-slate-400" />
 
-                  <span className="font-semibold text-teal-700">Management</span>
+                  <span className="font-semibold text-teal-700">
+                    Management
+                  </span>
                 </div>
 
                 <h1 className="mt-1 truncate text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
@@ -150,7 +152,7 @@ export default function VendorNavbar({ onMenuClick }) {
                 onChange={(event) => setSearch(event.target.value)}
                 placeholder="Search bookings..."
                 aria-label="Search bookings"
-                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400"
+                className="w-full bg-transparent text-sm text-slate-700 outline-none placeholder:text-slate-400 [&::-webkit-search-cancel-button]:hidden [&::-webkit-search-decoration]:hidden"
               />
 
               {search && (
