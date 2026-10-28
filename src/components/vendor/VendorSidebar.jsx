@@ -203,7 +203,7 @@ const linkBase =
 const linkActive =
   "bg-violet-600 font-semibold text-white shadow-lg shadow-violet-600/25";
 
-const linkIdle = "text-slate-600 hover:bg-violet-50 hover:text-violet-700";
+const linkIdle = "text-slate-700 hover:bg-violet-50 hover:text-violet-700";
 
 const scrollbarSlim =
   "[color-scheme:light] " +
@@ -259,7 +259,7 @@ function MenuLink({ item, badges, onNavigate, collapsed }) {
             className={`shrink-0 ${
               isActive
                 ? "text-white"
-                : "text-slate-400 group-hover:text-violet-600"
+                : "text-slate-500 group-hover:text-violet-600"
             }`}
           />
 
@@ -309,7 +309,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
         } ${
           isGroupActive
             ? "bg-violet-50 font-semibold text-violet-700"
-            : "text-slate-600 hover:bg-violet-50 hover:text-violet-700"
+            : "text-slate-700 hover:bg-violet-50 hover:text-violet-700"
         }`}
       >
         <Icon
@@ -317,7 +317,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
           className={`shrink-0 ${
             isGroupActive
               ? "text-violet-600"
-              : "text-slate-400 group-hover:text-violet-600"
+              : "text-slate-500 group-hover:text-violet-600"
           }`}
         />
 
@@ -327,7 +327,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
 
             <ChevronDown
               size={15}
-              className={`shrink-0 text-slate-400 transition-transform ${
+              className={`shrink-0 text-slate-500 transition-transform ${
                 open ? "rotate-180" : ""
               }`}
             />
@@ -350,7 +350,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
                   `group flex min-h-10 items-center gap-2.5 rounded-lg px-3 py-2 text-left text-[13px] transition-colors ${
                     isActive
                       ? "bg-violet-50 font-semibold text-violet-700 ring-1 ring-inset ring-violet-200"
-                      : "text-slate-500 hover:bg-slate-100 hover:text-slate-800"
+                      : "text-slate-700 hover:bg-slate-100 hover:text-slate-900"
                   }`
                 }
               >
@@ -359,7 +359,7 @@ function MenuGroup({ item, onNavigate, collapsed, onExpand }) {
                   className={`shrink-0 ${
                     pathname === child.path
                       ? "text-violet-600"
-                      : "text-slate-400 group-hover:text-slate-600"
+                      : "text-slate-500 group-hover:text-slate-700"
                   }`}
                 />
 
@@ -473,7 +473,7 @@ export default function VendorSidebar({
               {vendorName}
             </p>
 
-            <p className="mt-0.5 truncate text-xs text-slate-500">
+            <p className="mt-0.5 truncate text-xs text-slate-700">
               {accountType}
             </p>
           </div>
@@ -490,7 +490,7 @@ export default function VendorSidebar({
         {menuSections.map((section) => (
           <div key={section.title}>
             {!collapsed && (
-              <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-400">
+              <p className="mb-1 px-3 text-[10px] font-semibold uppercase tracking-[0.16em] text-slate-600">
                 {section.title}
               </p>
             )}
@@ -531,7 +531,7 @@ export default function VendorSidebar({
             type="button"
             onClick={onLogout}
             title={collapsed ? "Logout" : undefined}
-            className={`flex w-full items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-600 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 ${
+            className={`flex w-full items-center gap-2 rounded-xl border border-slate-200 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 ${
               collapsed ? "justify-center px-2" : ""
             }`}
           >
