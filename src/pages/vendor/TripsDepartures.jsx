@@ -11,6 +11,8 @@ import {
   CheckCircle2,
   PlayCircle,
   ChevronDown,
+  ChevronLeft,
+  ChevronRight,
   X,
   CircleAlert,
   RefreshCw,
@@ -39,6 +41,8 @@ const statCardTones = {
   teal: "bg-teal-50 text-teal-700 ring-teal-100",
 };
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+
 function getToday() {
   const now = new Date();
   return [
@@ -46,6 +50,22 @@ function getToday() {
     String(now.getMonth() + 1).padStart(2, "0"),
     String(now.getDate()).padStart(2, "0"),
   ].join("-");
+}
+
+// Returns e.g. [1, "...", 4, 5, 6, "...", 12]
+function getPageNumbers(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const pages = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  if (start > 2) pages.push("...");
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push("...");
+  pages.push(total);
+
+  return pages;
 }
 
 function StatCard({ title, value, description, icon: Icon, tone }) {
@@ -148,6 +168,8 @@ export default function TripsDepartures() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
 
   const trips = tripState.trips;
   const today = getToday();
@@ -211,6 +233,18 @@ export default function TripsDepartures() {
     });
   }, [trips, search, statusFilter, dateFilter, today]);
 
+  // Pagination
+  const totalPages = Math.max(1, Math.ceil(filteredTrips.length / pageSize));
+  const displayedPage = Math.min(currentPage, totalPages);
+  const pageTrips = useMemo(
+    () =>
+      filteredTrips.slice(
+        (displayedPage - 1) * pageSize,
+        displayedPage * pageSize,
+      ),
+    [filteredTrips, displayedPage, pageSize],
+  );
+
   const scheduledCount = trips.filter((t) => t.status === "Scheduled").length;
   const inProgressCount = trips.filter((t) => t.status === "In Progress").length;
   const completedCount = trips.filter((t) => t.status === "Completed").length;
@@ -225,6 +259,7 @@ export default function TripsDepartures() {
     setSearch("");
     setStatusFilter("All");
     setDateFilter("All");
+    setCurrentPage(1);
   };
 
   const openTrip = (trip) => {
@@ -300,7 +335,10 @@ export default function TripsDepartures() {
               <input
                 type="search"
                 value={search}
-                onChange={(event) => setSearch(event.target.value)}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setCurrentPage(1);
+                }}
                 placeholder="Search trip, destination or ID..."
                 className="h-10 w-full rounded-lg border border-slate-200 bg-white pl-9 pr-3 text-sm text-slate-700 outline-none transition placeholder:text-slate-400 hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
               />
@@ -310,7 +348,10 @@ export default function TripsDepartures() {
               <span className="sr-only">Filter by status</span>
               <select
                 value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
+                onChange={(event) => {
+                  setStatusFilter(event.target.value);
+                  setCurrentPage(1);
+                }}
                 className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
               >
                 <option value="All">All statuses</option>
@@ -329,7 +370,10 @@ export default function TripsDepartures() {
               <span className="sr-only">Filter by departure date</span>
               <select
                 value={dateFilter}
-                onChange={(event) => setDateFilter(event.target.value)}
+                onChange={(event) => {
+                  setDateFilter(event.target.value);
+                  setCurrentPage(1);
+                }}
                 className="h-10 w-full appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-9 text-sm text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
               >
                 <option value="All">All dates</option>
@@ -384,7 +428,7 @@ export default function TripsDepartures() {
         )}
 
         {/* Desktop table */}
-        {!tripState.error && filteredTrips.length > 0 && (
+        {!tripState.error && pageTrips.length > 0 && (
           <div className="hidden overflow-x-auto lg:block">
             <table className="w-full min-w-[960px] text-left">
               <thead className="border-b border-slate-200 bg-slate-50/80">
@@ -402,7 +446,7 @@ export default function TripsDepartures() {
               </thead>
 
               <tbody className="divide-y divide-slate-100">
-                {filteredTrips.map((trip) => (
+                {pageTrips.map((trip) => (
                   <tr
                     key={trip.id}
                     className="transition-colors hover:bg-slate-50/80"
@@ -459,9 +503,9 @@ export default function TripsDepartures() {
         )}
 
         {/* Mobile / tablet cards */}
-        {!tripState.error && filteredTrips.length > 0 && (
+        {!tripState.error && pageTrips.length > 0 && (
           <div className="grid grid-cols-1 gap-3 border-t border-slate-100 p-4 sm:grid-cols-2 lg:hidden">
-            {filteredTrips.map((trip) => (
+            {pageTrips.map((trip) => (
               <article
                 key={trip.id}
                 className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md"
@@ -541,22 +585,106 @@ export default function TripsDepartures() {
           </div>
         )}
 
-        {/* Footer */}
-        <div className="flex flex-col gap-1 border-t border-slate-100 bg-slate-50/60 px-5 py-3 text-xs text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            Showing{" "}
-            <span className="font-semibold text-slate-700">
-              {filteredTrips.length}
-            </span>{" "}
-            of{" "}
-            <span className="font-semibold text-slate-700">{trips.length}</span>{" "}
-            departures
-          </span>
-          <span className="inline-flex items-center gap-1.5">
-            <RefreshCw size={12} />
-            Data refreshes when you return to this page
-          </span>
-        </div>
+        {/* Pagination */}
+        {!tripState.error && filteredTrips.length > 0 && (
+          <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3.5 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
+              <p>
+                Showing{" "}
+                <span className="font-semibold text-slate-800 tabular-nums">
+                  {(displayedPage - 1) * pageSize + 1}–
+                  {Math.min(displayedPage * pageSize, filteredTrips.length)}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold text-slate-800 tabular-nums">
+                  {filteredTrips.length}
+                </span>{" "}
+                departures
+                {filteredTrips.length !== trips.length && (
+                  <span className="text-slate-400">
+                    {" "}
+                    (filtered from {trips.length})
+                  </span>
+                )}
+              </p>
+
+              <label className="flex items-center gap-2">
+                <span>Rows per page</span>
+                <span className="relative">
+                  <select
+                    value={pageSize}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                  >
+                    {PAGE_SIZE_OPTIONS.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={14}
+                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                  />
+                </span>
+              </label>
+            </div>
+
+            <nav
+              className="flex flex-wrap items-center gap-1.5"
+              aria-label="Pagination"
+            >
+              <button
+                type="button"
+                disabled={displayedPage === 1}
+                onClick={() => setCurrentPage(displayedPage - 1)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {getPageNumbers(displayedPage, totalPages).map((page, index) =>
+                page === "..." ? (
+                  <span
+                    key={`dots-${index}`}
+                    className="flex h-9 w-6 items-center justify-center text-sm text-slate-400"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    aria-current={page === displayedPage ? "page" : undefined}
+                    className={`h-9 min-w-9 rounded-lg border px-3 text-sm font-semibold tabular-nums transition ${
+                      page === displayedPage
+                        ? "border-teal-600 bg-teal-600 text-white shadow-sm"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+
+              <button
+                type="button"
+                disabled={displayedPage === totalPages}
+                onClick={() => setCurrentPage(displayedPage + 1)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+                aria-label="Next page"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </nav>
+          </div>
+        )}
+
       </section>
     </div>
   );

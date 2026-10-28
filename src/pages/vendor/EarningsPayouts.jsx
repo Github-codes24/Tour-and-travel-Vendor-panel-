@@ -18,6 +18,9 @@ import {
   FileText,
   CircleAlert,
   Filter,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 
 const initialTransactions = [
@@ -108,6 +111,8 @@ const statusStyles = {
   Failed: "bg-red-50 text-red-700 ring-red-200",
 };
 
+const PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+
 function formatMoney(amount) {
   return new Intl.NumberFormat("en-IN", {
     style: "currency",
@@ -122,6 +127,22 @@ function formatDate(date) {
     month: "short",
     year: "numeric",
   });
+}
+
+// Returns e.g. [1, "...", 4, 5, 6, "...", 12]
+function getPageNumbers(current, total) {
+  if (total <= 7) return Array.from({ length: total }, (_, i) => i + 1);
+
+  const pages = [1];
+  const start = Math.max(2, current - 1);
+  const end = Math.min(total - 1, current + 1);
+
+  if (start > 2) pages.push("...");
+  for (let i = start; i <= end; i++) pages.push(i);
+  if (end < total - 1) pages.push("...");
+  pages.push(total);
+
+  return pages;
 }
 
 function StatCard({ icon: Icon, label, amount, helper, iconStyle }) {
@@ -148,6 +169,8 @@ export default function EarningsPayouts() {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState("All");
   const [dateFilter, setDateFilter] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
   const [selectedTransaction, setSelectedTransaction] = useState(null);
   const navigate = useNavigate();
 
@@ -199,6 +222,31 @@ export default function EarningsPayouts() {
       return matchesSearch && matchesStatus && matchesDate;
     });
   }, [transactions, search, statusFilter, dateFilter]);
+
+  // Pagination
+  const totalPages = Math.max(
+    1,
+    Math.ceil(filteredTransactions.length / pageSize),
+  );
+  const displayedPage = Math.min(currentPage, totalPages);
+  const pageTransactions = useMemo(
+    () =>
+      filteredTransactions.slice(
+        (displayedPage - 1) * pageSize,
+        displayedPage * pageSize,
+      ),
+    [filteredTransactions, displayedPage, pageSize],
+  );
+
+  const filtersActive =
+    search.trim() !== "" || statusFilter !== "All" || dateFilter !== "All";
+
+  function clearFilters() {
+    setSearch("");
+    setStatusFilter("All");
+    setDateFilter("All");
+    setCurrentPage(1);
+  }
 
   function exportCSV() {
     const headers = [
@@ -356,7 +404,10 @@ export default function EarningsPayouts() {
                 />
                 <input
                   value={search}
-                  onChange={(event) => setSearch(event.target.value)}
+                  onChange={(event) => {
+                    setSearch(event.target.value);
+                    setCurrentPage(1);
+                  }}
                   placeholder="Search payout, booking, customer..."
                   className="w-full rounded-xl border border-slate-200 py-2.5 pl-9 pr-3 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-100"
                 />
@@ -364,7 +415,10 @@ export default function EarningsPayouts() {
 
               <select
                 value={statusFilter}
-                onChange={(event) => setStatusFilter(event.target.value)}
+                onChange={(event) => {
+                  setStatusFilter(event.target.value);
+                  setCurrentPage(1);
+                }}
                 className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
                 aria-label="Filter by payout status"
               >
@@ -377,7 +431,10 @@ export default function EarningsPayouts() {
 
               <select
                 value={dateFilter}
-                onChange={(event) => setDateFilter(event.target.value)}
+                onChange={(event) => {
+                  setDateFilter(event.target.value);
+                  setCurrentPage(1);
+                }}
                 className="rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-sm outline-none focus:border-teal-500"
                 aria-label="Filter by date"
               >
@@ -385,6 +442,17 @@ export default function EarningsPayouts() {
                 <option value="7 days">Last 7 days</option>
                 <option value="30 days">Last 30 days</option>
               </select>
+
+              {filtersActive && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-slate-500 transition hover:bg-rose-50 hover:text-rose-700"
+                >
+                  <X size={15} />
+                  Clear
+                </button>
+              )}
             </div>
           </div>
         </div>
@@ -405,7 +473,7 @@ export default function EarningsPayouts() {
             </thead>
 
             <tbody className="divide-y divide-slate-100">
-              {filteredTransactions.map((item) => (
+              {pageTransactions.map((item) => (
                 <tr key={item.id} className="transition hover:bg-slate-50/80">
                   <td className="px-5 py-4">
                     <p className="text-sm font-semibold text-slate-900">
@@ -475,27 +543,122 @@ export default function EarningsPayouts() {
               <p className="mt-1 text-sm text-slate-500">
                 Try changing your search or filters.
               </p>
+              {filtersActive && (
+                <button
+                  type="button"
+                  onClick={clearFilters}
+                  className="mt-4 inline-flex items-center gap-2 rounded-xl bg-teal-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-teal-800"
+                >
+                  <X size={15} />
+                  Clear all filters
+                </button>
+              )}
             </div>
           )}
         </div>
 
-        <div className="flex flex-col gap-2 border-t border-slate-100 px-5 py-4 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <span>
-            Showing {filteredTransactions.length} of {transactions.length}{" "}
-            transactions
-          </span>
-          <button
-            type="button"
-            onClick={() => {
-              setSearch("");
-              setStatusFilter("All");
-              setDateFilter("All");
-            }}
-            className="self-start font-semibold text-teal-700 hover:text-teal-900 sm:self-auto"
-          >
-            Clear filters
-          </button>
-        </div>
+        {/* Pagination */}
+        {filteredTransactions.length > 0 && (
+          <div className="flex flex-col gap-3 border-t border-slate-100 bg-slate-50/60 px-5 py-3.5 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-slate-500">
+              <p>
+                Showing{" "}
+                <span className="font-semibold tabular-nums text-slate-800">
+                  {(displayedPage - 1) * pageSize + 1}–
+                  {Math.min(
+                    displayedPage * pageSize,
+                    filteredTransactions.length,
+                  )}
+                </span>{" "}
+                of{" "}
+                <span className="font-semibold tabular-nums text-slate-800">
+                  {filteredTransactions.length}
+                </span>{" "}
+                transactions
+                {filteredTransactions.length !== transactions.length && (
+                  <span className="text-slate-400">
+                    {" "}
+                    (filtered from {transactions.length})
+                  </span>
+                )}
+              </p>
+
+              <label className="flex items-center gap-2">
+                <span>Rows per page</span>
+                <span className="relative">
+                  <select
+                    value={pageSize}
+                    onChange={(event) => {
+                      setPageSize(Number(event.target.value));
+                      setCurrentPage(1);
+                    }}
+                    className="h-9 appearance-none rounded-lg border border-slate-200 bg-white pl-3 pr-8 text-sm font-medium text-slate-700 outline-none transition hover:border-slate-300 focus:border-teal-600 focus:ring-2 focus:ring-teal-600/10"
+                  >
+                    {PAGE_SIZE_OPTIONS.map((size) => (
+                      <option key={size} value={size}>
+                        {size}
+                      </option>
+                    ))}
+                  </select>
+                  <ChevronDown
+                    size={14}
+                    className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400"
+                  />
+                </span>
+              </label>
+            </div>
+
+            <nav
+              className="flex flex-wrap items-center gap-1.5"
+              aria-label="Pagination"
+            >
+              <button
+                type="button"
+                disabled={displayedPage === 1}
+                onClick={() => setCurrentPage(displayedPage - 1)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+                aria-label="Previous page"
+              >
+                <ChevronLeft size={16} />
+              </button>
+
+              {getPageNumbers(displayedPage, totalPages).map((page, index) =>
+                page === "..." ? (
+                  <span
+                    key={`dots-${index}`}
+                    className="flex h-9 w-6 items-center justify-center text-sm text-slate-400"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={page}
+                    type="button"
+                    onClick={() => setCurrentPage(page)}
+                    aria-current={page === displayedPage ? "page" : undefined}
+                    className={`h-9 min-w-9 rounded-lg border px-3 text-sm font-semibold tabular-nums transition ${
+                      page === displayedPage
+                        ? "border-teal-600 bg-teal-600 text-white shadow-sm"
+                        : "border-slate-200 bg-white text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {page}
+                  </button>
+                ),
+              )}
+
+              <button
+                type="button"
+                disabled={displayedPage === totalPages}
+                onClick={() => setCurrentPage(displayedPage + 1)}
+                className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-white"
+                aria-label="Next page"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </nav>
+          </div>
+        )}
       </section>
 
       {/* Transaction details modal */}
